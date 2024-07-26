@@ -42,6 +42,7 @@ import { useIsEnforceReference } from '../../../../utils/hooks/useEntitySettings
 import StixCoreObjectQuickSubscription from '../stix_core_objects/StixCoreObjectQuickSubscription';
 import { getMainRepresentative } from '../../../../utils/defaultRepresentatives';
 import Transition from '../../../../components/Transition';
+import useHelper from '../../../../utils/hooks/useHelper';
 
 // Deprecated - https://mui.com/system/styles/basics/
 // Do not use it for new code.
@@ -247,11 +248,14 @@ const StixDomainObjectHeader = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const { t_i18n } = useFormatter();
+  const { isFeatureEnable } = useHelper();
+  const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
   const {
     stixDomainObject,
     isOpenctiAlias,
     PopoverComponent,
     EditComponent,
+    RelateComponent,
     viewAs,
     onViewAs,
     disablePopover,
@@ -611,6 +615,9 @@ const StixDomainObjectHeader = (props) => {
               </div>
             )}
             {EditComponent}
+            {isFABReplaced && RelateComponent && (
+              <RelateComponent id={stixDomainObject.id} />
+            )}
           </div>
         </div>
       </div>
