@@ -418,7 +418,11 @@ export const roleEditContext = async (context, user, roleId, input) => {
 
 export const assignOrganizationToUser = async (context, user, userId, organizationId) => {
   if (isOnlyOrgaAdmin(user)) {
-    throw ForbiddenAccess();
+    // When user is organization admin, we make sure she is also admin of organization added
+    const myAdministratedOrganizationsIds = user.administrated_organizations.map(({ id }) => id);
+    if (!myAdministratedOrganizationsIds.includes(organizationId)) {
+      throw ForbiddenAccess();
+    }
   }
   const targetUser = await findById(context, user, userId);
   if (!targetUser) {
@@ -1004,7 +1008,11 @@ export const userIdDeleteRelation = async (context, user, userId, toId, relation
 
 export const userDeleteOrganizationRelation = async (context, user, userId, toId) => {
   if (isOnlyOrgaAdmin(user)) {
-    throw ForbiddenAccess();
+    // When user is organization admin, we make sure she is also admin of organization removed
+    const myAdministratedOrganizationsIds = user.administrated_organizations.map(({ id }) => id);
+    if (!myAdministratedOrganizationsIds.includes(toId)) {
+      throw ForbiddenAccess();
+    }
   }
   const targetUser = await findById(context, user, userId);
   if (!targetUser) {
