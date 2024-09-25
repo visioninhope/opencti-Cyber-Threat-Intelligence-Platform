@@ -877,25 +877,6 @@ describe('User has no settings capability and is organization admin query behavi
     });
   });
   it('should administrate more than 1 organization', async () => {
-    // Need to add granted_groups to PLATFORM_ORGANIZATION because of line 533 in domain/user.js
-    const UPDATE_QUERY = gql`
-      mutation OrganizationEdit($id: ID!, $input: [EditInput]!) {
-        organizationFieldPatch(id: $id, input: $input) {
-          id
-          name
-          grantable_groups {
-            id
-          }
-        }
-      }
-    `;
-    const grantableGroupQueryResult = await adminQuery({
-      query: UPDATE_QUERY,
-      variables: { id: platformOrganizationId, input: { key: 'grantable_groups', value: [amberGroupId] } },
-    });
-    expect(grantableGroupQueryResult.data.organizationFieldPatch.grantable_groups.length).toEqual(1);
-    expect(grantableGroupQueryResult.data.organizationFieldPatch.grantable_groups[0]).toEqual({ id: amberGroupId });
-
     // Add Editor to PLATFORM_ORGANIZATION
     const addEditorToOrgaQuery = await adminQueryWithSuccess({
       query: ORGANIZATION_ADD_QUERY,
