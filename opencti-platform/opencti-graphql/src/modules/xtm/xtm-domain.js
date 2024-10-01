@@ -97,6 +97,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
   const name = `[${stixCoreObject.entity_type}] ${extractEntityRepresentativeName(stixCoreObject)}`;
   const description = extractRepresentativeDescription(stixCoreObject);
   const subtitle = `Based on cyber threat knowledge authored by ${author.name}`;
+  console.log('----- 1.CREATE SCENARIO start -----');
   const obasScenario = await createScenario(
     name,
     subtitle,
@@ -106,13 +107,16 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
     stixCoreObject.entity_type,
     simulationType === 'simulated' ? 'global-crisis' : 'attack-scenario'
   );
+  console.log('----- 1.CREATE SCENARIO end -----');
 
   // Get kill chin phases
   const sortByPhaseOrder = R.sortBy(R.prop('phase_order'));
+  console.log('----- 2.GET KILL CHAIN PHASE start -----');
   const obasKillChainPhases = await getKillChainPhases();
   const sortedObasKillChainPhases = sortByPhaseOrder(obasKillChainPhases);
   const killChainPhasesListOfNames = sortedObasKillChainPhases.map((n) => n.phase_name).join(', ');
   const indexedSortedObasKillChainPhase = R.indexBy(R.prop('phase_id'), sortedObasKillChainPhases);
+  console.log('----- 2.GET KILL CHAIN PHASE end -----');
 
   let dependsOnDuration = 0;
   if (attackPatterns.length === 0) {
@@ -123,6 +127,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
     for (const obasKillChainPhase of sortedObasKillChainPhases) {
       const killChainPhaseName = obasKillChainPhase.phase_name;
       // Mail to incident response
+      console.log('----- 3.PROMPT INCIDENT RESPONSE start -----');
       const promptIncidentResponse = `
             # Instructions
             - The context is a cybersecurity breach and attack simulation and cybersecurity crisis management exercise
@@ -130,7 +135,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             - You should fake it and not writing about the simulation but like if it is a true cybersecurity threat and / or incident.
             - Order of kill chain phases is ${killChainPhasesListOfNames}.
             - We are in the kill chain phase ${killChainPhaseName}.
-            - You should write an email message (only the content, NOT the subject) representing this kill chain phase (${killChainPhaseName}) targeting the enterprise of 3 paragraphs with 3 lines in each paragraph in HTML.
+            - You should write an email message (only the content, NOT the subject) representing this kill chain phase (${killChainPhaseName}) targeting the enterprise of 1 paragraph with 3 lines in each paragraph in HTML.
             - The email message should be addressed from the security operation center team to the incident response team, talking about the phase of the attack.
             - The incident response team is under attack.
             - Ensure that all words are accurately spelled and that the grammar is correct and the output format is in HTML.
@@ -140,6 +145,8 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${content}
             `;
       const responseIncidentResponse = await compute(null, promptIncidentResponse, user);
+      console.log('----- 3.PROMPT INCIDENT RESPONSE end -----');
+      console.log('----- 4.PROMPT INCIDENT RESPONSE SUBJECT start -----');
       const promptIncidentResponseSubject = `
             # Instructions
             - Generate a subject for the following email.
@@ -151,7 +158,9 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${responseIncidentResponse}
             `;
       const responseIncidentResponseSubject = await compute(null, promptIncidentResponseSubject, user);
+      console.log('----- 4.PROMPT INCIDENT RESPONSE SUBJECT end -----');
       const titleIncidentResponse = `[${killChainPhaseName}] ${responseIncidentResponseSubject} - Email to the incident response team`;
+      console.log('----- 5.CREATE INJECT IN SCENARIO start -----');
       await createInjectInScenario(
         obasScenario.scenario_id,
         'openbas_email',
@@ -165,8 +174,10 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
         },
         [{ value: 'opencti', color: '#001bda' }, { value: 'csirt', color: '#c28b0d' }]
       );
+      console.log('----- 5.CREATE INJECT IN SCENARIO end -----');
       dependsOnDuration += (interval * 60);
       // Mail to CISO
+      console.log('----- 6.PROMPT CISO start -----');
       const promptCiso = `
             # Instructions
             - The context is a cybersecurity breach and attack simulation and cybersecurity crisis management exercise
@@ -174,7 +185,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             - You should fake it and not writing about the simulation but like if it is a true cybersecurity threat and / or incident.
             - Order of kill chain phases is ${killChainPhasesListOfNames}.
             - We are in the kill chain phase ${killChainPhaseName}.
-            - You should write an email message (only the content, NOT the subject) representing this kill chain phase (${killChainPhaseName}) targeting the enterprise of 3 paragraphs with 3 lines in each paragraph in HTML.
+            - You should write an email message (only the content, NOT the subject) representing this kill chain phase (${killChainPhaseName}) targeting the enterprise of 1 paragraph with 3 lines in HTML.
             - The email message should be addressed from the security operation center team to the chief security officer, talking about the phase of the attack.
             - The incident response team is under attack.
             - Ensure that all words are accurately spelled and that the grammar is correct.
@@ -184,6 +195,8 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${content}
             `;
       const responseCiso = await compute(null, promptCiso, user);
+      console.log('----- 6.PROMPT CISO end -----');
+      console.log('----- 7.PROMPT CISO SUBJECT start -----');
       const promptCisoSubject = `
             # Instructions
             - Generate a subject for the following email.
@@ -195,7 +208,9 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${responseCiso}
             `;
       const responseCisoSubject = await compute(null, promptCisoSubject, user);
+      console.log('----- 7.PROMPT CISO SUBJECT end -----');
       const titleCiso = `[${killChainPhaseName}] ${responseCisoSubject} - Email to the CISO`;
+      console.log('----- 8.CREATE INJECT IN SCENARIO start -----');
       await createInjectInScenario(
         obasScenario.scenario_id,
         'openbas_email',
@@ -209,6 +224,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
         },
         [{ value: 'opencti', color: '#001bda' }, { value: 'ciso', color: '#b41313' }]
       );
+      console.log('----- 8.CREATE INJECT IN SCENARIO end -----');
       dependsOnDuration += (interval * 60);
     }
   }
@@ -216,7 +232,9 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
   // Get contracts from OpenBAS related to found attack patterns
 
   // Get attack patterns
+  console.log('----- 9.OBAS ATTACK PATTERN start -----');
   const obasAttackPatterns = await getAttackPatterns();
+  console.log('----- 9.OBAS ATTACK PATTERN end -----');
 
   // Extract attack patterns
   const attackPatternsMitreIds = finalAttackPatterns.filter((n) => isNotEmptyField(n.x_mitre_id)).map((n) => n.x_mitre_id);
@@ -239,6 +257,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
     const killChainPhaseName = obasAttackPattern.attack_pattern_kill_chain_phase.phase_name;
     if (simulationType === 'simulated') {
       // Mail to incident response
+      console.log('----- 10.PROMPT INCIDENT RESPONSE start -----');
       const promptIncidentResponse = `
             # Instructions
             - The context is a cybersecurity breach and attack simulation and cybersecurity crisis management exercise
@@ -260,6 +279,8 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${obasAttackPattern.attack_pattern_description}
             `;
       const responseIncidentResponse = await compute(null, promptIncidentResponse, user);
+      console.log('----- 10.PROMPT INCIDENT RESPONSE end -----');
+      console.log('----- 11.PROMPT INCIDENT RESPONSE SUBJECT start -----');
       const promptIncidentResponseSubject = `
             # Instructions
             - Generate a subject for the following email.
@@ -271,7 +292,9 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${responseIncidentResponse}
             `;
       const responseIncidentResponseSubject = await compute(null, promptIncidentResponseSubject, user);
+      console.log('----- 11.PROMPT INCIDENT RESPONSE SUBJECT end -----');
       const titleIncidentResponse = `[${killChainPhaseName}] ${obasAttackPattern.attack_pattern_name} - Email to the incident response team`;
+      console.log('----- 12.CREATE INJECT IN SCENARIO start -----');
       await createInjectInScenario(
         obasScenario.scenario_id,
         'openbas_email',
@@ -281,7 +304,9 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
         { expectations: [], subject: responseIncidentResponseSubject.replace('Subject: ', '').replace('"', ''), body: responseIncidentResponse },
         [{ value: 'opencti', color: '#001bda' }, { value: 'csirt', color: '#c28b0d' }]
       );
+      console.log('----- 12.CREATE INJECT IN SCENARIO end -----');
       dependsOnDuration += (interval * 60);
+      console.log('----- 13.PROMPT CISO start -----');
       const promptCiso = `
             # Instructions
             - The context is a cybersecurity breach and attack simulation and cybersecurity crisis management exercise
@@ -303,6 +328,8 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${obasAttackPattern.attack_pattern_description}
         `;
       const responseCiso = await compute(null, promptCiso, user);
+      console.log('----- 13.PROMPT CISO end -----');
+      console.log('----- 14.PROMPT CISO SUBJECT start -----');
       const promptCisoSubject = `
             # Instructions
             - Generate a subject for the following email.
@@ -314,7 +341,9 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             ${responseCiso}
             `;
       const responseCisoSubject = await compute(null, promptCisoSubject, user);
+      console.log('----- 14.PROMPT CISO SUBJECT end -----');
       const titleCiso = `[${killChainPhaseName}] ${obasAttackPattern.attack_pattern_name} - Email to the CISO`;
+      console.log('----- 15.CREATE INJECT IN SCENARIO start -----');
       await createInjectInScenario(
         obasScenario.scenario_id,
         'openbas_email',
@@ -324,9 +353,12 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
         { expectations: [], subject: responseCisoSubject.replace('Subject: ', '').replace('"', ''), body: responseCiso },
         [{ value: 'opencti', color: '#001bda' }, { value: 'ciso', color: '#b41313' }]
       );
+      console.log('----- 15.CREATE INJECT IN SCENARIO end -----');
       dependsOnDuration += (interval * 60);
     } else {
+      console.log('----- 16.OBAS INJECTOR CONTRACTS start -----');
       const obasInjectorContracts = await getInjectorContracts(obasAttackPattern.attack_pattern_id);
+      console.log('----- 16.OBAS INJECTOR CONTRACTS end -----');
       let finalObasInjectorContracts = R.take(5, getShuffledArr(obasInjectorContracts));
       if (selection === 'random') {
         finalObasInjectorContracts = R.take(1, finalObasInjectorContracts);
@@ -336,6 +368,7 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
         for (const finalObasInjectorContract of finalObasInjectorContracts) {
           const obasInjectorContractContent = JSON.parse(finalObasInjectorContract.injector_contract_content);
           const title = `[${obasAttackPattern.attack_pattern_external_id}] ${obasAttackPattern.attack_pattern_name} - ${finalObasInjectorContract.injector_contract_labels.en}`;
+          console.log('----- 17.CREATE INJECT IN SCENARIO start -----');
           await createInjectInScenario(
             obasScenario.scenario_id,
             obasInjectorContractContent.config.type,
@@ -345,13 +378,16 @@ export const generateOpenBasScenario = async (context, user, stixCoreObject, att
             null,
             [{ value: 'opencti', color: '#001bda' }, { value: 'technical', color: '#b9461a' }]
           );
+          console.log('----- 17.CREATE INJECT IN SCENARIO end -----');
           dependsOnDuration += (interval * 60);
         }
       } else {
         // TODO
+        console.log('----- 18.ELSE TODO -----');
       }
     }
   }
+  console.log('----- 19.RETURN -----');
   return `${XTM_OPENBAS_URL}/admin/scenarios/${obasScenario.scenario_id}/injects`;
 };
 
