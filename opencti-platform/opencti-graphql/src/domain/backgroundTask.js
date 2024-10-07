@@ -1,7 +1,7 @@
 import { ENTITY_TYPE_WORKSPACE } from '../modules/workspace/workspace-types';
 import { ENTITY_TYPE_PUBLIC_DASHBOARD } from '../modules/publicDashboard/publicDashboard-types';
 import { elIndex, elPaginate } from '../database/engine';
-import { INDEX_INTERNAL_OBJECTS, READ_DATA_INDICES } from '../database/utils';
+import { INDEX_INTERNAL_OBJECTS, READ_DATA_INDICES, READ_DATA_INDICES_WITHOUT_INFERRED } from '../database/utils';
 import { ENTITY_TYPE_BACKGROUND_TASK, ENTITY_TYPE_INTERNAL_FILE } from '../schema/internalObject';
 import { deleteElementById, patchAttribute } from '../database/middleware';
 import { getUserAccessRight, MEMBER_ACCESS_RIGHT_ADMIN, SYSTEM_USER } from '../utils/access';
@@ -104,7 +104,7 @@ const buildQueryFilters = async (context, user, filters, search, taskPosition, s
 };
 export const executeTaskQuery = async (context, user, filters, search, scope, start = null) => {
   const options = await buildQueryFilters(context, user, filters, search, start, scope);
-  return elPaginate(context, user, READ_DATA_INDICES, options);
+  return elPaginate(context, user, READ_DATA_INDICES_WITHOUT_INFERRED, options);
 };
 
 export const createRuleTask = async (context, user, ruleDefinition, input) => {

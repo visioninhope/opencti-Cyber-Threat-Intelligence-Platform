@@ -13,8 +13,12 @@ import { stixDomainObjectDelete } from './stixDomainObject';
 import { addFilter } from '../utils/filtering/filtering-utils';
 import { UnsupportedError } from '../config/errors';
 
-export const findById = (context, user, reportId) => {
-  return storeLoadById(context, user, reportId, ENTITY_TYPE_CONTAINER_REPORT);
+export const findById = async (context, user, reportId) => {
+  const aaa = await storeLoadById(context, user, reportId, ENTITY_TYPE_CONTAINER_REPORT);
+  if (reportId === 'b3d16ddc-76fa-41b9-9d49-4445f0bc49e2') {
+    console.log(aaa);
+  }
+  return aaa;
 };
 
 export const findAll = async (context, user, args) => {
