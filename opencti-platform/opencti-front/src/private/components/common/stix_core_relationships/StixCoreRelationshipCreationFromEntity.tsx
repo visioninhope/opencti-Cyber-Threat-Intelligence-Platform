@@ -528,6 +528,7 @@ const StixCoreRelationshipCreationFromEntity: FunctionComponent<StixCoreRelation
     onCreate = undefined,
     openExports = false,
     handleReverseRelation = undefined,
+    buttonRef,
   } = props;
   let isOnlySDOs = false;
   let isOnlySCOs = false;
@@ -1059,7 +1060,8 @@ const StixCoreRelationshipCreationFromEntity: FunctionComponent<StixCoreRelation
           color="primary"
           aria-label="Add"
           className={classes.createButton}
-          style={{ right: paddingRight || 30 }}
+          style={{ right: paddingRight || 30, display: buttonRef?.current ? 'none' : undefined }}
+          ref={buttonRef}
         >
           <Add />
         </Fab>

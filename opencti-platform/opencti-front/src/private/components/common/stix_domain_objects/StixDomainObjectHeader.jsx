@@ -41,6 +41,7 @@ import { useIsEnforceReference } from '../../../../utils/hooks/useEntitySettings
 import StixCoreObjectQuickSubscription from '../stix_core_objects/StixCoreObjectQuickSubscription';
 import { getMainRepresentative } from '../../../../utils/defaultRepresentatives';
 import Transition from '../../../../components/Transition';
+import StixDomainObjectCreateRelationshipTest from "@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest";
 
 // Deprecated - https://mui.com/system/styles/basics/
 // Do not use it for new code.
@@ -548,6 +549,7 @@ const StixDomainObjectHeader = (props) => {
           </div>
           )}
           {EditComponent}
+          <StixDomainObjectCreateRelationshipTest entityId={stixDomainObject.id} />
         </div>
       </div>
 
