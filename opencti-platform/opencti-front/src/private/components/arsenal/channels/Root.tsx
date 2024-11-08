@@ -1,12 +1,13 @@
 import React, { Suspense, useMemo } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import useQueryLoading from 'src/utils/hooks/useQueryLoading';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import Channel from './Channel';
 import ChannelKnowledge from './ChannelKnowledge';
@@ -27,8 +28,6 @@ import useHelper from '../../../../utils/hooks/useHelper';
 import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import ChannelEdition from './ChannelEdition';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootChannelSubscription($id: ID!) {
@@ -103,7 +102,7 @@ const RootChannel = ({ queryRef, channelId }: RootChannelProps) => {
   const paddingRight = getPaddingRight(location.pathname, channelId, '/dashboard/arsenal/channels');
   const link = `/dashboard/arsenal/channels/${channelId}/knowledge`;
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {channel ? (
         <>
           <Routes>
@@ -145,9 +144,9 @@ const RootChannel = ({ queryRef, channelId }: RootChannelProps) => {
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <ChannelEdition channelId={channel.id} />
+                  <StixDomainObjectCreateRelationship entity={channel} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
               enableQuickSubscription={true}
             />
             <Box
@@ -263,7 +262,7 @@ const RootChannel = ({ queryRef, channelId }: RootChannelProps) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 

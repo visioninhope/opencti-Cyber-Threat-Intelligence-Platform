@@ -36,7 +36,7 @@ import { useFormatter } from '../../../../components/i18n';
 import { FilterGroup } from '../../../../utils/filters/filtersHelpers-types';
 import { UseLocalStorageHelpers } from '../../../../utils/hooks/useLocalStorage';
 import useHelper from '../../../../utils/hooks/useHelper';
-import { CreateRelationshipContext } from '../menus/CreateRelationshipContextProvider';
+import { CreateRelationshipContext } from '../../../../utils/hooks/useNavigationContext';
 
 export const stixDomainObjectAttackPatternsKillChainQuery = graphql`
   query StixDomainObjectAttackPatternsKillChainQuery(
@@ -97,7 +97,7 @@ const StixDomainObjectAttackPatternsKillChain: FunctionComponent<StixDomainObjec
   storageKey,
 }) => {
   const { t_i18n } = useFormatter();
-  const { setState: setCreateRelationshipContext } = useContext(CreateRelationshipContext);
+  const { setState: setCreateRelationshipContext, resetState } = useContext(CreateRelationshipContext);
   const { isFeatureEnable } = useHelper();
   const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
   const [currentColorsReversed, setCurrentColorsReversed] = useState(false);
@@ -114,6 +114,7 @@ const StixDomainObjectAttackPatternsKillChain: FunctionComponent<StixDomainObjec
     setCreateRelationshipContext({
       onCreate: refetch,
     });
+    return resetState;
   }, []);
 
   const handleToggleColorsReversed = () => {

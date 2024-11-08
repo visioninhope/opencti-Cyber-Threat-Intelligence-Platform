@@ -1,5 +1,5 @@
 import { IconButton, List, styled, Typography } from '@mui/material';
-import React, { FunctionComponent, useContext, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useFormatter } from 'src/components/i18n';
 import Security from 'src/utils/Security';
 import { KNOWLEDGE_KNUPDATE } from 'src/utils/hooks/useGranted';
@@ -7,7 +7,7 @@ import useHelper from 'src/utils/hooks/useHelper';
 import { QueryRenderer } from 'src/relay/environment';
 import { Add } from '@mui/icons-material';
 import StixNestedRefRelationshipCreationFromEntityFabless from '../stix_nested_ref_relationships/StixNestedRefRelationshipCreationFromEntityFabless';
-import { CreateRelationshipContext } from '../menus/CreateRelationshipContextProvider';
+import useNavigationContext from '../../../../utils/hooks/useNavigationContext';
 import StixNestedRefRelationshipCreationFromEntity from '../stix_nested_ref_relationships/StixNestedRefRelationshipCreationFromEntity';
 import StixDomainObjectNestedEntitiesLines, { stixDomainObjectNestedEntitiesLinesQuery } from './StixDomainObjectNestedEntitiesLines';
 import { StixDomainObjectNestedEntitiesLines_data$data } from './__generated__/StixDomainObjectNestedEntitiesLines_data.graphql';
@@ -26,7 +26,6 @@ StixDomainObjectNestedEntitiesProps
   targetStixCoreObjectTypes,
 }) => {
   const { t_i18n } = useFormatter();
-  const { setState } = useContext(CreateRelationshipContext);
   const { isFeatureEnable } = useHelper();
   const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
 
@@ -39,9 +38,7 @@ StixDomainObjectNestedEntitiesProps
     orderMode: 'desc',
   };
 
-  useEffect(() => setState({
-    paginationOptions,
-  }), []);
+  useNavigationContext({ paginationOptions });
 
   return (
     <StyledContainer>

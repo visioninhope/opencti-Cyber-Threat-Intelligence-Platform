@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useContext, useEffect } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import useAuth from '../../../../../utils/hooks/useAuth';
 import ListLines from '../../../../../components/list_lines/ListLines';
 import ToolBar from '../../../data/ToolBar';
@@ -15,7 +15,7 @@ import { EntityStixCoreRelationshipsEntitiesViewLinesPaginationQuery$variables }
 import { isFilterGroupNotEmpty, useRemoveIdAndIncorrectKeysFromFilterGroupObject } from '../../../../../utils/filters/filtersUtils';
 import { Filter, FilterGroup } from '../../../../../utils/filters/filtersHelpers-types';
 import useHelper from '../../../../../utils/hooks/useHelper';
-import { CreateRelationshipContext } from '../../menus/CreateRelationshipContextProvider';
+import useNavigationContext from '../../../../../utils/hooks/useNavigationContext';
 
 interface EntityStixCoreRelationshipsEntitiesViewProps {
   entityId: string;
@@ -65,7 +65,6 @@ EntityStixCoreRelationshipsEntitiesViewProps
   } = viewStorage;
   const { isFeatureEnable } = useHelper();
   const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
-  const { setState: setCreateRelationshipContext } = useContext(CreateRelationshipContext);
   const { platformModuleHelpers } = useAuth();
   const isRuntimeSort = platformModuleHelpers.isRuntimeFieldEnable();
   const isObservables = isStixCyberObservables(stixCoreObjectTypes);
@@ -157,17 +156,13 @@ EntityStixCoreRelationshipsEntitiesViewProps
 
   const finalView = currentView || view;
 
-  setCreateRelationshipContext({
+  useNavigationContext({
+    paginationOptions,
     stixCoreObjectTypes,
     relationshipTypes,
     connectionKey: 'Pagination_stixCoreObjects',
     reversed: isRelationReversed,
   });
-  useEffect(() => {
-    setCreateRelationshipContext({
-      paginationOptions,
-    });
-  }, []);
 
   return (
     <>

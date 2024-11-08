@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense, useState } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams, useNavigate } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import React, { Suspense, useMemo, useState } from 'react';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import { propOr } from 'ramda';
 import Box from '@mui/material/Box';
@@ -10,6 +10,7 @@ import { RootSystemQuery } from '@components/entities/systems/__generated__/Root
 import { RootSystemsSubscription } from '@components/entities/systems/__generated__/RootSystemsSubscription.graphql';
 import useQueryLoading from 'src/utils/hooks/useQueryLoading';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import System from './System';
 import SystemKnowledge from './SystemKnowledge';
@@ -30,8 +31,6 @@ import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import SystemEdition from './SystemEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootSystemsSubscription($id: ID!) {
@@ -127,7 +126,7 @@ const RootSystem = ({ systemId, queryRef }: RootSystemProps) => {
   const link = `/dashboard/entities/systems/${systemId}/knowledge`;
   const paddingRight = getPaddingRight(location.pathname, systemId, '/dashboard/entities/systems');
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {system ? (
         <>
           <Routes>
@@ -171,9 +170,9 @@ const RootSystem = ({ systemId, queryRef }: RootSystemProps) => {
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <SystemEdition systemId={system.id} />
+                  <StixDomainObjectCreateRelationship entity={system} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
               onViewAs={handleChangeViewAs}
               viewAs={viewAs}
             />
@@ -324,7 +323,7 @@ const RootSystem = ({ systemId, queryRef }: RootSystemProps) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 const Root = () => {

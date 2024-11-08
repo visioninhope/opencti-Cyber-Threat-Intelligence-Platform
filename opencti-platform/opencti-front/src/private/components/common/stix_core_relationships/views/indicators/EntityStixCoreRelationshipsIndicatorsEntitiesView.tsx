@@ -15,7 +15,7 @@ import { QueryRenderer } from '../../../../../../relay/environment';
 import { isFilterGroupNotEmpty, useRemoveIdAndIncorrectKeysFromFilterGroupObject } from '../../../../../../utils/filters/filtersUtils';
 import { FilterGroup } from '../../../../../../utils/filters/filtersHelpers-types';
 import useHelper from '../../../../../../utils/hooks/useHelper';
-import { CreateRelationshipContext } from '../../../menus/CreateRelationshipContextProvider';
+import { CreateRelationshipContext } from '../../../../../../utils/hooks/useNavigationContext';
 
 interface EntityStixCoreRelationshipsIndicatorsEntitiesViewProps {
   entityId: string
@@ -71,7 +71,7 @@ const EntityStixCoreRelationshipsIndicatorsEntitiesView: FunctionComponent<Entit
   const stixDomainObjectTypes = ['Indicator'];
   const { isFeatureEnable } = useHelper();
   const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
-  const { setState: setCreateRelationshipContext } = useContext(CreateRelationshipContext);
+  const { setState: setCreateRelationshipContext, resetState } = useContext(CreateRelationshipContext);
   const { platformModuleHelpers } = useAuth();
   const isRuntimeSort = platformModuleHelpers.isRuntimeFieldEnable();
   const dataColumns: DataColumns = {
@@ -150,6 +150,7 @@ const EntityStixCoreRelationshipsIndicatorsEntitiesView: FunctionComponent<Entit
       reversed: isRelationReversed,
       paginationOptions,
     });
+    return resetState;
   }, []);
 
   return (

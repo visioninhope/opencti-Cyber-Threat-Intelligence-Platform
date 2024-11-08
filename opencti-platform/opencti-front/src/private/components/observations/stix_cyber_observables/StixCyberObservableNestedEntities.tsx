@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Add, ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, Paper, Typography } from '@mui/material';
 import { useFormatter } from '../../../../components/i18n';
-import { CreateRelationshipContext } from '../../common/menus/CreateRelationshipContextProvider';
+import useNavigationContext from '../../../../utils/hooks/useNavigationContext';
 import useHelper from '../../../../utils/hooks/useHelper';
 import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
@@ -27,7 +27,6 @@ StixCyberObservableNestedEntitiesProps
   targetStixCoreObjectTypes,
 }) => {
   const { t_i18n } = useFormatter();
-  const { setState } = useContext(CreateRelationshipContext);
   const { isFeatureEnable } = useHelper();
   const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
   const [sortBy, setSortBy] = useState<string>();
@@ -87,9 +86,7 @@ StixCyberObservableNestedEntitiesProps
     orderMode: orderAsc ? 'asc' : 'desc',
   };
 
-  useEffect(() => setState({
-    paginationOptions,
-  }), []);
+  useNavigationContext({ paginationOptions });
 
   return (
     <div style={{ height: '100%' }}>

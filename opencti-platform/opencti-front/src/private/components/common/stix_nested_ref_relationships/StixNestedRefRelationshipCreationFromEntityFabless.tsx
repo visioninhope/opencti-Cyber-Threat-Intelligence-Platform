@@ -18,7 +18,7 @@ import Drawer from '../drawer/Drawer';
 import { renderLoader } from '../stix_core_relationships/StixCoreRelationshipCreationFromControlledDial';
 import { stixNestedRefRelationshipCreationFromEntityMutation, stixNestedRefRelationshipResolveTypes } from './StixNestedRefRelationshipCreationFromEntity';
 import { StixNestedRefRelationshipCreationFromEntityResolveQuery$data } from './__generated__/StixNestedRefRelationshipCreationFromEntityResolveQuery.graphql';
-import { CreateRelationshipContext } from '../menus/CreateRelationshipContextProvider';
+import { CreateRelationshipContext } from '../../../../utils/hooks/useNavigationContext';
 import StixNestedRefRelationshipCreationFromEntityLines, { stixNestedRefRelationshipCreationFromEntityLinesQuery } from './StixNestedRefRelationshipCreationFromEntityLines';
 import { StixNestedRefRelationshipCreationFromEntityLinesQuery$data } from './__generated__/StixNestedRefRelationshipCreationFromEntityLinesQuery.graphql';
 import StixNestedRefRelationshipCreationForm, { StixNestedRefRelationshipCreationFormValues } from './StixNestedRefRelationshipCreationForm';

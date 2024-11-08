@@ -1,6 +1,6 @@
 import React, { Suspense, useMemo } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -9,6 +9,7 @@ import { RootThreatActorGroupQuery } from '@components/threats/threat_actors_gro
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import { RootThreatActorsGroupSubscription } from '@components/threats/threat_actors_group/__generated__/RootThreatActorsGroupSubscription.graphql';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import StixCoreObjectSimulationResult from '../../common/stix_core_objects/StixCoreObjectSimulationResult';
 import ThreatActorGroup from './ThreatActorGroup';
@@ -28,8 +29,6 @@ import useHelper from '../../../../utils/hooks/useHelper';
 import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import ThreatActorGroupEdition from './ThreatActorGroupEdition';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootThreatActorsGroupSubscription($id: ID!) {
@@ -107,7 +106,7 @@ const RootThreatActorGroup = ({ queryRef, threatActorGroupId }: RootThreatActorG
   const paddingRight = getPaddingRight(location.pathname, threatActorGroupId, '/dashboard/threats/threat_actors_group');
   const link = `/dashboard/threats/threat_actors_group/${threatActorGroupId}/knowledge`;
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {threatActorGroup ? (
         <>
           <Routes>
@@ -153,9 +152,9 @@ const RootThreatActorGroup = ({ queryRef, threatActorGroupId }: RootThreatActorG
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <ThreatActorGroupEdition threatActorGroupId={threatActorGroup.id} />
+                  <StixDomainObjectCreateRelationship entity={threatActorGroup} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
               enableQuickSubscription={true}
             />
             <Box
@@ -270,7 +269,7 @@ const RootThreatActorGroup = ({ queryRef, threatActorGroupId }: RootThreatActorG
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 

@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { useMemo } from 'react';
-import { Link, Route, Routes, useParams, useLocation, Navigate } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { graphql, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
@@ -13,6 +13,7 @@ import StixCoreObjectContentRoot from '@components/common/stix_core_objects/Stix
 import Security from 'src/utils/Security';
 import { KNOWLEDGE_KNUPDATE } from 'src/utils/hooks/useGranted';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import Incident from './Incident';
 import IncidentKnowledge from './IncidentKnowledge';
 import StixDomainObjectHeader from '../../common/stix_domain_objects/StixDomainObjectHeader';
@@ -31,8 +32,6 @@ import Breadcrumbs from '../../../../components/Breadcrumbs';
 import { getCurrentTab } from '../../../../utils/utils';
 import IncidentEdition from './IncidentEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootIncidentSubscription($id: ID!) {
@@ -105,7 +104,7 @@ const RootIncidentComponent = ({ queryRef }) => {
     return 0;
   };
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {incident ? (
         <>
           <Routes>
@@ -146,9 +145,9 @@ const RootIncidentComponent = ({ queryRef }) => {
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <IncidentEdition incidentId={incident.id} />
+                  <StixDomainObjectCreateRelationship entity={incident}/>
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
               enableQuickSubscription={true}
             />
             <Box
@@ -268,7 +267,7 @@ const RootIncidentComponent = ({ queryRef }) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { Suspense, useMemo } from 'react';
-import { Route, Routes, Link, useLocation, useParams } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -24,7 +24,6 @@ import FileManager from '../../common/files/FileManager';
 import { useFormatter } from '../../../../components/i18n';
 import Breadcrumbs from '../../../../components/Breadcrumbs';
 import { getCurrentTab, getPaddingRight } from '../../../../utils/utils';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
 
 const subscription = graphql`
   subscription RootStixCyberObservableSubscription($id: ID!) {
@@ -94,7 +93,7 @@ const RootStixCyberObservable = ({ observableId, queryRef }: RootStixCyberObserv
   const link = `/dashboard/observations/observables/${observableId}/knowledge`;
 
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {stixCyberObservable ? (
         <div style={{ paddingRight }}>
           <Breadcrumbs elements={[
@@ -261,7 +260,7 @@ const RootStixCyberObservable = ({ observableId, queryRef }: RootStixCyberObserv
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 

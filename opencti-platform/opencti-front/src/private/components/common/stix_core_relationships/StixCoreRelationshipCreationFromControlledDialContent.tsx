@@ -11,7 +11,6 @@ import {
 import { StixCoreRelationshipCreationFromEntityQuery } from '@components/common/stix_core_relationships/__generated__/StixCoreRelationshipCreationFromEntityQuery.graphql';
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay';
-import { CreateRelationshipContext } from '@components/common/menus/CreateRelationshipContextProvider';
 import { v4 as uuid } from 'uuid';
 import {
   StixCoreRelationshipCreationFromEntityStixCoreObjectsLinesQuery,
@@ -29,6 +28,7 @@ import {
 import { ChevronRightOutlined } from '@mui/icons-material';
 import Fab from '@mui/material/Fab';
 import BulkRelationDialogContainer from '@components/common/bulk/dialog/BulkRelationDialogContainer';
+import { CreateRelationshipContext } from '../../../../utils/hooks/useNavigationContext';
 import { PaginationOptions } from '../../../../components/list_lines';
 import { UseLocalStorageHelpers, usePaginationLocalStorage } from '../../../../utils/hooks/useLocalStorage';
 import { emptyFilterGroup, useBuildEntityTypeBasedFilterContext } from '../../../../utils/filters/filtersUtils';

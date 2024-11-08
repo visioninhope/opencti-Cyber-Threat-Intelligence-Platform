@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { useMemo } from 'react';
-import { Route, useParams, Routes, Link, useLocation, Navigate } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { graphql, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
@@ -11,6 +11,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import StixCoreObjectContentRoot from '@components/common/stix_core_objects/StixCoreObjectContentRoot';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import InfrastructureKnowledge from './InfrastructureKnowledge';
 import StixDomainObjectHeader from '../../common/stix_domain_objects/StixDomainObjectHeader';
 import FileManager from '../../common/files/FileManager';
@@ -30,8 +31,6 @@ import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import InfrastructureEdition from './InfrastructureEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootInfrastructureSubscription($id: ID!) {
@@ -96,7 +95,7 @@ const RootInfrastructureComponent = ({ queryRef, infrastructureId }) => {
     return 0;
   };
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {infrastructure ? (
         <div
           style={{ paddingRight: paddingRightValue() }}
@@ -114,9 +113,9 @@ const RootInfrastructureComponent = ({ queryRef, infrastructureId }) => {
             EditComponent={isFABReplaced && (
               <Security needs={[KNOWLEDGE_KNUPDATE]}>
                 <InfrastructureEdition infrastructureId={infrastructure.id} />
+                <StixDomainObjectCreateRelationship entity={infrastructure}/>
               </Security>
             )}
-            RelateComponent={CreateRelationshipButtonComponent}
             enableQuickSubscription={true}
           />
           <Box
@@ -222,7 +221,7 @@ const RootInfrastructureComponent = ({ queryRef, infrastructureId }) => {
       ) : (
         <ErrorNotFound/>
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 

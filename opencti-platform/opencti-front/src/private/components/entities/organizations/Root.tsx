@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense, useState } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams, useNavigate } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import React, { Suspense, useMemo, useState } from 'react';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -10,6 +10,7 @@ import useQueryLoading from 'src/utils/hooks/useQueryLoading';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
 import { RootOrganizationSubscription } from '@components/entities/organizations/__generated__/RootOrganizationSubscription.graphql';
 import { propOr } from 'ramda';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import Organization from './Organization';
 import OrganizationKnowledge from './OrganizationKnowledge';
@@ -30,8 +31,6 @@ import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import OrganizationEdition from './OrganizationEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootOrganizationSubscription($id: ID!) {
@@ -129,7 +128,7 @@ const RootOrganization = ({ organizationId, queryRef }: RootOrganizationProps) =
   const link = `/dashboard/entities/organizations/${organizationId}/knowledge`;
   const paddingRight = getPaddingRight(location.pathname, organizationId, '/dashboard/entities/organizations', viewAs === 'knowledge');
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {organization ? (
         <>
           <Routes>
@@ -177,9 +176,9 @@ const RootOrganization = ({ organizationId, queryRef }: RootOrganizationProps) =
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <OrganizationEdition organizationId={organization.id} />
+                  <StixDomainObjectCreateRelationship entity={organization} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
               onViewAs={handleChangeViewAs}
               viewAs={viewAs}
             />
@@ -331,7 +330,7 @@ const RootOrganization = ({ organizationId, queryRef }: RootOrganizationProps) =
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 const Root = () => {

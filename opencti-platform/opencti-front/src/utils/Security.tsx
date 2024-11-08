@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, { FunctionComponent, ReactElement, ReactNode } from 'react';
 import { filter, includes } from 'ramda';
 import useAuth from './hooks/useAuth';
 import useGranted, { BYPASS, KNOWLEDGE_KNPARTICIPATE, KNOWLEDGE_KNUPDATE_KNORGARESTRICT } from './hooks/useGranted';
@@ -10,7 +10,7 @@ export const CAPABILITY_INFORMATION = {
 };
 
 interface SecurityProps {
-  children: ReactElement;
+  children: ReactNode;
   needs: string[];
   hasAccess?: boolean;
   matchAll?: boolean;

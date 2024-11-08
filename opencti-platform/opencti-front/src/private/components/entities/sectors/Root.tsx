@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import React, { Suspense, useMemo } from 'react';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -9,6 +9,7 @@ import { RootSectorQuery } from '@components/entities/sectors/__generated__/Root
 import { RootSectorSubscription } from '@components/entities/sectors/__generated__/RootSectorSubscription.graphql';
 import useQueryLoading from 'src/utils/hooks/useQueryLoading';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import Sector from './Sector';
 import SectorKnowledge from './SectorKnowledge';
@@ -28,8 +29,6 @@ import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import SectorEdition from './SectorEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootSectorSubscription($id: ID!) {
@@ -104,7 +103,7 @@ const RootSector = ({ sectorId, queryRef }: RootSectorProps) => {
   const paddingRight = getPaddingRight(location.pathname, sectorId, '/dashboard/entities/sectors');
   const link = `/dashboard/entities/sectors/${sectorId}/knowledge`;
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {sector ? (
         <>
           <Routes>
@@ -147,9 +146,9 @@ const RootSector = ({ sectorId, queryRef }: RootSectorProps) => {
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <SectorEdition sectorId={sector.id} />
+                  <StixDomainObjectCreateRelationship entity={sector} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
             />
             <Box
               sx={{
@@ -291,7 +290,7 @@ const RootSector = ({ sectorId, queryRef }: RootSectorProps) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 const Root = () => {

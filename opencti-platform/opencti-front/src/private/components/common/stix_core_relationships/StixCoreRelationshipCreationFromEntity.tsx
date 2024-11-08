@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useState } from 'react';
 import { graphql } from 'react-relay';
 import * as R from 'ramda';
 import IconButton from '@mui/material/IconButton';
@@ -43,6 +43,7 @@ import { ModuleHelper } from '../../../../utils/platformModulesHelper';
 import useEntityToggle from '../../../../utils/hooks/useEntityToggle';
 import useQueryLoading from '../../../../utils/hooks/useQueryLoading';
 import DataTable from '../../../../components/dataGrid/DataTable';
+import useHelper from '../../../../utils/hooks/useHelper';
 
 // Deprecated - https://mui.com/system/styles/basics/
 // Do not use it for new code.
@@ -439,7 +440,7 @@ export const stixCoreRelationshipCreationFromEntityFromMutation = graphql`
   }
 `;
 
-export const stixCoreRelationshipCreationFromEntityToMutation = graphql`
+const stixCoreRelationshipCreationFromEntityToMutation = graphql`
   mutation StixCoreRelationshipCreationFromEntityToMutation(
     $input: StixCoreRelationshipAddInput!
   ) {
@@ -465,13 +466,11 @@ interface StixCoreRelationshipCreationFromEntityProps {
   onCreate?: () => void;
   openExports?: boolean;
   handleReverseRelation?: () => void;
-  controlledDial?: (({ onOpen, onClose }: {
-    onOpen: () => void;
-    onClose: () => void;
-  }) => React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>>)
+  controlledOpen?: boolean
+  controlledSetOpen?: Dispatch<SetStateAction<boolean>> | undefined
 }
 
-export interface StixCoreRelationshipCreationFromEntityForm {
+interface StixCoreRelationshipCreationFromEntityForm {
   confidence: string;
   start_time: string;
   stop_time: string;
@@ -506,7 +505,8 @@ const StixCoreRelationshipCreationFromEntity: FunctionComponent<StixCoreRelation
     onCreate = undefined,
     openExports = false,
     handleReverseRelation = undefined,
-    controlledDial = undefined,
+    controlledOpen,
+    controlledSetOpen,
   } = props;
   let isOnlySDOs = false;
   let isOnlySCOs = false;
@@ -543,9 +543,20 @@ const StixCoreRelationshipCreationFromEntity: FunctionComponent<StixCoreRelation
     ];
   }
 
+  const { isFeatureEnable } = useHelper();
+  const isFABReplaced = isFeatureEnable('FAB_REPLACEMENT');
+
   const classes = useStyles();
   const { t_i18n } = useFormatter();
-  const [open, setOpen] = useState(targetEntitiesProps.length !== 0);
+
+  const [internalOpen, setInternalOpen] = useState(targetEntitiesProps.length !== 0);
+  let open = internalOpen;
+  let setOpen = setInternalOpen;
+  if (controlledSetOpen && controlledOpen != null) {
+    open = controlledOpen;
+    setOpen = controlledSetOpen;
+  }
+
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
   const [openCreateEntity, setOpenCreateEntity] = useState(false);
   const [openCreateObservable, setOpenCreateObservable] = useState(false);
@@ -989,41 +1000,32 @@ const StixCoreRelationshipCreationFromEntity: FunctionComponent<StixCoreRelation
     );
   };
 
-  let openElement = controlledDial
-    ? controlledDial({
-      onOpen: () => setOpen(true),
-      onClose: handleClose,
-    })
-    : '';
-  if (variant === 'inLine') {
-    openElement = (
-      <IconButton
-        color="primary"
-        aria-label="Label"
-        onClick={() => setOpen(true)}
-        style={{ float: 'left', margin: '-15px 0 0 -2px' }}
-        size="large"
-      >
-        <Add fontSize="small" />
-      </IconButton>
-    );
-  } else if (controlledDial === undefined && !openExports) {
-    openElement = (
-      <Fab
-        onClick={() => setOpen(true)}
-        color="primary"
-        aria-label="Add"
-        className={classes.createButton}
-        style={{ right: paddingRight || 30 }}
-      >
-        <Add />
-      </Fab>
-    );
-  }
-
   return (
     <>
-      {openElement}
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {variant === 'inLine' ? (
+        <IconButton
+          color="primary"
+          aria-label="Label"
+          onClick={() => setOpen(true)}
+          style={{ float: 'left', margin: '-15px 0 0 -2px', visibility: isFABReplaced ? 'hidden' : undefined }}
+          size="large"
+        >
+          <Add fontSize="small" />
+        </IconButton>
+      ) : !openExports ? (
+        <Fab
+          onClick={() => setOpen(true)}
+          color="primary"
+          aria-label="Add"
+          className={classes.createButton}
+          style={{ right: paddingRight || 30, visibility: isFABReplaced ? 'hidden' : undefined }}
+        >
+          <Add />
+        </Fab>
+      ) : (
+        ''
+      )}
       <Drawer
         open={open}
         onClose={handleClose}

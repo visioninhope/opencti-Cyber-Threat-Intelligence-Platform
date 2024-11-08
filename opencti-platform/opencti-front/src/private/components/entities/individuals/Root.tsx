@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense, useState } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams, useNavigate } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import React, { Suspense, useMemo, useState } from 'react';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import { propOr } from 'ramda';
 import Box from '@mui/material/Box';
@@ -10,6 +10,7 @@ import { RootIndividualQuery } from '@components/entities/individuals/__generate
 import { RootIndicatorSubscription } from '@components/observations/indicators/__generated__/RootIndicatorSubscription.graphql';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
 import useQueryLoading from 'src/utils/hooks/useQueryLoading';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import Individual from './Individual';
 import IndividualKnowledge from './IndividualKnowledge';
@@ -30,8 +31,6 @@ import IndividualEdition from './IndividualEdition';
 import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootIndividualsSubscription($id: ID!) {
@@ -135,7 +134,7 @@ const RootIndividual = ({ individualId, queryRef }: RootIndividualProps) => {
   }
 
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {individual ? (
         <>
           <Routes>
@@ -178,9 +177,9 @@ const RootIndividual = ({ individualId, queryRef }: RootIndividualProps) => {
               EditComponent={!individual.isUser && isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <IndividualEdition individualId={individual.id} />
+                  <StixDomainObjectCreateRelationship entity={individual} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
               onViewAs={handleChangeViewAs}
               viewAs={viewAs}
             />
@@ -331,7 +330,7 @@ const RootIndividual = ({ individualId, queryRef }: RootIndividualProps) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 const Root = () => {

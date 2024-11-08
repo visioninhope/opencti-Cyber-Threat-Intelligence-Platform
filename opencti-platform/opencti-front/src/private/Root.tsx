@@ -17,6 +17,7 @@ import generateAnalyticsConfig from './Analytics';
 import { RootMe_data$key } from './__generated__/RootMe_data.graphql';
 import { RootPrivateQuery } from './__generated__/RootPrivateQuery.graphql';
 import { RootSettings$data, RootSettings$key } from './__generated__/RootSettings.graphql';
+import { UseNavigationContext } from '../utils/hooks/useNavigationContext';
 
 const rootSettingsFragment = graphql`
   fragment RootSettings on Settings {
@@ -357,7 +358,9 @@ const RootComponent: FunctionComponent<RootComponentProps> = ({ queryRef }) => {
         <ConnectedThemeProvider settings={settings}>
           <ConnectedIntlProvider settings={settings}>
             <AnalyticsProvider instance={Analytics(platformAnalyticsConfiguration)}>
-              <Index settings={settings} />
+              <UseNavigationContext>
+                <Index settings={settings} />
+              </UseNavigationContext>
             </AnalyticsProvider>
           </ConnectedIntlProvider>
         </ConnectedThemeProvider>

@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useContext, useState } from 'react';
-import { CreateRelationshipContext } from '@components/common/menus/CreateRelationshipContextProvider';
 import { Button, Typography } from '@mui/material';
 import StixDomainObjectCreation from '@components/common/stix_domain_objects/StixDomainObjectCreation';
 import StixCyberObservableCreation from '@components/observations/stix_cyber_observables/StixCyberObservableCreation';
+import { CreateRelationshipContext } from '../../../../utils/hooks/useNavigationContext';
 import { computeTargetStixCyberObservableTypes, computeTargetStixDomainObjectTypes } from '../../../../utils/stixTypeUtils';
 import { useFormatter } from '../../../../components/i18n';
 import { PaginationOptions } from '../../../../components/list_lines';

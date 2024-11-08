@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import React, { Suspense, useMemo } from 'react';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -9,6 +9,7 @@ import { RootNarrativeQuery } from '@components/techniques/narratives/__generate
 import { RootNarrativeSubscription } from '@components/techniques/narratives/__generated__/RootNarrativeSubscription.graphql';
 import useQueryLoading from 'src/utils/hooks/useQueryLoading';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import Narrative from './Narrative';
 import NarrativeKnowledge from './NarrativeKnowledge';
@@ -27,8 +28,6 @@ import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import NarrativeEdition from './NarrativeEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootNarrativeSubscription($id: ID!) {
@@ -102,7 +101,7 @@ const RootNarrative = ({ narrativeId, queryRef }: RootNarrativeProps) => {
   const paddingRight = getPaddingRight(location.pathname, narrativeId, '/dashboard/techniques/narratives');
   const link = `/dashboard/techniques/narratives/${narrativeId}/knowledge`;
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {narrative ? (
         <>
           <Routes>
@@ -139,9 +138,9 @@ const RootNarrative = ({ narrativeId, queryRef }: RootNarrativeProps) => {
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <NarrativeEdition narrativeId={narrative.id} />
+                  <StixDomainObjectCreateRelationship entity={narrative} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
             />
             <Box
               sx={{
@@ -249,7 +248,7 @@ const RootNarrative = ({ narrativeId, queryRef }: RootNarrativeProps) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 

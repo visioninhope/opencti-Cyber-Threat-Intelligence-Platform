@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import * as R from 'ramda';
+import StixDomainObjectCreateRelationship from '../../common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import withRouter from '../../../../utils/compat_router/withRouter';
 import { QueryRenderer, requestSubscription } from '../../../../relay/environment';
@@ -23,8 +24,6 @@ import { getCurrentTab, getPaddingRight } from '../../../../utils/utils';
 import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import CourseOfActionEdition from './CourseOfActionEdition';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootCoursesOfActionSubscription($id: ID!) {
@@ -89,7 +88,7 @@ class RootCourseOfAction extends Component {
     } = this.props;
 
     return (
-      <CreateRelationshipContextProvider>
+      <>
         <QueryRenderer
           query={courseOfActionQuery}
           variables={{ id: courseOfActionId }}
@@ -113,9 +112,9 @@ class RootCourseOfAction extends Component {
                       EditComponent={(
                         <Security needs={[KNOWLEDGE_KNUPDATE]}>
                           <CourseOfActionEdition courseOfActionId={courseOfAction.id} />
+                          <StixDomainObjectCreateRelationship entity={courseOfAction}/>
                         </Security>
                       )}
-                      RelateComponent={CreateRelationshipButtonComponent}
                       isOpenctiAlias={true}
                     />
                     <Box
@@ -201,7 +200,7 @@ class RootCourseOfAction extends Component {
             return <Loader />;
           }}
         />
-      </CreateRelationshipContextProvider>
+      </>
     );
   }
 }

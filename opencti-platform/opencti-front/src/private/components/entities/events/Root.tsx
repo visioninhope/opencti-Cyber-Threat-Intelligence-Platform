@@ -1,6 +1,6 @@
-import React, { useMemo, Suspense } from 'react';
-import { Route, Routes, Link, Navigate, useLocation, useParams } from 'react-router-dom';
-import { graphql, useSubscription, usePreloadedQuery, PreloadedQuery } from 'react-relay';
+import React, { Suspense, useMemo } from 'react';
+import { Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { graphql, PreloadedQuery, usePreloadedQuery, useSubscription } from 'react-relay';
 import { GraphQLSubscriptionConfig } from 'relay-runtime';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -9,6 +9,7 @@ import { RootEventQuery } from '@components/entities/events/__generated__/RootEv
 import { RootEventsSubscription } from '@components/entities/events/__generated__/RootEventsSubscription.graphql';
 import useQueryLoading from 'src/utils/hooks/useQueryLoading';
 import useForceUpdate from '@components/common/bulk/useForceUpdate';
+import StixDomainObjectCreateRelationship from '@components/common/stix_domain_objects/StixDomainObjectCreateRelationshipTest';
 import StixCoreObjectContentRoot from '../../common/stix_core_objects/StixCoreObjectContentRoot';
 import Event from './Event';
 import EventKnowledge from './EventKnowledge';
@@ -28,8 +29,6 @@ import Security from '../../../../utils/Security';
 import { KNOWLEDGE_KNUPDATE } from '../../../../utils/hooks/useGranted';
 import EventEdition from './EventEdition';
 import useHelper from '../../../../utils/hooks/useHelper';
-import CreateRelationshipContextProvider from '../../common/menus/CreateRelationshipContextProvider';
-import CreateRelationshipButtonComponent from '../../common/menus/CreateRelationshipButtonComponent';
 
 const subscription = graphql`
   subscription RootEventsSubscription($id: ID!) {
@@ -102,7 +101,7 @@ const RootEvent = ({ eventId, queryRef }: RootEventProps) => {
   const link = `/dashboard/entities/events/${eventId}/knowledge`;
   const paddingRight = getPaddingRight(location.pathname, eventId, '/dashboard/entities/events');
   return (
-    <CreateRelationshipContextProvider>
+    <>
       {event ? (
         <>
           <Routes>
@@ -143,9 +142,9 @@ const RootEvent = ({ eventId, queryRef }: RootEventProps) => {
               EditComponent={isFABReplaced && (
                 <Security needs={[KNOWLEDGE_KNUPDATE]}>
                   <EventEdition eventId={event.id} />
+                  <StixDomainObjectCreateRelationship entity={event} />
                 </Security>
               )}
-              RelateComponent={CreateRelationshipButtonComponent}
             />
             <Box
               sx={{
@@ -287,7 +286,7 @@ const RootEvent = ({ eventId, queryRef }: RootEventProps) => {
       ) : (
         <ErrorNotFound />
       )}
-    </CreateRelationshipContextProvider>
+    </>
   );
 };
 const Root = () => {
