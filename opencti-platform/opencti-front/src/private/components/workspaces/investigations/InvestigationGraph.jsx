@@ -1476,45 +1476,57 @@ class InvestigationGraphComponent extends Component {
 
   async handleAddRelation(stixCoreRelationship, skipReload = false) {
     if (R.map((n) => n.id, this.graphObjects).includes(stixCoreRelationship.id)) return;
-    commitMutation({
-      mutation: investigationGraphRelationsAddMutation,
-      variables: {
-        id: this.props.workspace.id,
-        input: {
-          key: 'investigated_entities_ids',
-          operation: 'add',
-          value: [stixCoreRelationship.id],
+    this.graphObjects = [...this.graphObjects, stixCoreRelationship];
+    if (!skipReload) {
+      this.graphData = buildGraphData(
+        this.graphObjects,
+        decodeGraphData(this.props.workspace.graph_data),
+        this.props.t,
+      );
+      await this.resetAllFilters();
+      const selectedTimeRangeInterval = computeTimeRangeInterval(
+        this.graphObjects,
+      );
+      this.setState(
+        {
+          selectedTimeRangeInterval,
+          graphData: applyFilters(
+            this.graphData,
+            this.state.stixCoreObjectsTypes,
+            this.state.markedBy,
+            this.state.createdBy,
+            [],
+            selectedTimeRangeInterval,
+          ),
         },
-      },
-      onCompleted: async () => {
-        this.graphObjects = [...this.graphObjects, stixCoreRelationship];
-        if (!skipReload) {
-          this.graphData = buildGraphData(
-            this.graphObjects,
-            decodeGraphData(this.props.workspace.graph_data),
-            this.props.t,
-          );
-          await this.resetAllFilters();
-          const selectedTimeRangeInterval = computeTimeRangeInterval(this.graphObjects);
-          this.setState(
-            {
-              selectedTimeRangeInterval,
-              graphData: applyFilters(
-                this.graphData,
-                this.state.stixCoreObjectsTypes,
-                this.state.markedBy,
-                this.state.createdBy,
-                [],
-                selectedTimeRangeInterval,
-              ),
+        () => {
+          commitMutation({
+            mutation: investigationGraphRelationsAddMutation,
+            variables: {
+              id: this.props.workspace.id,
+              input: {
+                key: 'investigated_entities_ids',
+                operation: 'add',
+                value: [stixCoreRelationship.id],
+              },
             },
-            () => {
-              setTimeout(() => this.handleZoomToFit(), 1500);
-            },
-          );
-        }
-      },
-    });
+          });
+          setTimeout(() => this.handleZoomToFit(), 1500);
+        },
+      );
+    } else {
+      commitMutation({
+        mutation: investigationGraphRelationsAddMutation,
+        variables: {
+          id: this.props.workspace.id,
+          input: {
+            key: 'investigated_entities_ids',
+            operation: 'add',
+            value: [stixCoreRelationship.id],
+          },
+        },
+      });
+    }
   }
 
   handleDelete(stixCoreObject) {
