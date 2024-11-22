@@ -1,6 +1,7 @@
+import React, { FunctionComponent, useRef, useState } from 'react';
 import { Field, FieldProps } from 'formik';
-import React, { FunctionComponent, useState } from 'react';
-import { Grid, MenuItem, Select, SelectChangeEvent, Slider } from '@mui/material';
+import { Grid, MenuItem, Select, Slider } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 import SimpleTextField from './SimpleTextField';
 import { SubscriptionFocus } from './Subscription';
 import { buildScaleLevel, useLevel } from '../utils/hooks/useScale';
@@ -41,6 +42,8 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
     marks: defaultMarks,
     scale,
   } = useLevel(entityType, attributeName, value);
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debounceInterval = 200;
   const min = scale?.min ? scale.min.value : 0;
   const defaultMaxValue = scale?.max ? scale.max.value : 0;
   const max = maxLimit !== undefined && Number.isFinite(maxLimit) && maxLimit <= defaultMaxValue
@@ -53,16 +56,42 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
       background: `${color}`,
     },
   };
-  const updateFromSelect = (event: SelectChangeEvent) => {
+  const handleSliderChange = (event: SelectChangeEvent) => {
     setFieldValue(name, event.target.value);
     onSubmit?.(name, event.target.value);
   };
+
+  const handleInputChange = (_: string, v: string) => {
+    const inputValue = parseInt(v, 10);
+
+    if (!Number.isNaN(inputValue)) {
+      const clampedValue = Math.min(Math.max(inputValue, min), max);
+
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      debounceTimeout.current = setTimeout(() => {
+        setFieldValue(name, clampedValue.toString());
+        onSubmit?.(name, clampedValue.toString());
+      }, debounceInterval);
+    } else {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+      debounceTimeout.current = setTimeout(() => {
+        setFieldValue(name, '0');
+        onSubmit?.(name, '0');
+      }, debounceInterval);
+    }
+  };
+
   const currentLevel = buildScaleLevel(value, scale);
 
   const [initialValue] = useState(value);
+  const finalDisabled = disabled === true || disabled === false ? disabled : initialValue > max;
+
   if (variant === 'edit') {
-    // disabled prop is "forced", be it true or false
-    const finalDisabled = (disabled === true || disabled === false) ? disabled : initialValue > max;
     return (
       <>
         <Grid container={true} spacing={3} >
@@ -76,6 +105,7 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
               onSubmit={onSubmit}
               onFocus={onFocus}
               disabled={finalDisabled}
+              onChange={handleInputChange}
               helpertext={
                 <SubscriptionFocus context={editContext} fieldName={name} />
               }
@@ -86,7 +116,7 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
               fullWidth
               labelId={name}
               value={currentLevel.level.value?.toString() ?? ''}
-              onChange={updateFromSelect}
+              onChange={handleSliderChange}
               disabled={finalDisabled}
               sx={{ marginTop: 2 }} // to align field with the number input, that has a label
             >
@@ -121,7 +151,7 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
   }
   return (
     <>
-      <Grid container={true} spacing={3} >
+      <Grid container spacing={3}>
         <Grid item xs={6}>
           <Field
             component={SimpleTextField}
@@ -130,6 +160,7 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
             name={name}
             label={label}
             disabled={disabled}
+            onChange={handleInputChange}
           />
         </Grid>
         <Grid item xs={6}>
