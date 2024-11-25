@@ -6,7 +6,7 @@ import SimpleTextField from './SimpleTextField';
 import { SubscriptionFocus } from './Subscription';
 import { buildScaleLevel, useLevel } from '../utils/hooks/useScale';
 
-interface InputSliderFieldProps {
+interface InputScaleFieldProps {
   label: string;
   variant?: string;
   onSubmit?: (name: string, value: string | number | number[]) => void;
@@ -24,7 +24,7 @@ interface InputSliderFieldProps {
   maxLimit?: number;
 }
 
-const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = ({
+const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
   form: { setFieldValue },
   field: { name, value },
   label,
@@ -201,4 +201,4 @@ const InputSliderField: FunctionComponent<InputSliderFieldProps & FieldProps> = 
   );
 };
 
-export default InputSliderField;
+export default InputScaleField;

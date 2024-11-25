@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Field } from 'formik';
 import Alert from '@mui/material/Alert';
 import makeStyles from '@mui/styles/makeStyles';
-import InputSliderField from '../../../../components/InputSliderField';
+import InputScaleField from '../../../../components/InputScaleField';
 import { useFormatter } from '../../../../components/i18n';
 import { GenericContext } from '../model/GenericContextModel';
 import useConfidenceLevel from '../../../../utils/hooks/useConfidenceLevel';
@@ -60,7 +60,7 @@ const ConfidenceField: FunctionComponent<ConfidenceFieldProps> = ({
       aria-label={finalLabel}
     >
       <Field
-        component={InputSliderField}
+        component={InputScaleField}
         variant={variant}
         containerstyle={containerStyle}
         fullWidth={true}

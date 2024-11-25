@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import makeStyles from '@mui/styles/makeStyles';
 import { InformationOutline } from 'mdi-material-ui';
 import { UserEdition_user$data } from '@components/settings/users/__generated__/UserEdition_user.graphql';
-import InputSliderField from '../../../../../components/InputSliderField';
+import InputScaleField from '../../../../../components/InputScaleField';
 import { useFormatter } from '../../../../../components/i18n';
 import type { Theme } from '../../../../../components/Theme';
 import SwitchField from '../../../../../components/fields/SwitchField';
@@ -118,7 +118,7 @@ const UserConfidenceLevelField: FunctionComponent<UserConfidenceLevelFieldProps>
         </Tooltip>
       </Box>
       <Field
-        component={InputSliderField}
+        component={InputScaleField}
         containerstyle={containerStyle}
         fullWidth={true}
         entityType={'User'}
