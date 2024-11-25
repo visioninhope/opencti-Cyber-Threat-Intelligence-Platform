@@ -270,7 +270,6 @@ const CityEditionOverview: FunctionComponent<CityEditionOverviewProps> = ({
             entityType="City"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={TextField}

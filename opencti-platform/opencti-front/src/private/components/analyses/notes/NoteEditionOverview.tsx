@@ -233,7 +233,6 @@ const NoteEditionOverviewComponent: FunctionComponent<NoteEditionOverviewProps> 
             entityType="Note"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={SliderField}

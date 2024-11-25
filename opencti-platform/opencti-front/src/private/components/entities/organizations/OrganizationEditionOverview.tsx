@@ -234,7 +234,6 @@ const OrganizationEditionOverviewComponent: FunctionComponent<OrganizationEditio
             entityType="Organization"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={TextField}

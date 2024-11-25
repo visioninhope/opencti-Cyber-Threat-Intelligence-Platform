@@ -341,7 +341,6 @@ const CaseRfiEditionOverview: FunctionComponent<CaseRfiEditionOverviewProps> = (
             entityType="Case-Rfi"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={MarkdownField}

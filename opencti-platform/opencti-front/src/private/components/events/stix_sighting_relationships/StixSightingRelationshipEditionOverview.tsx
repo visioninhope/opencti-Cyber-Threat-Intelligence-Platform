@@ -325,7 +325,6 @@ const StixSightingRelationshipEditionOverviewComponent: FunctionComponent<Omit<S
                 disabled={inferred}
               />
               <ConfidenceField
-                variant="edit"
                 onFocus={editor.changeFocus}
                 onSubmit={editor.changeField}
                 editContext={editContext}

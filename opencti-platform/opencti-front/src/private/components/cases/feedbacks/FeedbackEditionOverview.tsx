@@ -284,7 +284,6 @@ FeedbackEditionOverviewProps
             entityType="Feedback"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <RatingField
             label={t_i18n('Rating')}

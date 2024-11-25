@@ -344,7 +344,6 @@ const CaseIncidentEditionOverview: FunctionComponent<CaseIncidentEditionOverview
             entityType="Case-Incident"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={MarkdownField}

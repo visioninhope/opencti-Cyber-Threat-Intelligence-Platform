@@ -340,7 +340,6 @@ const CaseRftEditionOverview: FunctionComponent<CaseRftEditionOverviewProps> = (
             entityType="Case-Rft"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={MarkdownField}

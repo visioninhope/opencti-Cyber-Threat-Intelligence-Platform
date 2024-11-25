@@ -283,7 +283,6 @@ AdministrativeAreaEditionOverviewProps
             entityType="Administrative-Area"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={TextField}

@@ -8,7 +8,6 @@ import { buildScaleLevel, useLevel } from '../utils/hooks/useScale';
 
 interface InputScaleFieldProps {
   label: string;
-  variant?: string;
   onSubmit?: (name: string, value: string | number | number[]) => void;
   onFocus?: (name: string, value: string) => void;
   editContext?:
@@ -28,10 +27,10 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
   form: { setFieldValue },
   field: { name, value },
   label,
-  variant,
   onFocus,
   onSubmit,
   editContext,
+  containerStyle,
   entityType,
   attributeName,
   disabled,
@@ -91,67 +90,9 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
   const [initialValue] = useState(value);
   const finalDisabled = disabled === true || disabled === false ? disabled : initialValue > max;
 
-  if (variant === 'edit') {
-    return (
-      <>
-        <Grid container={true} spacing={3} >
-          <Grid item xs={6}>
-            <Field
-              component={SimpleTextField}
-              fullWidth
-              type="number"
-              name={name}
-              label={label}
-              onSubmit={onSubmit}
-              onFocus={onFocus}
-              disabled={finalDisabled}
-              onChange={handleInputChange}
-              helpertext={
-                <SubscriptionFocus context={editContext} fieldName={name} />
-              }
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Select
-              fullWidth
-              labelId={name}
-              value={currentLevel.level.value?.toString() ?? ''}
-              onChange={handleSliderChange}
-              disabled={finalDisabled}
-              sx={{ marginTop: 2 }} // to align field with the number input, that has a label
-            >
-              {marks.map((mark, i: number) => {
-                return (
-                  <MenuItem
-                    key={i}
-                    value={mark.value.toString()}
-                  >
-                    {mark.label}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </Grid>
-        </Grid>
-        <Slider
-          value={typeof value === 'string' ? parseInt(value, 10) : value ?? 0}
-          min={min}
-          max={max}
-          onChange={(_, v) => setFieldValue(name, v.toString())}
-          onChangeCommitted={(_, v) => onSubmit?.(name, v.toString())}
-          sx={sliderStyle}
-          style={{ margin: '5px 0 0 0' }}
-          valueLabelDisplay="off"
-          size="small"
-          valueLabelFormat={() => currentLevel.level.label}
-          disabled={finalDisabled}
-        />
-      </>
-    );
-  }
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container={true} spacing={3} >
         <Grid item xs={6}>
           <Field
             component={SimpleTextField}
@@ -159,8 +100,14 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
             type="number"
             name={name}
             label={label}
-            disabled={disabled}
+            onSubmit={onSubmit}
+            onFocus={onFocus}
+            disabled={finalDisabled}
             onChange={handleInputChange}
+            style={containerStyle}
+            helpertext={
+              editContext ? <SubscriptionFocus context={editContext} fieldName={name} /> : undefined
+              }
           />
         </Grid>
         <Grid item xs={6}>
@@ -168,8 +115,8 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
             fullWidth
             labelId={name}
             value={currentLevel.level.value?.toString() ?? ''}
-            onChange={(event) => setFieldValue(name, event.target.value)}
-            disabled={disabled}
+            onChange={handleSliderChange}
+            disabled={finalDisabled}
             sx={{ marginTop: 2 }}
           >
             {marks.map((mark, i: number) => {
@@ -186,16 +133,17 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
         </Grid>
       </Grid>
       <Slider
-        value={value || 0}
+        value={typeof value === 'string' ? parseInt(value, 10) : value ?? 0}
         min={min}
         max={max}
         onChange={(_, v) => setFieldValue(name, v.toString())}
+        onChangeCommitted={(_, v) => onSubmit?.(name, v.toString())}
         sx={sliderStyle}
         style={{ margin: '5px 0 0 0' }}
-        valueLabelDisplay="auto"
+        valueLabelDisplay={editContext ? 'off' : 'auto'}
         size="small"
         valueLabelFormat={() => currentLevel.level.label}
-        disabled={disabled}
+        disabled={finalDisabled}
       />
     </>
   );

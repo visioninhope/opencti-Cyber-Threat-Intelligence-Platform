@@ -282,7 +282,6 @@ IncidentEditionOverviewProps
             disabled={isInferred}
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <OpenVocabField
             label={t_i18n('Incident type')}

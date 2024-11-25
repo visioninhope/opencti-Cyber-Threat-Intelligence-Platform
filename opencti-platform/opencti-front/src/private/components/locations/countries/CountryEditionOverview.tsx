@@ -266,7 +266,6 @@ CountryEditionOverviewProps
             entityType="Country"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           {country?.workflowEnabled && (
             <StatusField

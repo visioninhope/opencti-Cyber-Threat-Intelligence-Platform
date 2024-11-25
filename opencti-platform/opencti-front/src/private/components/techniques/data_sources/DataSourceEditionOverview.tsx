@@ -275,7 +275,6 @@ DataSourceEditionOverviewProps
             entityType="Data-Source"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={MarkdownField}

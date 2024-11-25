@@ -337,7 +337,6 @@ Omit<StixCoreRelationshipEditionOverviewProps, 'queryRef'>
             <Form>
               <AlertConfidenceForEntity entity={stixCoreRelationship} />
               <ConfidenceField
-                variant="edit"
                 onFocus={editor.changeFocus}
                 onSubmit={editor.changeField}
                 containerStyle={{ width: '100%' }}

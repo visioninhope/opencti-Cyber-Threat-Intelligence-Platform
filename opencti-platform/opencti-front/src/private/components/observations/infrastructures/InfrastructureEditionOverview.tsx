@@ -300,7 +300,6 @@ const InfrastructureEditionOverviewComponent: FunctionComponent<InfrastructureEd
             entityType="Infrastructure"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={DateTimePickerField}

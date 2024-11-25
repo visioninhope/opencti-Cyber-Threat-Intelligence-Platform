@@ -264,7 +264,6 @@ DataComponentEditionOverviewComponentProps
             entityType="Data-Component"
             containerStyle={fieldSpacingContainerStyle}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={MarkdownField}

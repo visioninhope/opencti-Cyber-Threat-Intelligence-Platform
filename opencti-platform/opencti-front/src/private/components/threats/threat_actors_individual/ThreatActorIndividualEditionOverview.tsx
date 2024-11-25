@@ -283,7 +283,6 @@ ThreatActorIndividualEditionOverviewProps
             entityType="Threat-Actor-Group"
             containerStyle={{ width: '100%', marginTop: 20 }}
             editContext={context}
-            variant="edit"
           />
           <Field
             component={MarkdownField}
