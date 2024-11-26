@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useRef, useState } from 'react';
 import { Field, FieldProps } from 'formik';
-import { Grid, MenuItem, Select, Slider } from '@mui/material';
-import { SelectChangeEvent } from '@mui/material/Select';
+import { Grid, MenuItem, Select, SelectChangeEvent, Slider } from '@mui/material';
 import SimpleTextField from './SimpleTextField';
 import { SubscriptionFocus } from './Subscription';
 import { buildScaleLevel, useLevel } from '../utils/hooks/useScale';
@@ -92,7 +91,7 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
 
   return (
     <>
-      <Grid container={true} spacing={3} >
+      <Grid container={true} spacing={3} style={containerStyle}>
         <Grid item xs={6}>
           <Field
             component={SimpleTextField}
@@ -104,7 +103,6 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
             onFocus={onFocus}
             disabled={finalDisabled}
             onChange={handleInputChange}
-            style={containerStyle}
             helpertext={
               editContext ? <SubscriptionFocus context={editContext} fieldName={name} /> : undefined
               }

@@ -54,12 +54,11 @@ const ConfidenceField: FunctionComponent<ConfidenceFieldProps> = ({
       severity="info"
       icon={false}
       variant="outlined"
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', ...(containerStyle || {}) }}
       aria-label={finalLabel}
     >
       <Field
         component={InputScaleField}
-        containerstyle={containerStyle}
         fullWidth={true}
         entityType={entityType}
         attributeName={name}

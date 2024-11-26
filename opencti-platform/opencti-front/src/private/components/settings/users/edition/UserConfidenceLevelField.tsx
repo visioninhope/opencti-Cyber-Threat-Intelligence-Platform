@@ -77,6 +77,7 @@ const UserConfidenceLevelField: FunctionComponent<UserConfidenceLevelFieldProps>
       icon={false}
       variant="outlined"
       sx={{ position: 'relative' }}
+      style={ containerStyle }
     >
       { user && !!user.effective_confidence_level && (
         <Box>
@@ -119,7 +120,6 @@ const UserConfidenceLevelField: FunctionComponent<UserConfidenceLevelFieldProps>
       </Box>
       <Field
         component={InputScaleField}
-        containerstyle={containerStyle}
         fullWidth={true}
         entityType={'User'}
         attributeName={name}
