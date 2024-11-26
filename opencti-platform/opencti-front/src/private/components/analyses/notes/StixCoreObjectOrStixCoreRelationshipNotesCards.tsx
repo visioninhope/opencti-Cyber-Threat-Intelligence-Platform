@@ -173,7 +173,10 @@ StixCoreObjectOrStixCoreRelationshipNotesCardsProps
   const basicShape = yupShapeConditionalRequired({
     content: Yup.string().trim().min(2),
     attribute_abstract: Yup.string().nullable(),
-    confidence: Yup.number(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
     note_types: Yup.array(),
     likelihood: Yup.number().min(0).max(100),
   }, mandatoryAttributes);

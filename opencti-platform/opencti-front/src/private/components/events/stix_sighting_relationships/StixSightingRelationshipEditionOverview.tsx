@@ -219,6 +219,8 @@ const StixSightingRelationshipEditionOverviewComponent: FunctionComponent<Omit<S
       .integer(t_i18n('The value must be a number'))
       .required(t_i18n('This field is required')),
     confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
       .typeError(t_i18n('The value must be a number'))
       .integer(t_i18n('The value must be a number'))
       .required(t_i18n('This field is required')),

@@ -93,7 +93,10 @@ export const EventCreationForm: FunctionComponent<EventFormProps> = ({
   const basicShape = {
     name: Yup.string().trim().min(2).required(t_i18n('This field is required')),
     description: Yup.string().nullable(),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
     event_types: Yup.array().nullable(),
     start_time: Yup.date()
       .typeError(t_i18n('The value must be a datetime (yyyy-MM-dd hh:mm (a|p)m)'))

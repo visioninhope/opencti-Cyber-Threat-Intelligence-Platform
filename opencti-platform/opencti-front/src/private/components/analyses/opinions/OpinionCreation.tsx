@@ -102,7 +102,10 @@ export const OpinionCreationFormKnowledgeEditor: FunctionComponent<OpinionFormPr
   const basicShape = yupShapeConditionalRequired({
     opinion: Yup.string(),
     explanation: Yup.string().nullable(),
-    confidence: Yup.number(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
   }, mandatoryAttributes);
   const opinionValidator = useDynamicSchemaCreationValidation(
     mandatoryAttributes,
@@ -263,7 +266,10 @@ export const OpinionCreationFormKnowledgeParticipant: FunctionComponent<OpinionF
   const basicShape = yupShapeConditionalRequired({
     opinion: Yup.string(),
     explanation: Yup.string().nullable(),
-    confidence: Yup.number(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
   }, mandatoryAttributes);
   const opinionValidator = useDynamicSchemaCreationValidation(
     mandatoryAttributes,

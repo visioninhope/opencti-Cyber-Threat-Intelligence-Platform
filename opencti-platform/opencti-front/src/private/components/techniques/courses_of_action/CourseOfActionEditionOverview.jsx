@@ -88,7 +88,10 @@ const CourseOfActionEditionOverviewComponent = (props) => {
   const basicShape = {
     name: Yup.string().trim().min(2).required(t_i18n('This field is required')),
     description: Yup.string().nullable(),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
     x_opencti_threat_hunting: Yup.string().nullable(),
     x_opencti_log_sources: Yup.string().nullable(),
     x_mitre_id: Yup.string().nullable(),

@@ -101,7 +101,10 @@ export const GroupingCreationForm: FunctionComponent<GroupingFormProps> = ({
   const { mandatoryAttributes } = useIsMandatoryAttribute(GROUPING_TYPE);
   const basicShape = yupShapeConditionalRequired({
     name: Yup.string().trim().min(2),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
     context: Yup.string(),
     description: Yup.string().nullable(),
     content: Yup.string().nullable(),

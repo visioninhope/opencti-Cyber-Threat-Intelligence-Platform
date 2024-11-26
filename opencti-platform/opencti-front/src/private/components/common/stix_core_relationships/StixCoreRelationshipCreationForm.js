@@ -96,7 +96,10 @@ const useStyles = makeStyles((theme) => ({
 
 export const stixCoreRelationshipBasicShape = (t) => ({
   relationship_type: Yup.string().required(t('This field is required')),
-  confidence: Yup.number().nullable(),
+  confidence: Yup.number()
+    .min(0, t('Confidence must be at least 0'))
+    .max(100, t('Confidence must not exceed 100'))
+    .nullable(),
   start_time: Yup.date()
     .typeError(t('The value must be a datetime (yyyy-MM-dd hh:mm (a|p)m)'))
     .nullable(),

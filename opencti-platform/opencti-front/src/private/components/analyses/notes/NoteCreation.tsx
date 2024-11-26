@@ -132,7 +132,10 @@ export const NoteCreationForm: FunctionComponent<NoteFormProps> = ({
       .typeError(t_i18n('The value must be a datetime (yyyy-MM-dd hh:mm (a|p)m)')),
     attribute_abstract: Yup.string().nullable(),
     content: Yup.string().trim().min(2),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
     note_types: Yup.array().nullable(),
     likelihood: Yup.number().min(0).max(100),
     createdBy: Yup.object().nullable(),

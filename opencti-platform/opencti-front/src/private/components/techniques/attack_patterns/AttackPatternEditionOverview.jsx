@@ -93,7 +93,10 @@ const AttackPatternEditionOverviewComponent = (props) => {
     x_mitre_id: Yup.string().nullable(),
     description: Yup.string().nullable(),
     references: Yup.array(),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
     x_opencti_workflow_id: Yup.object(),
   };
   const attackPatternValidator = useSchemaEditionValidation(

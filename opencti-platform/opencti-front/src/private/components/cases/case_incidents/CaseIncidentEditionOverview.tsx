@@ -183,7 +183,10 @@ const CaseIncidentEditionOverview: FunctionComponent<CaseIncidentEditionOverview
     description: Yup.string().nullable(),
     x_opencti_workflow_id: Yup.object().nullable(),
     rating: Yup.number().nullable(),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
   };
   const caseIncidentValidator = useSchemaEditionValidation('Case-Incident', basicShape);
 

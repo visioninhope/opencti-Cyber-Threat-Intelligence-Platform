@@ -158,7 +158,10 @@ FeedbackEditionOverviewProps
     description: Yup.string().nullable(),
     x_opencti_workflow_id: Yup.object(),
     rating: Yup.number(),
-    confidence: Yup.number(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
   };
   const feedbackValidator = useSchemaEditionValidation('Feedback', basicShape);
 

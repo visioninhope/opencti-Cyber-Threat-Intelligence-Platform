@@ -91,7 +91,10 @@ export const ChannelCreationForm: FunctionComponent<ChannelFormProps> = ({
     name: Yup.string().trim().min(2).required(t_i18n('This field is required')),
     channel_types: Yup.array().nullable(),
     description: Yup.string().nullable(),
-    confidence: Yup.number().nullable(),
+    confidence: Yup.number()
+      .min(0, t_i18n('Confidence must be at least 0'))
+      .max(100, t_i18n('Confidence must not exceed 100'))
+      .nullable(),
   };
   const channelValidator = useSchemaCreationValidation(
     CHANNEL_TYPE,
