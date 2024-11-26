@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Field, FieldProps } from 'formik';
 import { Grid, MenuItem, Select, SelectChangeEvent, Slider } from '@mui/material';
 import SimpleTextField from './SimpleTextField';
@@ -40,8 +40,6 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
     marks: defaultMarks,
     scale,
   } = useLevel(entityType, attributeName, value);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const debounceInterval = 200;
   const min = scale?.min ? scale.min.value : 0;
   const defaultMaxValue = scale?.max ? scale.max.value : 0;
   const max = maxLimit !== undefined && Number.isFinite(maxLimit) && maxLimit <= defaultMaxValue
@@ -54,34 +52,9 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
       background: `${color}`,
     },
   };
-  const handleSliderChange = (event: SelectChangeEvent) => {
+  const handleValueChange = (event: SelectChangeEvent) => {
     setFieldValue(name, event.target.value);
     onSubmit?.(name, event.target.value);
-  };
-
-  const handleInputChange = (_: string, v: string) => {
-    const inputValue = parseInt(v, 10);
-
-    if (!Number.isNaN(inputValue)) {
-      const clampedValue = Math.min(Math.max(inputValue, min), max);
-
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-
-      debounceTimeout.current = setTimeout(() => {
-        setFieldValue(name, clampedValue.toString());
-        onSubmit?.(name, clampedValue.toString());
-      }, debounceInterval);
-    } else {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-      debounceTimeout.current = setTimeout(() => {
-        setFieldValue(name, '0');
-        onSubmit?.(name, '0');
-      }, debounceInterval);
-    }
   };
 
   const currentLevel = buildScaleLevel(value, scale);
@@ -102,7 +75,7 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
             onSubmit={onSubmit}
             onFocus={onFocus}
             disabled={finalDisabled}
-            onChange={handleInputChange}
+            onChange={handleValueChange}
             helpertext={
               editContext ? <SubscriptionFocus context={editContext} fieldName={name} /> : undefined
               }
@@ -113,7 +86,7 @@ const InputScaleField: FunctionComponent<InputScaleFieldProps & FieldProps> = ({
             fullWidth
             labelId={name}
             value={currentLevel.level.value?.toString() ?? ''}
-            onChange={handleSliderChange}
+            onChange={handleValueChange}
             disabled={finalDisabled}
             sx={{ marginTop: 2 }}
           >
