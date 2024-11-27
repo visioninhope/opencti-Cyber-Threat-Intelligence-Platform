@@ -216,8 +216,8 @@ Omit<StixCoreRelationshipEditionOverviewProps, 'queryRef'>
 
   const basicShape = {
     confidence: Yup.number()
-      .min(0, t_i18n('Confidence must be at least 0'))
-      .max(100, t_i18n('Confidence must not exceed 100'))
+      .min(0, t_i18n('The value must be greater than or equal to 0'))
+      .max(100, t_i18n('The value must be less than or equal to 100'))
       .nullable(),
     start_time: Yup.date()
       .typeError(t_i18n('The value must be a datetime (yyyy-MM-dd hh:mm (a|p)m)'))

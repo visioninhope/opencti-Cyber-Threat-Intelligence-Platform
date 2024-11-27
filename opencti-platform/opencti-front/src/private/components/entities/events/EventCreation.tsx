@@ -94,8 +94,8 @@ export const EventCreationForm: FunctionComponent<EventFormProps> = ({
     name: Yup.string().trim().min(2).required(t_i18n('This field is required')),
     description: Yup.string().nullable(),
     confidence: Yup.number()
-      .min(0, t_i18n('Confidence must be at least 0'))
-      .max(100, t_i18n('Confidence must not exceed 100'))
+      .min(0, t_i18n('The value must be greater than or equal to 0'))
+      .max(100, t_i18n('The value must be less than or equal to 100'))
       .nullable(),
     event_types: Yup.array().nullable(),
     start_time: Yup.date()

@@ -147,8 +147,8 @@ ThreatActorIndividualFormProps
     name: Yup.string().required(t_i18n('This field is required')),
     threat_actor_types: Yup.array().nullable(),
     confidence: Yup.number()
-      .min(0, t_i18n('Confidence must be at least 0'))
-      .max(100, t_i18n('Confidence must not exceed 100'))
+      .min(0, t_i18n('The value must be greater than or equal to 0'))
+      .max(100, t_i18n('The value must be less than or equal to 100'))
       .nullable(),
     description: Yup.string().nullable(),
     first_seen: Yup.date()
