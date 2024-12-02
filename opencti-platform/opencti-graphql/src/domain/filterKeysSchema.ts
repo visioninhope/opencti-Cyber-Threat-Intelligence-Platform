@@ -45,7 +45,6 @@ import { ENTITY_TYPE_MALWARE_ANALYSIS } from '../modules/malwareAnalysis/malware
 import { isBasicRelationship, isStixRelationship, isStixRelationshipExceptRef } from '../schema/stixRelationship';
 import { ENTITY_TYPE_LABEL, ENTITY_TYPE_MARKING_DEFINITION } from '../schema/stixMetaObject';
 import { ENTITY_TYPE_IDENTITY_ORGANIZATION } from '../modules/organization/organization-types';
-import { isStixCoreRelationship } from '../schema/stixCoreRelationship';
 
 export type FilterDefinition = {
   filterKey: string
@@ -240,28 +239,6 @@ const completeFilterDefinitionMapWithSpecialKeys = (
       subEntityTypes,
       elementsForFilterValuesSearch: ['reliability_ov'],
     });
-    // 'contains' is not only for containers, but might be used in any sro or sco as in "contained inside"
-    if (isStixCoreObject(type) || isStixRelationship(type)) {
-      filterDefinitionsMap.set(OBJECT_CONTAINS_FILTER, {
-        filterKey: OBJECT_CONTAINS_FILTER,
-        type: 'id',
-        label: 'Contains',
-        multiple: true,
-        subEntityTypes,
-        elementsForFilterValuesSearch: [],
-      });
-    }
-    // key match is_inferred for relationships and object
-    if (isStixCoreObject(type) || isStixCoreRelationship(type)) {
-      filterDefinitionsMap.set(IS_INFERRED_FILTER, {
-        filterKey: IS_INFERRED_FILTER,
-        type: 'boolean',
-        label: 'Is inferred',
-        multiple: false,
-        subEntityTypes,
-        elementsForFilterValuesSearch: [],
-      });
-    }
     // Alias (handle both 'aliases' and 'x_opencti_aliases' attributes
     if (isStixObjectAliased(type)) {
       filterDefinitionsMap.set(ALIAS_FILTER, {
@@ -284,6 +261,26 @@ const completeFilterDefinitionMapWithSpecialKeys = (
         elementsForFilterValuesSearch: [ENTITY_TYPE_STATUS_TEMPLATE],
       });
     }
+  }
+  // 'contains' is not only for containers, but might be used in any sro or sco as in "contained inside"
+  if (isStixCoreObject(type) || isStixRelationship(type)) {
+    filterDefinitionsMap.set(OBJECT_CONTAINS_FILTER, {
+      filterKey: OBJECT_CONTAINS_FILTER,
+      type: 'id',
+      label: 'Contains',
+      multiple: true,
+      subEntityTypes,
+      elementsForFilterValuesSearch: [],
+    });
+    // key match is_inferred for relationships and object
+    filterDefinitionsMap.set(IS_INFERRED_FILTER, {
+      filterKey: IS_INFERRED_FILTER,
+      type: 'boolean',
+      label: 'Is inferred',
+      multiple: false,
+      subEntityTypes,
+      elementsForFilterValuesSearch: [],
+    });
   }
   if (type === ENTITY_TYPE_HISTORY) {
     // add context filters
