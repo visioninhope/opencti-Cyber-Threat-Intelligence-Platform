@@ -17,6 +17,8 @@ import {
   getIndicesToQuery,
   INDEX_DELETED_OBJECTS,
   INDEX_DRAFT_OBJECTS,
+  INDEX_INFERRED_ENTITIES,
+  INDEX_INFERRED_RELATIONSHIPS,
   INDEX_INTERNAL_OBJECTS,
   inferIndexFromConceptType,
   isEmptyField,
@@ -133,6 +135,7 @@ import {
   INSTANCE_REGARDING_OF,
   INSTANCE_RELATION_FILTER,
   INSTANCE_RELATION_TYPES_FILTER,
+  IS_INFERRED_FILTER,
   RELATION_FROM_FILTER,
   RELATION_FROM_ROLE_FILTER,
   RELATION_FROM_TYPES_FILTER,
@@ -146,7 +149,7 @@ import {
   WORKFLOW_FILTER,
   X_OPENCTI_WORKFLOW_ID
 } from '../utils/filtering/filtering-constants';
-import { FilterMode } from '../generated/graphql';
+import { FilterMode, FilterOperator } from '../generated/graphql';
 import {
   booleanMapping,
   dateMapping,
@@ -2806,6 +2809,14 @@ const completeSpecialFilterKeys = async (context, user, inputFilters) => {
             { ...filter, key: [ATTRIBUTE_ALIASES_OPENCTI] },
           ],
           filterGroups: [],
+        });
+      }
+      if (filterKey === IS_INFERRED_FILTER) {
+        finalFilters.push({
+          key: '_index',
+          values: [INDEX_INFERRED_ENTITIES, INDEX_INFERRED_RELATIONSHIPS],
+          operator: FilterOperator.StartsWith,
+          mode: 'or'
         });
       }
     } else if (arrayKeys.some((filterKey) => isObjectAttribute(filterKey)) && !arrayKeys.some((filterKey) => filterKey === 'connections')) {

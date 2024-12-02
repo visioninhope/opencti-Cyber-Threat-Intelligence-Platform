@@ -29,6 +29,7 @@ export const REPRESENTATIVE_FILTER = 'representative'; // representative of an e
 export const INSTANCE_RELATION_TYPES_FILTER = 'elementWithTargetTypes'; // TODO Rename/migrate to fromOrToType
 export const CONNECTED_TO_INSTANCE_FILTER = 'connectedToId'; // TODO Rename/migrate to triggerListenId
 export const CONNECTED_TO_INSTANCE_SIDE_EVENTS_FILTER = 'connectedToId_sideEvents';
+export const IS_INFERRED_FILTER = 'is_inferred';
 
 // Values that do not need resolution when matching against stix object
 export const TYPE_FILTER = 'entity_type';
@@ -96,6 +97,7 @@ export const complexConversionFilterKeys = [
   RELATION_FROM_ROLE_FILTER, // nested relation for the from role of a relationship
   RELATION_TO_ROLE_FILTER, // nested relation for the to role of a relationship
   ALIAS_FILTER, // key that target both 'aliases' and 'x_opencti_aliases' attributes
+  IS_INFERRED_FILTER, // key match is_inferred for relationships and object
 ];
 
 // list of the special filtering keys
