@@ -1698,7 +1698,7 @@ class DataTableToolBar extends Component {
 
           const isManualPromoteSelect = !selectAll
             && selectedTypes.length > 0
-            && selectedTypes.every((type) => promotionTypes.includes(type));
+            && selectedTypes.some((type) => promotionTypes.includes(type));
 
           const promoteEnabled = isManualPromoteSelect || promotionTypesFiltered;
 
