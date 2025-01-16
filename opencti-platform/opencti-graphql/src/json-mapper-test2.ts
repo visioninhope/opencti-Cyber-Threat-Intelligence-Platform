@@ -5,7 +5,7 @@ import { ENTITY_DOMAIN_NAME, ENTITY_HASHED_OBSERVABLE_STIX_FILE, ENTITY_IPV4_ADD
 import { ENTITY_TYPE_EXTERNAL_REFERENCE, ENTITY_TYPE_MARKING_DEFINITION } from './schema/stixMetaObject';
 import { ENTITY_TYPE_INDICATOR } from './modules/indicator/indicator-types';
 
-export const mispJsonMapper: Partial<JsonMapperParsed> = {
+export const mispJsonMapper2: Partial<JsonMapperParsed> = {
   id: 'misp-json-mapper',
   entity_type: 'JsonMapper',
   name: 'MispJsonMapper',
@@ -1256,7 +1256,7 @@ export const mispJsonMapper: Partial<JsonMapperParsed> = {
   ]
 };
 
-export const json = `{
+export const json2 = `{
     "Event": {
         "id": "558",
         "orgc_id": "2",

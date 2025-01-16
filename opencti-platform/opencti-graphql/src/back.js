@@ -20,7 +20,7 @@ import { SEMRESATTRS_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { ENABLED_EVENT_LOOP_MONITORING, ENABLED_TRACING, logApp } from './config/conf';
 import { isNotEmptyField } from './database/utils';
 import testJsonMapper from './json-mapper';
-import { json, mispJsonMapper } from './json-mapper-test2';
+import { json3, mispJsonMapper3 } from './json-mapper-test3';
 
 // -- Apply telemetry
 // ------- Tracing
@@ -60,4 +60,5 @@ if (ENABLED_EVENT_LOOP_MONITORING) {
 // -- Start the platform
 // noinspection JSIgnoredPromiseFromCall
 // platformStart();
-testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json, mispJsonMapper);
+// testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json, mispJsonMapper);
+testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json3, mispJsonMapper3);

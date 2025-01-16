@@ -30,7 +30,7 @@ const USER_CHOICE_MARKING_CONFIG = 'user-choice';
 export const formatValue = (value: string | boolean, type: AttrType, column: AttributeColumn | AttributePath | ComplexPath | undefined) => {
   const pattern_date = column?.configuration?.pattern_date;
   const timezone = column?.configuration?.timezone;
-  if (type === 'string' && typeof value === 'string') {
+  if ((type === 'string' || type === 'ref') && typeof value === 'string') {
     return value.trim();
   }
   if (type === 'numeric' && typeof value === 'string') {

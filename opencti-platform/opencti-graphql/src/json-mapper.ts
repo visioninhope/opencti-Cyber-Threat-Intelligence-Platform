@@ -173,6 +173,9 @@ const handleBasedOnAttribute = async (
       entities = (attribute.based_on.representations ?? [])
         .map((id) => otherEntities.get(id)).flat()
         .filter((e) => e !== undefined && compareValues.includes(e.__identifier as string)) as Record<string, InputType>[];
+      if (entities.length === 0) {
+        console.log('EMPTY BASED_ON', attribute.based_on, compareValues, definition);
+      }
     } else {
       entities = (attribute.based_on.representations ?? [])
         .map((id) => otherEntities.get(id)).flat()
@@ -301,7 +304,8 @@ const testJsonMapper = async (meta: Record<string, any>, data: string, mapper: J
         } else {
           input.standard_id = generateStandardId(entity_type, input);
           if (representation.identifier) {
-            input.__identifier = await extractValueFromJson(baseJson, dataVars, baseDatum, representation.identifier, idType) as string;
+            const identifier = await extractValueFromJson(baseJson, dataVars, baseDatum, representation.identifier, idType) as string;
+            input.__identifier = identifier ? String(identifier).trim() : identifier;
           } else {
             input.__identifier = uuidv4();
           }
@@ -313,7 +317,14 @@ const testJsonMapper = async (meta: Record<string, any>, data: string, mapper: J
   }
   // Generate the final bundle
   const objects = Array.from(results.values()).flat();
-  const stixObjects = objects.map((e) => convertStoreToStix(e as unknown as StoreCommon));
+  const stixObjects = objects.map((e) => {
+    try {
+      return convertStoreToStix(e as unknown as StoreCommon);
+    } catch (err) {
+      // console.log('error converting ', e);
+    }
+    return null;
+  }).filter((elem) => isNotEmptyField(elem));
   const bundleBuilder = new BundleBuilder();
   bundleBuilder.addObjects(stixObjects);
   const bundle = bundleBuilder.build();
