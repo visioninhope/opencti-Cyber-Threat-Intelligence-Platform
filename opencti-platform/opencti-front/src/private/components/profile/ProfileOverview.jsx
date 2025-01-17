@@ -559,7 +559,7 @@ const ProfileOverviewComponent = (props) => {
                   style={{ marginTop: 20 }}
                   disabled={external}
                 />
-                <div style={{ marginTop: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'end', marginTop: 20 }}>
                   <Button
                     variant="contained"
                     type="button"
@@ -674,15 +674,17 @@ const ProfileOverviewComponent = (props) => {
             </IconButton>
           </pre>
           { isPlaygroundEnable() && (
-            <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              to="/public/graphql"
-              target="_blank"
-            >
-              {t('Playground')}
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'end', marginTop: 20 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/public/graphql"
+                target="_blank"
+              >
+                {t('Playground')}
+              </Button>
+            </div>
           )}
         </div>
       </Paper>
