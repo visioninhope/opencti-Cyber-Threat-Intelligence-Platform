@@ -114,7 +114,13 @@ export const ROLE_EDITOR: Role = {
   id: generateStandardId(ENTITY_TYPE_ROLE, { name: 'Access knowledge/exploration and edit/delete' }),
   name: 'Access knowledge/exploration and edit/delete',
   description: 'Knowledge/exploration edit/delete',
-  capabilities: ['KNOWLEDGE_KNUPDATE_KNDELETE', 'EXPLORE_EXUPDATE_EXDELETE', 'EXPLORE_EXUPDATE_PUBLISH', 'KNOWLEDGE_KNUPDATE_KNMANAGEAUTHMEMBERS']
+  capabilities: [
+    'KNOWLEDGE_KNUPDATE_KNDELETE',
+    'EXPLORE_EXUPDATE_EXDELETE',
+    'EXPLORE_EXUPDATE_PUBLISH',
+    'TAXIIAPI_SETCOLLECTIONS',
+    'KNOWLEDGE_KNUPDATE_KNMANAGEAUTHMEMBERS'
+  ]
 };
 TESTING_ROLES.push(ROLE_EDITOR);
 
@@ -317,7 +323,6 @@ export const ADMIN_USER: AuthUser = {
   groups: [],
   capabilities: [{ name: BYPASS }],
   all_marking: [],
-  allowed_organizations: [],
   inside_platform_organization: true,
   allowed_marking: [],
   default_marking: [],
@@ -693,7 +698,6 @@ export const buildStandardUser = (
     groups: [],
     capabilities: capabilities ?? [{ name: 'KNOWLEDGE_KNUPDATE_KNDELETE' }],
     all_marking: (allMarkings ?? []) as StoreMarkingDefinition[],
-    allowed_organizations: [],
     inside_platform_organization: true,
     allowed_marking: allowedMarkings as StoreMarkingDefinition[],
     default_marking: [],
