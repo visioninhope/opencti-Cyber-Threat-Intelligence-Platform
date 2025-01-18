@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import type { SetIntervalAsyncTimer } from 'set-interval-async/fixed';
 import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async/fixed';
 import type { Moment } from 'moment';
+import * as JSONPath from 'jsonpath-plus';
+import ejs from 'ejs';
 import { lockResource } from '../database/redis';
 import conf, { booleanConf, logApp } from '../config/conf';
 import { TYPE_LOCK_ERROR, UnsupportedError } from '../config/errors';
@@ -24,7 +26,9 @@ import type {
   BasicStoreEntityIngestionJson,
   BasicStoreEntityIngestionRss,
   BasicStoreEntityIngestionTaxii,
-  BasicStoreEntityIngestionTaxiiCollection
+  BasicStoreEntityIngestionTaxiiCollection,
+  DataParam,
+  HeaderParam
 } from '../modules/ingestion/ingestion-types';
 import { findAllTaxiiIngestions, patchTaxiiIngestion } from '../modules/ingestion/ingestion-taxii-domain';
 import { ConnectorType, IngestionAuthType, TaxiiVersion } from '../generated/graphql';
@@ -543,6 +547,7 @@ const csvExecutor = async (context: AuthContext) => {
 // endregion
 
 // region json ingestion
+const jsonParsers: Record<string, JsonMapperParsed> = { parser4: mapper4 as JsonMapperParsed };
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const testIngestion: BasicStoreEntityIngestionJson = {
@@ -550,16 +555,29 @@ const testIngestion: BasicStoreEntityIngestionJson = {
   description: 'test',
   uri: 'http://localhost:8080/v1/statement',
   verb: 'post',
-  body: 'select * from customer',
-  pagination_type: 'next_page',
-  next_page_attribute: 'nextUri',
-  next_page_pagination_verb: 'get',
+  // body: 'select * from customer',
+  body: 'select * from customer OFFSET <?- offset -?> LIMIT 10',
+  json_parser_id: 'parser4',
+  pagination_with_sub_page: true,
+  pagination_with_sub_page_attribute_path: '$.nextUri',
+  pagination_with_sub_page_query_verb: 'get',
   confidence_to_score: true,
   authentication_type: IngestionAuthType.None,
   authentication_value: '',
   user_id: undefined,
   ingestion_running: true,
   last_execution_date: undefined,
+  query_attributes: [
+    {
+      type: 'data',
+      expose: 'variable',
+      data_operation: 'count',
+      state_operation: 'sum',
+      from_path: '$.data',
+      to_name: 'offset',
+      default: 0
+    }
+  ],
   headers: [
     { key: 'X-Trino-User', value: 'admin' },
     { key: 'X-Trino-Schema', value: 'sf1' },
@@ -567,18 +585,66 @@ const testIngestion: BasicStoreEntityIngestionJson = {
   ]
 };
 
-const buildQueryParams = (queryParamsAttributes: any[], requestData: any) => {
-  const qParams = [];
-  for (let attrIndex = 0; attrIndex < queryParamsAttributes.length; attrIndex += 1) {
-    const queryParamsAttribute = queryParamsAttributes[attrIndex];
-    const attrValue = requestData[queryParamsAttribute.from];
-    if (attrValue) {
-      qParams.push(`${queryParamsAttribute.to}=${attrValue}`);
+let ingestionState = {}; /* TODO GET STATE */
+
+const getValueFromPath = (path: string, json: any) => {
+  const value = JSONPath.JSONPath({ path, json, wrap: false, flatten: true });
+  // console.log(json, path, value);
+  return value;
+};
+const buildQueryObject = (queryParamsAttributes: Array<HeaderParam | DataParam> | undefined, requestData: Record<string, any>, withDefault = true) => {
+  const params: Record<string, string | number> = {};
+  if (queryParamsAttributes) {
+    for (let attrIndex = 0; attrIndex < queryParamsAttributes.length; attrIndex += 1) {
+      const queryParamsAttribute = queryParamsAttributes[attrIndex];
+      let attrValue;
+      if (queryParamsAttribute.type === 'data') {
+        let valueFromPath = getValueFromPath(queryParamsAttribute.from_path, requestData);
+        if (queryParamsAttribute.data_operation === 'count' && valueFromPath) {
+          valueFromPath = Array.isArray(valueFromPath) ? valueFromPath.length : 1;
+        }
+        attrValue = valueFromPath;
+      } else {
+        attrValue = requestData[queryParamsAttribute.from_name];
+      }
+      // console.log('------------>', queryParamsAttribute, attrValue, isNotEmptyField(attrValue));
+      if (isNotEmptyField(attrValue)) {
+        params[queryParamsAttribute.to_name] = attrValue;
+        // console.log('isNotEmptyField', params);
+      } else if (isNotEmptyField(queryParamsAttribute.default) && withDefault) {
+        params[queryParamsAttribute.to_name] = queryParamsAttribute.default;
+        // console.log('default', params);
+      }
     }
   }
-  return qParams;
+  return params;
 };
-export const jsonExecutor = async (context: AuthContext) => {
+const mergeQueryState = (queryParamsAttributes: Array<HeaderParam | DataParam> | undefined, previousState: Record<string, any>, newState: Record<string, any>) => {
+  const state: Record<string, any> = {};
+  const queryParams = queryParamsAttributes ?? [];
+  for (let attrIndex = 0; attrIndex < queryParams.length; attrIndex += 1) {
+    const queryParamsAttribute = queryParams[attrIndex];
+    if (queryParamsAttribute.state_operation === 'sum') {
+      // console.log('------------->', previousState[queryParamsAttribute.to_name], newState[queryParamsAttribute.to_name]);
+      state[queryParamsAttribute.to_name] = previousState[queryParamsAttribute.to_name] + newState[queryParamsAttribute.to_name];
+    } else {
+      state[queryParamsAttribute.to_name] = newState[queryParamsAttribute.to_name];
+    }
+  }
+  return state;
+};
+const buildQueryParams = (queryParamsAttributes: Array<HeaderParam | DataParam> | undefined, variables: Record<string, any>) => {
+  const params: Record<string, string | number> = {};
+  const paramAttributes = (queryParamsAttributes ?? []).filter((query) => query.expose === 'param');
+  for (let attrIndex = 0; attrIndex < paramAttributes.length; attrIndex += 1) {
+    const queryParamsAttribute = paramAttributes[attrIndex];
+    params[queryParamsAttribute.to_name] = variables[queryParamsAttribute.to_name];
+  }
+  return params;
+};
+
+export const jsonExecutor = async (_context: AuthContext) => {
+  // console.log('ingestionState', ingestionState);
   // const filters = {
   //   mode: 'and',
   //   filters: [{ key: 'ingestion_running', values: [true] }],
@@ -610,40 +676,39 @@ export const jsonExecutor = async (context: AuthContext) => {
     const httpClientOptions: GetHttpClient = { headers, rejectUnauthorized: false, responseType: 'json', certificates };
     const httpClient = getHttpClient(httpClientOptions);
     // Execute the http query
-    const params = {};
-    const { data: requestData } = await httpClient.call({ method: ingestion.verb, url: ingestion.uri, data: ingestion.body, params });
-    const bundle = await jsonMappingExecution({}, requestData, mapper4 as JsonMapperParsed);
+    // const ingestionState = {}; /* TODO GET STATE */
+    // const params = buildQueryObject({}, ingestion.query_attributes, ingestionState);
+    const variables = isEmptyField(ingestionState) ? buildQueryObject(ingestion.query_attributes, {}) : ingestionState;
+    const params = buildQueryParams(ingestion.query_attributes, variables);
+    // console.log('variables', variables);
+    const parsedBody = await ejs.render(ingestion.body, variables, { delimiter: '?', async: true });
+    // console.log('parsedBody', parsedBody);
+    console.log('query', parsedBody);
+    const { data: requestData, headers: responseHeaders } = await httpClient.call({ method: ingestion.verb, url: ingestion.uri, data: parsedBody, params });
+    const bundle = await jsonMappingExecution({}, requestData, jsonParsers[ingestion.json_parser_id]);
+    let nextExecutionState = buildQueryObject(ingestion.query_attributes, { ...requestData, ...responseHeaders }, false);
     // region Try to paginate with next page style
-    if (ingestion.pagination_type === 'next_page' && isNotEmptyField(ingestion.next_page_attribute)) {
-      let url = requestData[ingestion.next_page_attribute];
-      while (url) {
-        await wait(100);
-        const { data: paginationData } = await httpClient.call({ method: ingestion.next_page_pagination_verb ?? ingestion.verb, url, data: ingestion.body, params });
-        const paginationBundle = await jsonMappingExecution({}, paginationData, mapper4 as JsonMapperParsed);
+    if (ingestion.pagination_with_sub_page && isNotEmptyField(ingestion.pagination_with_sub_page_attribute_path)) {
+      // console.log(requestData);
+      let url = getValueFromPath(ingestion.pagination_with_sub_page_attribute_path, requestData);
+      while (isNotEmptyField(url)) {
+        console.log(url);
+        await wait(100); // Wait 100 ms between 2 calls
+        const { data: paginationData } = await httpClient.call({ method: ingestion.pagination_with_sub_page_query_verb ?? ingestion.verb, url, data: ingestion.body, params });
+        const paginationVariables = buildQueryObject(ingestion.query_attributes, { ...paginationData, ...responseHeaders }, false);
+        nextExecutionState = { ...nextExecutionState, ...paginationVariables };
+        const paginationBundle = await jsonMappingExecution({}, paginationData, jsonParsers[ingestion.json_parser_id]);
         if (paginationBundle.objects.length > 0) {
           bundle.objects = bundle.objects.concat(paginationBundle.objects);
         }
-        url = paginationData[ingestion.next_page_attribute];
+        url = getValueFromPath(ingestion.pagination_with_sub_page_attribute_path, paginationData);
       }
     }
     // endregion
-    // region Try to paginate with query parameters style
-    if (ingestion.pagination_type === 'query_params' && isNotEmptyField(ingestion.query_params_attributes)) {
-      const queryParamsAttributes = ingestion.query_params_attributes ?? [];
-      let qParams = buildQueryParams(queryParamsAttributes, requestData);
-      while (qParams.length > 0) {
-        const paginationUri = `${ingestion.uri}?${qParams.join('&')}`;
-        const { data: paginationData } = await httpClient.call({ method: ingestion.verb, url: paginationUri, data: ingestion.body, params });
-        const paginationBundle = await jsonMappingExecution({}, paginationData, mapper4 as JsonMapperParsed);
-        if (paginationBundle.objects.length > 0) {
-          bundle.objects = bundle.objects.concat(paginationBundle.objects);
-        }
-        const newParams = buildQueryParams(queryParamsAttributes, paginationData);
-        qParams = newParams.sort().toString() !== qParams.sort().toString() ? newParams : [];
-      }
-    }
-    // endregion
-    console.log('dataBundle', bundle);
+    console.log('dataBundle', bundle.objects.length);
+    console.log('----------------------------------------------');
+    ingestionState = mergeQueryState(ingestion.query_attributes, variables, nextExecutionState);
+    // console.log('nextExecutionState', ingestionState);
     // Push the bundle to absorption queue
     // await pushBundleToConnectorQueue(context, ingestion, bundle);
   }

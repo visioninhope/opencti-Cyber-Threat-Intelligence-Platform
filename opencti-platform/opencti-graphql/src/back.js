@@ -77,4 +77,4 @@ if (ENABLED_EVENT_LOOP_MONITORING) {
 // });
 
 // testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json4, mispJsonMapper4);
-jsonExecutor();
+jsonExecutor().then(() => jsonExecutor().then(() => jsonExecutor()));
