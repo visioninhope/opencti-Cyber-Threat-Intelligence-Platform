@@ -3,15 +3,15 @@ import { parseStringPromise as xmlParse } from 'xml2js';
 import TurndownService from 'turndown';
 import * as R from 'ramda';
 import { v4 as uuidv4 } from 'uuid';
-import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async/fixed';
 import type { SetIntervalAsyncTimer } from 'set-interval-async/fixed';
+import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async/fixed';
 import type { Moment } from 'moment';
 import { lockResource } from '../database/redis';
 import conf, { booleanConf, logApp } from '../config/conf';
 import { TYPE_LOCK_ERROR, UnsupportedError } from '../config/errors';
 import { executionContext, SYSTEM_USER } from '../utils/access';
 import { type GetHttpClient, getHttpClient, OpenCTIHeaders } from '../utils/http-client';
-import { isEmptyField, isNotEmptyField } from '../database/utils';
+import { isEmptyField, isNotEmptyField, wait } from '../database/utils';
 import { FROM_START_STR, now, sanitizeForMomentParsing, utcDate } from '../utils/format';
 import { generateStandardId } from '../schema/identifier';
 import { ENTITY_TYPE_CONTAINER_REPORT } from '../schema/stixDomainObject';
@@ -21,6 +21,7 @@ import { findAllRssIngestions, patchRssIngestion } from '../modules/ingestion/in
 import type { AuthContext } from '../types/user';
 import type {
   BasicStoreEntityIngestionCsv,
+  BasicStoreEntityIngestionJson,
   BasicStoreEntityIngestionRss,
   BasicStoreEntityIngestionTaxii,
   BasicStoreEntityIngestionTaxiiCollection
@@ -41,6 +42,9 @@ import { connectorIdFromIngestId, queueDetails } from '../domain/connector';
 import { STIX_EXT_OCTI } from '../types/stix-extensions';
 import type { StixIndicator } from '../modules/indicator/indicator-types';
 import type { CsvMapperParsed } from '../modules/internal/csvMapper/csvMapper-types';
+import jsonMappingExecution from '../json-mapper';
+import { mapper4 } from '../json-mapper-test4';
+import type { JsonMapperParsed } from '../modules/internal/jsonMapper/jsonMapper-types';
 
 // Ingestion manager responsible to cleanup old data
 // Each API will start is ingestion manager.
@@ -89,7 +93,7 @@ const updateBuiltInConnectorInfo = async (context: AuthContext, user_id: string 
 };
 
 const createWorkForIngestion = async (context: AuthContext, ingestion: BasicStoreEntityIngestionTaxii
-| BasicStoreEntityIngestionRss | BasicStoreEntityIngestionCsv | BasicStoreEntityIngestionTaxiiCollection) => {
+| BasicStoreEntityIngestionRss | BasicStoreEntityIngestionCsv | BasicStoreEntityIngestionTaxiiCollection | BasicStoreEntityIngestionJson) => {
   const connector = { internal_id: connectorIdFromIngestId(ingestion.id), connector_type: ConnectorType.ExternalImport };
   const workName = `run @ ${now()}`;
   const work: any = await createWork(context, SYSTEM_USER, connector, workName, connector.internal_id, { receivedTime: now() });
@@ -97,7 +101,7 @@ const createWorkForIngestion = async (context: AuthContext, ingestion: BasicStor
 };
 
 export const pushBundleToConnectorQueue = async (context: AuthContext, ingestion: BasicStoreEntityIngestionTaxii
-| BasicStoreEntityIngestionRss | BasicStoreEntityIngestionCsv | BasicStoreEntityIngestionTaxiiCollection, bundle: StixBundle) => {
+| BasicStoreEntityIngestionRss | BasicStoreEntityIngestionCsv | BasicStoreEntityIngestionTaxiiCollection | BasicStoreEntityIngestionJson, bundle: StixBundle) => {
   // Push the bundle to absorption queue
   const connectorId = connectorIdFromIngestId(ingestion.id);
   const work: any = await createWorkForIngestion(context, ingestion);
@@ -538,6 +542,114 @@ const csvExecutor = async (context: AuthContext) => {
 };
 // endregion
 
+// region json ingestion
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const testIngestion: BasicStoreEntityIngestionJson = {
+  name: 'test',
+  description: 'test',
+  uri: 'http://localhost:8080/v1/statement',
+  verb: 'post',
+  body: 'select * from customer',
+  pagination_type: 'next_page',
+  next_page_attribute: 'nextUri',
+  next_page_pagination_verb: 'get',
+  confidence_to_score: true,
+  authentication_type: IngestionAuthType.None,
+  authentication_value: '',
+  user_id: undefined,
+  ingestion_running: true,
+  last_execution_date: undefined,
+  headers: [
+    { key: 'X-Trino-User', value: 'admin' },
+    { key: 'X-Trino-Schema', value: 'sf1' },
+    { key: 'X-Trino-Catalog', value: 'tpcds' }
+  ]
+};
+
+const buildQueryParams = (queryParamsAttributes: any[], requestData: any) => {
+  const qParams = [];
+  for (let attrIndex = 0; attrIndex < queryParamsAttributes.length; attrIndex += 1) {
+    const queryParamsAttribute = queryParamsAttributes[attrIndex];
+    const attrValue = requestData[queryParamsAttribute.from];
+    if (attrValue) {
+      qParams.push(`${queryParamsAttribute.to}=${attrValue}`);
+    }
+  }
+  return qParams;
+};
+export const jsonExecutor = async (context: AuthContext) => {
+  // const filters = {
+  //   mode: 'and',
+  //   filters: [{ key: 'ingestion_running', values: [true] }],
+  //   filterGroups: [],
+  // };
+  // const opts = { filters, connectionFormat: false, noFiltersChecking: true };
+  // const ingestions = await findAllJsonIngestions(context, SYSTEM_USER, opts);
+  const ingestions = [testIngestion];
+  for (let i = 0; i < ingestions.length; i += 1) {
+    const ingestion = ingestions[i];
+    let certificates;
+    const headers = new OpenCTIHeaders();
+    headers.Accept = 'application/json';
+    const headerOptions = ingestion.headers ?? [];
+    for (let index = 0; index < headerOptions.length; index += 1) {
+      const h = headerOptions[index];
+      headers[h.key] = h.value;
+    }
+    if (ingestion.authentication_type === IngestionAuthType.Basic) {
+      const auth = Buffer.from(ingestion.authentication_value, 'utf-8').toString('base64');
+      headers.Authorization = `Basic ${auth}`;
+    }
+    if (ingestion.authentication_type === IngestionAuthType.Bearer) {
+      headers.Authorization = `Bearer ${ingestion.authentication_value}`;
+    }
+    if (ingestion.authentication_type === IngestionAuthType.Certificate) {
+      certificates = { cert: ingestion.authentication_value.split(':')[0], key: ingestion.authentication_value.split(':')[1], ca: ingestion.authentication_value.split(':')[2] };
+    }
+    const httpClientOptions: GetHttpClient = { headers, rejectUnauthorized: false, responseType: 'json', certificates };
+    const httpClient = getHttpClient(httpClientOptions);
+    // Execute the http query
+    const params = {};
+    const { data: requestData } = await httpClient.call({ method: ingestion.verb, url: ingestion.uri, data: ingestion.body, params });
+    const bundle = await jsonMappingExecution({}, requestData, mapper4 as JsonMapperParsed);
+    // region Try to paginate with next page style
+    if (ingestion.pagination_type === 'next_page' && isNotEmptyField(ingestion.next_page_attribute)) {
+      let url = requestData[ingestion.next_page_attribute];
+      while (url) {
+        await wait(100);
+        const { data: paginationData } = await httpClient.call({ method: ingestion.next_page_pagination_verb ?? ingestion.verb, url, data: ingestion.body, params });
+        const paginationBundle = await jsonMappingExecution({}, paginationData, mapper4 as JsonMapperParsed);
+        if (paginationBundle.objects.length > 0) {
+          bundle.objects = bundle.objects.concat(paginationBundle.objects);
+        }
+        url = paginationData[ingestion.next_page_attribute];
+      }
+    }
+    // endregion
+    // region Try to paginate with query parameters style
+    if (ingestion.pagination_type === 'query_params' && isNotEmptyField(ingestion.query_params_attributes)) {
+      const queryParamsAttributes = ingestion.query_params_attributes ?? [];
+      let qParams = buildQueryParams(queryParamsAttributes, requestData);
+      while (qParams.length > 0) {
+        const paginationUri = `${ingestion.uri}?${qParams.join('&')}`;
+        const { data: paginationData } = await httpClient.call({ method: ingestion.verb, url: paginationUri, data: ingestion.body, params });
+        const paginationBundle = await jsonMappingExecution({}, paginationData, mapper4 as JsonMapperParsed);
+        if (paginationBundle.objects.length > 0) {
+          bundle.objects = bundle.objects.concat(paginationBundle.objects);
+        }
+        const newParams = buildQueryParams(queryParamsAttributes, paginationData);
+        qParams = newParams.sort().toString() !== qParams.sort().toString() ? newParams : [];
+      }
+    }
+    // endregion
+    console.log('dataBundle', bundle);
+    // Push the bundle to absorption queue
+    // await pushBundleToConnectorQueue(context, ingestion, bundle);
+  }
+};
+// endregion
+
 const ingestionHandler = async () => {
   logApp.debug('[OPENCTI-MODULE] INGESTION - Running ingestion handlers');
   let lock;
@@ -552,6 +664,7 @@ const ingestionHandler = async () => {
     ingestionPromises.push(rssExecutor(context, turndownService));
     ingestionPromises.push(taxiiExecutor(context));
     ingestionPromises.push(csvExecutor(context));
+    ingestionPromises.push(jsonExecutor(context));
     await Promise.all(ingestionPromises);
   } catch (e: any) {
     // We dont care about failing to get the lock.

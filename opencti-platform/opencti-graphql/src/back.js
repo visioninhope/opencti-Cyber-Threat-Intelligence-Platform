@@ -19,8 +19,7 @@ import { SEMRESATTRS_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 // import { platformStart } from './boot';
 import { ENABLED_EVENT_LOOP_MONITORING, ENABLED_TRACING, logApp } from './config/conf';
 import { isNotEmptyField } from './database/utils';
-import testJsonMapper from './json-mapper';
-import { json3, mispJsonMapper3 } from './json-mapper-test3';
+import { jsonExecutor } from './manager/ingestionManager';
 
 // -- Apply telemetry
 // ------- Tracing
@@ -61,4 +60,21 @@ if (ENABLED_EVENT_LOOP_MONITORING) {
 // noinspection JSIgnoredPromiseFromCall
 // platformStart();
 // testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json, mispJsonMapper);
-testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json3, mispJsonMapper3);
+
+// const trino = Trino.create({
+//   server: 'http://localhost:8080',
+//   catalog: 'tpcds',
+//   schema: 'sf1',
+//   auth: new BasicAuth('admin'),
+// });
+//
+// trino.query(
+//   'select * from customer'
+// ).then(async (iter) => {
+//   for await (const queryResult of iter) {
+//     console.log(`iter result ${(queryResult.data ?? []).length}`);
+//   }
+// });
+
+// testJsonMapper({ externalUri: 'https://4.233.151.63:444' }, json4, mispJsonMapper4);
+jsonExecutor();

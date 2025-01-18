@@ -106,6 +106,16 @@ const extractValueFromJson = async (
   return attrDef ? format(val, attrDef, attribute) : val;
 };
 
+const extractIdentifierFromJson = async (
+  base: JSON,
+  metaData: Record<string, any>,
+  record: JSON,
+  identifier: string[],
+  attrDef?: AttributeDefinition
+) => {
+  return identifier.map((id) => extractValueFromJson(base, metaData, record, { path: id }, attrDef)).join('-');
+};
+
 /* eslint-disable no-param-reassign */
 const handleDirectAttribute = async (
   base: JSON,
@@ -167,8 +177,8 @@ const handleBasedOnAttribute = async (
     }
     // region fetch entities
     let entities;
-    if (attribute.based_on.identifier_path) {
-      const computedValue = await extractValueFromJson(base, metaData, record, attribute.based_on.identifier_path, definition);
+    if (attribute.based_on.identifier) {
+      const computedValue = await extractIdentifierFromJson(base, metaData, record, attribute.based_on.identifier, definition);
       const compareValues = Array.isArray(computedValue) ? computedValue : [computedValue];
       entities = (attribute.based_on.representations ?? [])
         .map((id) => otherEntities.get(id)).flat()
@@ -224,12 +234,12 @@ const addResult = (representation: JsonMapperRepresentation, results: Map<string
   }
 };
 
-const testJsonMapper = async (meta: Record<string, any>, data: string, mapper: JsonMapperParsed) => {
+const jsonMappingExecution = async (meta: Record<string, any>, data: string | object, mapper: JsonMapperParsed) => {
   const start = new Date().getTime();
   const context = executionContext('JsonMapper');
   const refEntities = await handleRefEntities(context, SYSTEM_USER, mapper);
   const results = new Map<string, Record<string, InputType>[]>();
-  const baseJson = JSON.parse(data);
+  const baseJson = typeof data === 'string' ? JSON.parse(data) : data;
   const baseArray = Array.isArray(baseJson) ? baseJson : [baseJson];
   for (let index = 0; index < baseArray.length; index += 1) {
     const element = baseArray[index];
@@ -304,7 +314,7 @@ const testJsonMapper = async (meta: Record<string, any>, data: string, mapper: J
         } else {
           input.standard_id = generateStandardId(entity_type, input);
           if (representation.identifier) {
-            const identifier = await extractValueFromJson(baseJson, dataVars, baseDatum, representation.identifier, idType) as string;
+            const identifier = await extractIdentifierFromJson(baseJson, dataVars, baseDatum, representation.identifier, idType) as string;
             input.__identifier = identifier ? String(identifier).trim() : identifier;
           } else {
             input.__identifier = uuidv4();
@@ -330,6 +340,7 @@ const testJsonMapper = async (meta: Record<string, any>, data: string, mapper: J
   const bundle = bundleBuilder.build();
   console.log(`Event built in ${new Date().getTime() - start} ms with ${bundle.objects.length} objects`);
   fs.writeFileSync('./src/temp.json', JSON.stringify(bundle), {});
+  return bundle;
 };
 
-export default testJsonMapper;
+export default jsonMappingExecution;

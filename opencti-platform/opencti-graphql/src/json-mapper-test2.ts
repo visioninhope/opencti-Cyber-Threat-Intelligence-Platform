@@ -33,9 +33,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_MARKING_DEFINITION,
         path: '$.Event.Tag[?(@.name.includes("tlp:"))]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'definition_type',
@@ -61,9 +59,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         // path: '$.Event.Galaxy..GalaxyCluster[?(@.meta && @.meta.country)].meta.country'
         path: '$.Event.Galaxy..GalaxyCluster[?(@.type == \'country\')]'
       },
-      identifier: {
-        path: '$.meta.ISO'
-      },
+      identifier: ['$.meta.ISO'],
       attributes: [
         {
           key: 'name',
@@ -80,9 +76,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_IDENTITY_ORGANIZATION,
         path: '$.Event.Orgc'
       },
-      identifier: {
-        path: '$.uuid'
-      },
+      identifier: ['$.uuid'],
       attributes: [
         {
           key: 'name',
@@ -99,9 +93,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_EXTERNAL_REFERENCE,
         path: '$.Event.Attribute[?(@.type == \'link\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'external_id',
@@ -130,9 +122,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_EXTERNAL_REFERENCE,
         path: '$.Event.Galaxy..GalaxyCluster..meta.refs'
       },
-      identifier: {
-        path: '$'
-      },
+      identifier: ['$'],
       attributes: [
         {
           key: 'source_name',
@@ -156,9 +146,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_EXTERNAL_REFERENCE,
         path: '$.Event'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'source_name',
@@ -195,9 +183,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_INTRUSION_SET,
         path: '$.Event.Galaxy[?(@.type == \'threat-actor\')].GalaxyCluster'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'name',
@@ -226,9 +212,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'externalReferences',
           based_on: {
-            identifier_path: {
-              path: '$.meta.refs'
-            },
+            identifier: ['$.meta.refs'],
             representations: ['externalRefsRepresentation']
           }
         },
@@ -251,9 +235,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'galaxy-Intrusion-Set'
             ]
@@ -262,9 +244,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'to',
           based_on: {
-            identifier_path: {
-              path: '$.meta.country'
-            },
+            identifier: ['$.meta.country'],
             representations: [
               'countryRepresentation'
             ]
@@ -279,9 +259,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_INTRUSION_SET,
         path: '$.Event.Galaxy[?(@.type == \'microsoft-activity-group\')].GalaxyCluster'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'name',
@@ -317,9 +295,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_MALWARE,
         path: '$.Event.Galaxy[?(@.type == \'malpedia\')].GalaxyCluster'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'name',
@@ -356,9 +332,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_HASHED_OBSERVABLE_STIX_FILE,
         path: '$.Event.Attribute[?(@.type == \'sha256\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'SHA-256',
@@ -400,9 +374,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_INDICATOR,
         path: '$.Event.Attribute[?(@.type == \'sha256\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'pattern',
@@ -484,9 +456,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-sha256-indicator'
             ]
@@ -495,9 +465,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'to',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-sha256-observable'
             ]
@@ -516,9 +484,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-sha256-observable'
             ]
@@ -545,9 +511,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-sha256-indicator'
             ]
@@ -571,9 +535,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_HASHED_OBSERVABLE_STIX_FILE,
         path: '$.Event.Attribute[?(@.type == \'filename\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'name',
@@ -606,9 +568,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_INDICATOR,
         path: '$.Event.Attribute[?(@.type == \'filename\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'pattern',
@@ -678,9 +638,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-files-indicator'
             ]
@@ -689,9 +647,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'to',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-files-observable'
             ]
@@ -710,9 +666,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-files-observable'
             ]
@@ -739,9 +693,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-files-indicator'
             ]
@@ -765,9 +717,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_IPV4_ADDR,
         path: '$.Event.Attribute[?(@.type == \'ip-dst\' && @.value.match(/^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$/))]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'value',
@@ -800,9 +750,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_INDICATOR,
         path: '$.Event.Attribute[?(@.type == \'ip-dst\' && @.value.match(/^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$/))]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'pattern',
@@ -854,9 +802,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-ips-v4-indicator'
             ]
@@ -865,9 +811,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'to',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-ips-v4-observable'
             ]
@@ -886,9 +830,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-ips-v4-observable'
             ]
@@ -915,9 +857,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-ips-v4-indicator'
             ]
@@ -941,9 +881,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_DOMAIN_NAME,
         path: '$.Event.Attribute[?(@.type == \'domain\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'value',
@@ -966,9 +904,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_INDICATOR,
         path: '$.Event.Attribute[?(@.type == \'domain\')]'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'pattern',
@@ -1024,9 +960,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-domains-indicator'
             ]
@@ -1035,9 +969,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'to',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-domains-observable'
             ]
@@ -1056,9 +988,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-domains-observable'
             ]
@@ -1085,9 +1015,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         {
           key: 'from',
           based_on: {
-            identifier_path: {
-              path: '$.id'
-            },
+            identifier: ['$.id'],
             representations: [
               'attributes-domains-indicator'
             ]
@@ -1111,9 +1039,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_CONTAINER_REPORT,
         path: '$.Event'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'name',
@@ -1201,9 +1127,7 @@ export const mispJsonMapper2: Partial<JsonMapperParsed> = {
         entity_type: ENTITY_TYPE_CONTAINER_NOTE,
         path: '$.Event.EventReport'
       },
-      identifier: {
-        path: '$.id'
-      },
+      identifier: ['$.id'],
       attributes: [
         {
           key: 'attribute_abstract',

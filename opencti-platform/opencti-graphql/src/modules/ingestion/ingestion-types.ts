@@ -153,3 +153,27 @@ export interface StixIngestionTaxiiCollection extends StixObject {
   }
 }
 // endregion
+
+// region Taxii ingestion
+export const ENTITY_TYPE_INGESTION_JSON_COLLECTION = 'IngestionJsonCollection';
+
+export interface BasicStoreEntityIngestionJson extends BasicStoreEntity {
+  name: string
+  description: string
+  uri: string
+  verb: 'get' | 'post'
+  body: string
+  confidence_to_score: boolean
+  authentication_type: IngestionAuthType.None | IngestionAuthType.Basic | IngestionAuthType.Bearer | IngestionAuthType.Certificate
+  authentication_value: string
+  user_id: string | undefined
+  ingestion_running: boolean
+  last_execution_date: Date | undefined
+  headers?: { key: string, value: string }[]
+  // pagination
+  pagination_type: 'next_page' | 'query_params'
+  next_page_attribute: string
+  next_page_pagination_verb?: 'get' | 'post'
+  query_params_attributes?: { from: string, to: string }[]
+}
+// endregion
