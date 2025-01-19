@@ -570,7 +570,7 @@ const testIngestion: BasicStoreEntityIngestionJson = {
   query_attributes: [
     {
       type: 'data',
-      expose: 'variable',
+      as_query_param: false,
       data_operation: 'count',
       state_operation: 'sum',
       from_path: '$.data',
@@ -635,7 +635,7 @@ const mergeQueryState = (queryParamsAttributes: Array<HeaderParam | DataParam> |
 };
 const buildQueryParams = (queryParamsAttributes: Array<HeaderParam | DataParam> | undefined, variables: Record<string, any>) => {
   const params: Record<string, string | number> = {};
-  const paramAttributes = (queryParamsAttributes ?? []).filter((query) => query.expose === 'param');
+  const paramAttributes = (queryParamsAttributes ?? []).filter((query) => query.as_query_param === true);
   for (let attrIndex = 0; attrIndex < paramAttributes.length; attrIndex += 1) {
     const queryParamsAttribute = paramAttributes[attrIndex];
     params[queryParamsAttribute.to_name] = variables[queryParamsAttribute.to_name];
@@ -706,11 +706,12 @@ export const jsonExecutor = async (_context: AuthContext) => {
     }
     // endregion
     console.log('dataBundle', bundle.objects.length);
-    console.log('----------------------------------------------');
-    ingestionState = mergeQueryState(ingestion.query_attributes, variables, nextExecutionState);
     // console.log('nextExecutionState', ingestionState);
     // Push the bundle to absorption queue
     // await pushBundleToConnectorQueue(context, ingestion, bundle);
+    // Save new state for next execution
+    console.log('----------------------------------------------');
+    ingestionState = mergeQueryState(ingestion.query_attributes, variables, nextExecutionState);
   }
 };
 // endregion

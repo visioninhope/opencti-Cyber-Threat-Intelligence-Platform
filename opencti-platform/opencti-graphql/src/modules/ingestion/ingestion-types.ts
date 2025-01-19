@@ -163,7 +163,7 @@ export interface HeaderParam {
   to_name: string
   default: string
   state_operation: 'replace' | 'sum'
-  expose: 'param' | 'variable'
+  as_query_param: boolean
 }
 
 export interface DataParam {
@@ -173,7 +173,7 @@ export interface DataParam {
   data_operation: 'count' | 'data'
   state_operation: 'replace' | 'sum'
   default: string | number,
-  expose: 'param' | 'variable'
+  as_query_param: boolean
 }
 
 export interface BasicStoreEntityIngestionJson extends BasicStoreEntity {
