@@ -16,8 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 import ejs from 'ejs';
 import type { AuthContext, AuthUser } from '../../types/user';
 import { listEntitiesPaginated, storeLoadById } from '../../database/middleware-loader';
-import type { DisseminationListSendInput, QueryDisseminationListsArgs } from '../../generated/graphql';
-import { type BasicStoreEntityDisseminationList, ENTITY_TYPE_DISSEMINATION_LIST } from './disseminationList-types';
+import type { DisseminationListAddInput, DisseminationListSendInput, QueryDisseminationListsArgs } from '../../generated/graphql';
+import { type BasicStoreEntityDisseminationList, ENTITY_TYPE_DISSEMINATION_LIST, type StoreEntityDisseminationList } from './disseminationList-types';
 import { sendMail } from '../../database/smtp';
 import { getEntityFromCache } from '../../database/cache';
 import type { BasicStoreSettings } from '../../types/settings';
@@ -27,6 +27,8 @@ import { downloadFile, loadFile } from '../../database/file-storage';
 import { buildContextDataForFile, publishUserAction } from '../../listener/UserActionListener';
 import { EMAIL_TEMPLATE } from '../../utils/emailTemplates/emailTemplate';
 import conf from '../../config/conf';
+import { generateInternalId } from '../../schema/identifier';
+import { createInternalObject } from '../../domain/internalObject';
 
 export const findById = (context: AuthContext, user: AuthUser, id: string) => {
   return storeLoadById<BasicStoreEntityDisseminationList>(context, user, id, ENTITY_TYPE_DISSEMINATION_LIST);
@@ -83,6 +85,15 @@ export const sendToDisseminationList = async (context: AuthContext, user: AuthUs
   return false;
 };
 
-// export const addDisseminationList = async (context: AuthContext, user: AuthUser, input: DisseminationListAddInput) => {};
+export const addDisseminationList = async (context: AuthContext, user: AuthUser, input: DisseminationListAddInput) => {
+  const disseminationListInternalId = generateInternalId();
+  const disseminationListToCreate = {
+    name: input.name,
+    emails: input.emails,
+    internal_id: disseminationListInternalId,
+  };
+  return createInternalObject<StoreEntityDisseminationList>(context, user, disseminationListToCreate, ENTITY_TYPE_DISSEMINATION_LIST);
+};
+
 // export const fieldPatchDisseminationList = async (context: AuthContext, user: AuthUser, id: string, input: EditInput[]) => {};
 // export const deleteDisseminationList = async (context: AuthContext, user: AuthUser, id: string) => {};
