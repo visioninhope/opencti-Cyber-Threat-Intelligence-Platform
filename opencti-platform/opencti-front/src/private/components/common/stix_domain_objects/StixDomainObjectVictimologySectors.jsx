@@ -5,10 +5,8 @@ import * as R from 'ramda';
 import withStyles from '@mui/styles/withStyles';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Collapse from '@mui/material/Collapse';
 import { Domain, ExpandLess, ExpandMore, FileDownloadOutlined } from '@mui/icons-material';
 import { AutoFix, FormatListGroup, RelationManyToMany } from 'mdi-material-ui';
@@ -16,6 +14,7 @@ import { createRefetchContainer, graphql } from 'react-relay';
 import Tooltip from '@mui/material/Tooltip';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import { ListItemButton } from '@mui/material';
 import { yearFormat } from '../../../../utils/Time';
 import inject18n from '../../../../components/i18n';
 import StixCoreRelationshipPopover from '../stix_core_relationships/StixCoreRelationshipPopover';
@@ -382,8 +381,7 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
             )(sector.subSectors);
             return (
               <div key={sector.id}>
-                <ListItem
-                  button={true}
+                <ListItemButton
                   divider={true}
                   onClick={this.handleToggleLine.bind(this, sector.id)}
                 >
@@ -404,17 +402,16 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                       )}
                     </IconButton>
                   </ListItemSecondaryAction>
-                </ListItem>
+                </ListItemButton>
                 <Collapse in={this.state.expandedLines[sector.id] === true}>
                   <List>
                     {orderedRelations.map((stixCoreRelationship) => {
                       const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                       return (
-                        <ListItem
+                        <ListItemButton
                           key={stixCoreRelationship.id}
                           classes={{ root: classes.nested }}
                           divider={true}
-                          button={true}
                           dense={true}
                           component={Link}
                           to={link}
@@ -480,7 +477,7 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                               />
                             )}
                           </ListItemSecondaryAction>
-                        </ListItem>
+                        </ListItemButton>
                       );
                     })}
                     {orderedSubSectors.map((subsector) => {
@@ -490,8 +487,7 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                       )(subsector.relations);
                       return (
                         <div key={subsector.id}>
-                          <ListItem
-                            button={true}
+                          <ListItemButton
                             divider={true}
                             classes={{ root: classes.nested }}
                             onClick={this.handleToggleLine.bind(
@@ -520,7 +516,7 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                   )}
                               </IconButton>
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </ListItemButton>
                           <Collapse
                             in={this.state.expandedLines[subsector.id] === true}
                           >
@@ -529,11 +525,10 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                 (stixCoreRelationship) => {
                                   const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                                   return (
-                                    <ListItem
+                                    <ListItemButton
                                       key={stixCoreRelationship.id}
                                       classes={{ root: classes.subnested }}
                                       divider={true}
-                                      button={true}
                                       dense={true}
                                       component={Link}
                                       to={link}
@@ -625,7 +620,7 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                           />
                                         )}
                                       </ListItemSecondaryAction>
-                                    </ListItem>
+                                    </ListItemButton>
                                   );
                                 },
                               )}

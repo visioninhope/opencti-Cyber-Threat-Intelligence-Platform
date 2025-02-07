@@ -8,11 +8,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Link } from 'react-router-dom';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import IconButton from '@mui/material/IconButton';
 import { LinkOff } from '@mui/icons-material';
 import { graphql, createFragmentContainer } from 'react-relay';
 import * as R from 'ramda';
+import { ListItemButton } from '@mui/material';
 import AddLocations from './AddLocations';
 import { addLocationsMutationRelationDelete } from './AddLocationsLines';
 import { APP_BASE_PATH, commitMutation } from '../../../../relay/environment';
@@ -79,7 +79,7 @@ class IntrusionSetLocationsComponent extends Component {
         <div className="clearfix" />
         <List style={{ marginTop: -10 }}>
           {intrusionSet.locations.edges.length === 0 && (
-            <ListItem dense={true} divider={true} button={false}>
+            <ListItem dense={true} divider={true}>
               <ListItemText primary="-" />
             </ListItem>
           )}
@@ -93,11 +93,10 @@ class IntrusionSetLocationsComponent extends Component {
                 ),
               );
             return (
-              <ListItem
+              <ListItemButton
                 key={location.id}
                 dense={true}
                 divider={true}
-                button={true}
                 component={Link}
                 to={`${link}/${location.id}`}
               >
@@ -126,7 +125,7 @@ class IntrusionSetLocationsComponent extends Component {
                     </IconButton>
                   </Security>
                 </ListItemSecondaryAction>
-              </ListItem>
+              </ListItemButton>
             );
           })}
         </List>

@@ -23,9 +23,9 @@ import { SearchIndexedFileLine_node$data } from '@components/search/__generated_
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { MoreVertOutlined, OpenInNewOutlined } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Tooltip from '@mui/material/Tooltip';
 import Skeleton from '@mui/material/Skeleton';
+import { ListItemButton } from '@mui/material';
 import { DataColumns } from '../../../components/list_lines';
 import type { Theme } from '../../../components/Theme';
 import { useFormatter } from '../../../components/i18n';
@@ -75,10 +75,9 @@ const SearchIndexedFileLineComponent: FunctionComponent<SearchIndexedFileLineCom
     entityLink = entityLink.concat('/files');
   }
   return (
-    <ListItem
+    <ListItemButton
       classes={{ root: classes.item }}
       divider={true}
-      button={true}
       component="a"
       href={getFileUri(node.file_id)}
       target="_blank"
@@ -115,7 +114,7 @@ const SearchIndexedFileLineComponent: FunctionComponent<SearchIndexedFileLineCom
           </Tooltip>
         )}
       </ListItemSecondaryAction>
-    </ListItem>
+    </ListItemButton>
   );
 };
 

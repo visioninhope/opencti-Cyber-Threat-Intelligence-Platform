@@ -5,7 +5,6 @@ import { graphql, createFragmentContainer } from 'react-relay';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { MoreVert } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
 import makeStyles from '@mui/styles/makeStyles';
@@ -13,6 +12,7 @@ import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
 import { AutoFix } from 'mdi-material-ui';
 import IconButton from '@mui/material/IconButton';
+import { ListItemButton } from '@mui/material';
 import { useFormatter } from '../../../../components/i18n';
 import ItemIcon from '../../../../components/ItemIcon';
 import { resolveLink } from '../../../../utils/Entity';
@@ -73,10 +73,9 @@ const ContainerStixCoreObjectLineComponent = (props) => {
   const isOnlyThroughInference = isThroughInference && !refTypes.includes('manual');
   const mappedString = Object.keys(contentMappingData).find((key) => contentMappingData[key] === node.standard_id);
   return (
-    <ListItem
+    <ListItemButton
       classes={{ root: classes.item }}
       divider={true}
-      button={true}
       component={Link}
       to={`${resolveLink(node.entity_type)}/${node.id}`}
     >
@@ -158,7 +157,7 @@ const ContainerStixCoreObjectLineComponent = (props) => {
           </Security>
         )}
       </ListItemSecondaryAction>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
@@ -204,7 +203,15 @@ export const ContainerStixCoreObjectsMappingLineDummy = (props) => {
   const classes = useStyles();
   const { dataColumns } = props;
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <IconButton classes={classes.itemIconDisabled} disabled={true} aria-haspopup="true" size="large">
+          <MoreVert />
+        </IconButton>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIcon }}>
         <Skeleton animation="wave" variant="circular" width={30} height={30} />
       </ListItemIcon>
@@ -228,11 +235,6 @@ export const ContainerStixCoreObjectsMappingLineDummy = (props) => {
           </div>
         }
       />
-      <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-        <IconButton disabled={true} aria-haspopup="true" size="large">
-          <MoreVert />
-        </IconButton>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

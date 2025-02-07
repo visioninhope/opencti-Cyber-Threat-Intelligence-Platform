@@ -8,7 +8,6 @@ import withStyles from '@mui/styles/withStyles';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import List from '@mui/material/List';
 import Alert from '@mui/material/Alert';
 import inject18n, { useFormatter } from '../../../../components/i18n';
@@ -76,7 +75,7 @@ const StixCoreObjectEnrollPlaybook = ({
                 <ListItem
                   divider={true}
                   classes={{ root: classes.item }}
-                  button={false}
+
                 >
                   <ListItemIcon classes={{ root: classes.itemIcon }}>
                     <ItemIcon type="Playbook" />

@@ -3,7 +3,6 @@ import { graphql, useFragment } from 'react-relay';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { LayersClearOutlined, MoreVert } from '@mui/icons-material';
 import Slide, { SlideProps } from '@mui/material/Slide';
 import Skeleton from '@mui/material/Skeleton';

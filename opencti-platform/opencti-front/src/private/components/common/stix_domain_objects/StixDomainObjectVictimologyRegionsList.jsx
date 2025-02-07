@@ -5,14 +5,13 @@ import * as R from 'ramda';
 import withStyles from '@mui/styles/withStyles';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Collapse from '@mui/material/Collapse';
 import { ExpandLess, ExpandMore, Flag, LocalPlayOutlined } from '@mui/icons-material';
 import Tooltip from '@mui/material/Tooltip';
 import { AutoFix } from 'mdi-material-ui';
+import { ListItemButton } from '@mui/material';
 import { yearFormat } from '../../../../utils/Time';
 import inject18n from '../../../../components/i18n';
 import StixCoreRelationshipPopover from '../stix_core_relationships/StixCoreRelationshipPopover';
@@ -275,8 +274,7 @@ class StixDomainObjectVictimologyRegionsList extends Component {
           )(region.countries);
           return (
             <div key={region.id}>
-              <ListItem
-                button={true}
+              <ListItemButton
                 divider={true}
                 onClick={this.handleToggleLine.bind(this, region.id)}
               >
@@ -297,17 +295,16 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                     )}
                   </IconButton>
                 </ListItemSecondaryAction>
-              </ListItem>
+              </ListItemButton>
               <Collapse in={this.state.expandedLines[region.id] === true}>
                 <List>
                   {orderedRelations.map((stixCoreRelationship) => {
                     const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                     return (
-                      <ListItem
+                      <ListItemButton
                         key={stixCoreRelationship.id}
                         classes={{ root: classes.nested }}
                         divider={true}
-                        button={true}
                         dense={true}
                         component={Link}
                         to={link}
@@ -374,7 +371,7 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                             />
                           )}
                         </ListItemSecondaryAction>
-                      </ListItem>
+                      </ListItemButton>
                     );
                   })}
                   {orderedCountries.map((country) => {
@@ -388,8 +385,7 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                     )(country.cities);
                     return (
                       <div key={country.id}>
-                        <ListItem
-                          button={true}
+                        <ListItemButton
                           divider={true}
                           classes={{ root: classes.nested }}
                           onClick={this.handleToggleLine.bind(this, country.id)}
@@ -414,7 +410,7 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                               )}
                             </IconButton>
                           </ListItemSecondaryAction>
-                        </ListItem>
+                        </ListItemButton>
                         <Collapse
                           in={this.state.expandedLines[country.id] === true}
                         >
@@ -422,11 +418,10 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                             {orderedSubRelations.map((stixCoreRelationship) => {
                               const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                               return (
-                                <ListItem
+                                <ListItemButton
                                   key={stixCoreRelationship.id}
                                   classes={{ root: classes.subnested }}
                                   divider={true}
-                                  button={true}
                                   dense={true}
                                   component={Link}
                                   to={link}
@@ -508,7 +503,7 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                                       />
                                     )}
                                   </ListItemSecondaryAction>
-                                </ListItem>
+                                </ListItemButton>
                               );
                             })}
                             {orderedCities.map((city) => {
@@ -522,13 +517,12 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                                     (stixCoreRelationship) => {
                                       const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                                       return (
-                                        <ListItem
+                                        <ListItemButton
                                           key={stixCoreRelationship.id}
                                           classes={{
                                             root: classes.subnested,
                                           }}
                                           divider={true}
-                                          button={true}
                                           dense={true}
                                           component={Link}
                                           to={link}
@@ -621,7 +615,7 @@ class StixDomainObjectVictimologyRegionsList extends Component {
                                               />
                                             )}
                                           </ListItemSecondaryAction>
-                                        </ListItem>
+                                        </ListItemButton>
                                       );
                                     },
                                   )}

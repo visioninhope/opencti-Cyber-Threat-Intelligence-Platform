@@ -116,7 +116,29 @@ const PublicFeedLine = ({ node }: { node: PublicFeedLines_node$key }) => {
     copyToClipboard(t_i18n, `${window.location.origin}/feeds/${feed.id}`);
   };
   return (
-    <ListItem classes={{ root: classes.item }} color="primary" divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      color="primary"
+      divider={true}
+      secondaryAction={
+        <>
+          <Tooltip title={t_i18n('Copy uri to clipboard for your csv client')}>
+            <span>
+              <IconButton onClick={copyClick} size="large" color="primary">
+                <ContentCopy />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title={t_i18n('Access CSV feeds directly in your browser')}>
+            <span>
+              <IconButton onClick={browseClick} size="large" color="primary">
+                <OpenInNew />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </>
+    }
+    >
       <ListItemIcon classes={{ root: classes.itemIcon }}>
         <ItemIcon type="feed" />
       </ListItemIcon>
@@ -135,22 +157,6 @@ const PublicFeedLine = ({ node }: { node: PublicFeedLines_node$key }) => {
           </div>
         }
       />
-      <ListItemSecondaryAction>
-        <Tooltip title={t_i18n('Copy uri to clipboard for your csv client')}>
-          <span>
-            <IconButton onClick={copyClick} size="large" color="primary">
-              <ContentCopy />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title={t_i18n('Access CSV feeds directly in your browser')}>
-          <span>
-            <IconButton onClick={browseClick} size="large" color="primary">
-              <OpenInNew />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

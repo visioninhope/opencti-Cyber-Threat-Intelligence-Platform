@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import { interval } from 'rxjs';
 import { graphql, createPaginationContainer } from 'react-relay';
-import ListItem from '@mui/material/ListItem';
 import { Link } from 'react-router-dom';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { compose } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
 import Tooltip from '@mui/material/Tooltip';
 import * as R from 'ramda';
 import { AutoFix } from 'mdi-material-ui';
+import { ListItemButton } from '@mui/material';
 import ItemIcon from '../../../../components/ItemIcon';
 import { getMainRepresentative } from '../../../../utils/defaultRepresentatives';
 import inject18n from '../../../../components/i18n';
@@ -116,10 +115,9 @@ class StixCyberObservableEntitiesLinesComponent extends Component {
                 }/knowledge/relations/${node.id}`
               : null;
             return (
-              <ListItem
+              <ListItemButton
                 classes={{ root: classes.item }}
                 divider={true}
-                button={true}
                 component={Link}
                 to={link}
                 disabled={restricted}
@@ -223,7 +221,7 @@ class StixCyberObservableEntitiesLinesComponent extends Component {
                     </Security>
                   )}
                 </ListItemSecondaryAction>
-              </ListItem>
+              </ListItemButton>
             );
           })}
       </>

@@ -3,11 +3,11 @@ import { useFragment } from 'react-relay';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { MoreVertOutlined, ShortTextOutlined } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
 import makeStyles from '@mui/styles/makeStyles';
 import Checkbox from '@mui/material/Checkbox';
+import { ListItemButton } from '@mui/material';
 import VocabularyPopover from './VocabularyPopover';
 import { DataColumns } from '../../../../components/list_lines';
 import type { Theme } from '../../../../components/Theme';
@@ -73,10 +73,9 @@ export const VocabularyLine: FunctionComponent<VocabularyLineProps> = ({
   const classes = useStyles();
   const vocab = useFragment(vocabFragment, node);
   return (
-    <ListItem
+    <ListItemButton
       classes={{ root: classes.item }}
       divider={true}
-      button={true}
       onClick={(event) => (event.shiftKey
         ? onToggleShiftEntity(index, vocab)
         : onToggleEntity(vocab))
@@ -120,7 +119,7 @@ export const VocabularyLine: FunctionComponent<VocabularyLineProps> = ({
           paginationOptions={paginationOptions}
         />
       </ListItemSecondaryAction>
-    </ListItem>
+    </ListItemButton>
   );
 };
 

@@ -8,12 +8,12 @@ import withTheme from '@mui/styles/withTheme';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { MoreVertOutlined } from '@mui/icons-material';
 import { AutoFix } from 'mdi-material-ui';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import * as R from 'ramda';
+import { ListItemButton } from '@mui/material';
 import { DraftChip, getDraftModeColor } from '../draft/DraftChip';
 import inject18n from '../../../../components/i18n';
 import ItemConfidence from '../../../../components/ItemConfidence';
@@ -76,10 +76,9 @@ class SimpleStixObjectOrStixRelationshipStixCoreRelationshipLineComponent extend
     };
     const draftColor = getDraftModeColor(theme);
     return (
-      <ListItem
+      <ListItemButton
         classes={{ root: classes.item }}
         divider={true}
-        button={true}
         component={Link}
         to={link}
       >
@@ -163,7 +162,7 @@ class SimpleStixObjectOrStixRelationshipStixCoreRelationshipLineComponent extend
             </Security>
           )}
         </ListItemSecondaryAction>
-      </ListItem>
+      </ListItemButton>
     );
   }
 }

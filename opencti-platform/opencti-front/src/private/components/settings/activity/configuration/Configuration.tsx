@@ -21,15 +21,14 @@ import makeStyles from '@mui/styles/makeStyles';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import Grid from '@mui/material/Grid';
-import ListItem from '@mui/material/ListItem';
 import { Delete } from '@mui/icons-material';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/styles';
+import { ListItemButton } from '@mui/material';
 import ActivityMenu from '../../ActivityMenu';
 import type { Theme } from '../../../../../components/Theme';
 import { useFormatter } from '../../../../../components/i18n';
@@ -222,10 +221,9 @@ ConfigurationComponentProps
                 {(settings.activity_listeners ?? []).map((listener) => {
                   return (
                     <React.Fragment key={listener.id}>
-                      <ListItem
+                      <ListItemButton
                         classes={{ root: classes.item }}
                         divider={true}
-                        button={true}
                       >
                         <ListItemIcon classes={{ root: classes.itemIcon }}>
                           <ItemIcon type={listener.entity_type} />
@@ -256,7 +254,7 @@ ConfigurationComponentProps
                             <Delete />
                           </IconButton>
                         </ListItemSecondaryAction>
-                      </ListItem>
+                      </ListItemButton>
                     </React.Fragment>
                   );
                 })}

@@ -116,7 +116,33 @@ const PublicStreamLine = ({ node }: { node: PublicStreamLines_node$key }) => {
     copyToClipboard(t_i18n, window.location.origin);
   };
   return (
-    <ListItem classes={{ root: classes.item }} color="primary" divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      color="primary"
+      divider={true}
+      secondaryAction={
+        <>
+          <Tooltip
+            title={t_i18n(
+              'Copy uri to clipboard for your OpenCTI synchronizer configuration',
+            )}
+          >
+            <span>
+              <IconButton onClick={copyClick} size="large" color="primary">
+                <ContentCopy />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title={t_i18n('Access stream directly in your browser')}>
+            <span>
+              <IconButton onClick={browseClick} size="large" color="primary">
+                <OpenInNew />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </>
+      }
+    >
       <ListItemIcon>
         <ItemIcon type="streamcollection" />
       </ListItemIcon>
@@ -135,26 +161,6 @@ const PublicStreamLine = ({ node }: { node: PublicStreamLines_node$key }) => {
           </div>
         }
       />
-      <ListItemSecondaryAction>
-        <Tooltip
-          title={t_i18n(
-            'Copy uri to clipboard for your OpenCTI synchronizer configuration',
-          )}
-        >
-          <span>
-            <IconButton onClick={copyClick} size="large" color="primary">
-              <ContentCopy />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title={t_i18n('Access stream directly in your browser')}>
-          <span>
-            <IconButton onClick={browseClick} size="large" color="primary">
-              <OpenInNew />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

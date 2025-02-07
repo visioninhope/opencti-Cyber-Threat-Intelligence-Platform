@@ -5,7 +5,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import { toPairs } from 'ramda';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { useFormatter } from './i18n';
 import { DataColumns } from './list_lines';
 
@@ -90,7 +89,7 @@ const ColumnsLinesTitles: FunctionComponent<TriggerLineTitlesProps> = ({
     );
   };
   return (
-    <ListItem classes={{ root: classes.item }} divider={false} button={false}>
+    <ListItem classes={{ root: classes.item }} divider={false}>
       <ListItemIcon> &nbsp; </ListItemIcon>
       <ListItemText
         primary={

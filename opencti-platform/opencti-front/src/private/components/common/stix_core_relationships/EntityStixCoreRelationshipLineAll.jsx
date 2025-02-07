@@ -7,13 +7,13 @@ import withStyles from '@mui/styles/withStyles';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { MoreVertOutlined } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
 import { AutoFix } from 'mdi-material-ui';
 import Tooltip from '@mui/material/Tooltip';
 import Checkbox from '@mui/material/Checkbox';
 import withTheme from '@mui/styles/withTheme';
+import { ListItemButton } from '@mui/material';
 import inject18n from '../../../../components/i18n';
 import ItemIcon from '../../../../components/ItemIcon';
 import ItemConfidence from '../../../../components/ItemConfidence';
@@ -74,10 +74,9 @@ class EntityStixCoreRelationshipLineAllComponent extends Component {
     const restricted = node.from === null || node.to === null;
     const link = `${entityLink}/relations/${node.id}`;
     return (
-      <ListItem
+      <ListItemButton
         classes={{ root: classes.item }}
         divider={true}
-        button={true}
         component={Link}
         to={link}
         disabled={restricted}
@@ -202,7 +201,7 @@ class EntityStixCoreRelationshipLineAllComponent extends Component {
             />
           )}
         </ListItemSecondaryAction>
-      </ListItem>
+      </ListItemButton>
     );
   }
 }
@@ -552,7 +551,11 @@ class EntityStixCoreRelationshipLineAllDummyComponent extends Component {
   render() {
     const { classes, dataColumns } = this.props;
     return (
-      <ListItem classes={{ root: classes.item }} divider={true}>
+      <ListItem
+        classes={{ root: classes.item }}
+        divider={true}
+        secondaryAction={<MoreVertOutlined classes={classes.itemIconDisabled} />}
+      >
         <ListItemIcon
           classes={{ root: classes.itemIconDisabled }}
           style={{ minWidth: 40 }}
@@ -687,9 +690,6 @@ class EntityStixCoreRelationshipLineAllDummyComponent extends Component {
             </div>
           }
         />
-        <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-          <MoreVertOutlined />
-        </ListItemSecondaryAction>
       </ListItem>
     );
   }

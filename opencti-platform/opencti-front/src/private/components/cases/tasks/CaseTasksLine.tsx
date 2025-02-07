@@ -4,7 +4,6 @@ import ListItemText from '@mui/material/ListItemText';
 import makeStyles from '@mui/styles/makeStyles';
 import React, { FunctionComponent, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
 import MoreVert from '@mui/icons-material/MoreVert';
@@ -12,6 +11,7 @@ import Drawer from '@components/common/drawer/Drawer';
 import CaseTaskOverview from '@components/cases/tasks/CaseTaskOverview';
 import { NorthEastOutlined } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { ListItemButton } from '@mui/material';
 import ItemIcon from '../../../../components/ItemIcon';
 import type { Theme } from '../../../../components/Theme';
 import { tasksDataColumns } from './TasksLine';
@@ -94,10 +94,9 @@ export const CaseTasksLine: FunctionComponent<CaseTasksLineProps> = ({
   const [open, setOpen] = useState(false);
   return (
     <>
-      <ListItem
+      <ListItemButton
         classes={{ root: classes.item }}
         divider={true}
-        button={true}
         onClick={() => setOpen(true)}
       >
         <ListItemIcon classes={{ root: classes.itemIcon }}>
@@ -126,7 +125,7 @@ export const CaseTasksLine: FunctionComponent<CaseTasksLineProps> = ({
             variant="inLine"
           />
         </ListItemSecondaryAction>
-      </ListItem>
+      </ListItemButton>
       <Drawer
         open={open}
         title={task.name}
@@ -152,7 +151,20 @@ export const CaseTasksLine: FunctionComponent<CaseTasksLineProps> = ({
 export const CaseTasksLineDummy = () => {
   const classes = useStyles();
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <IconButton
+          disabled={true}
+          aria-haspopup="true"
+          style={{ marginTop: 3 }}
+          size="large"
+        >
+          <MoreVert />
+        </IconButton>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIcon }}>
         <Skeleton animation="wave" variant="circular" width={30} height={30} />
       </ListItemIcon>
@@ -176,16 +188,6 @@ export const CaseTasksLineDummy = () => {
           </div>
         }
       />
-      <ListItemSecondaryAction>
-        <IconButton
-          disabled={true}
-          aria-haspopup="true"
-          style={{ marginTop: 3 }}
-          size="large"
-        >
-          <MoreVert />
-        </IconButton>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

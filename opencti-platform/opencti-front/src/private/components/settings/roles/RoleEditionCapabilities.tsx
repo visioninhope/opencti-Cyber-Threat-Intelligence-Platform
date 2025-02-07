@@ -3,7 +3,6 @@ import { createFragmentContainer, graphql, usePreloadedQuery } from 'react-relay
 import * as R from 'ramda';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import Checkbox from '@mui/material/Checkbox';
 import List from '@mui/material/List';
 import { PreloadedQuery } from 'react-relay/relay-hooks/EntryPointTypes';

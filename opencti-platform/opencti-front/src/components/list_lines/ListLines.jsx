@@ -7,7 +7,6 @@ import Tooltip from '@mui/material/Tooltip';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { ArrowDropDown, ArrowDropUp, FileDownloadOutlined, LibraryBooksOutlined, SettingsOutlined, ViewModuleOutlined } from '@mui/icons-material';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -587,8 +586,8 @@ class ListLines extends Component {
           {handleSwitchRedirectionMode && (
           <Dialog
             open={this.state.openSettings}
-            PaperProps={{ elevation: 1 }}
-            TransitionComponent={Transition}
+            slotProps={{ paper: { elevation: 1 } }}
+            slots={{ transition: Transition }}
             onClose={this.handleCloseSettings.bind(this)}
             maxWidth="xs"
             fullWidth={true}

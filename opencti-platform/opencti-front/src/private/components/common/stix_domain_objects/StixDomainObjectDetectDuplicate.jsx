@@ -11,7 +11,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { VisibilityOutlined } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { stixDomainObjectsLinesSearchQuery } from './StixDomainObjectsLines';
@@ -115,12 +114,12 @@ class StixDomainObjectDetectDuplicate extends Component {
           ''
         )}
         <Dialog
-          PaperProps={{ elevation: 1 }}
+          slotProps={{ paper: { elevation: 1 } }}
           open={this.state.open}
           fullWidth={true}
           maxWidth="md"
           keepMounted={true}
-          TransitionComponent={Transition}
+          slots={{ transition: Transition }}
           onClose={this.handleClose.bind(this)}
           classes={{ paper: classes.dialogPaper }}
         >

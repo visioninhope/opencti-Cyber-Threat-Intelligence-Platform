@@ -10,7 +10,6 @@ import { AddOutlined, DeleteOutlined, EditOutlined, HelpOutlined, LinkOffOutline
 import { LinkVariantPlus, LinkVariantRemove, Merge } from 'mdi-material-ui';
 import Tooltip from '@mui/material/Tooltip';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Badge from '@mui/material/Badge';
@@ -20,10 +19,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import DialogContentText from '@mui/material/DialogContentText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import IconButton from '@mui/material/IconButton';
 import { Link } from 'react-router-dom';
 import withTheme from '@mui/styles/withTheme';
+import { ListItemButton } from '@mui/material';
 import { truncate } from '../../../../utils/String';
 import inject18n from '../../../../components/i18n';
 import MarkdownDisplay from '../../../../components/MarkdownDisplay';
@@ -354,13 +353,12 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
                       }
                       if (externalReference.url) {
                         return (
-                          <ListItem
+                          <ListItemButton
                             component={Link}
                             key={externalReference.id}
                             to={`/dashboard/analyses/external_references/${externalReference.id}`}
                             dense={true}
                             divider={true}
-                            button={true}
                           >
                             <ListItemIcon>
                               <ItemIcon type="External-Reference" />
@@ -386,17 +384,16 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
                                 </IconButton>
                               </Tooltip>
                             </ListItemSecondaryAction>
-                          </ListItem>
+                          </ListItemButton>
                         );
                       }
                       return (
-                        <ListItem
+                        <ListItemButton
                           component={Link}
                           key={externalReference.id}
                           to={`/dashboard/analyses/external_references/${externalReference.id}`}
                           dense={true}
                           divider={true}
-                          button={true}
                         >
                           <ListItemIcon>
                             <ItemIcon type="External-Reference" />
@@ -408,7 +405,7 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
                               120,
                             )}
                           />
-                        </ListItem>
+                        </ListItemButton>
                       );
                     },
                   )}
@@ -418,7 +415,7 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
         </div>
         <div className={classes.line} />
         <Dialog
-          PaperProps={{ elevation: 1 }}
+          slotProps={{ paper: { elevation: 1 } }}
           open={this.state.open}
           onClose={this.handleClose.bind(this)}
           fullWidth={true}
@@ -438,10 +435,10 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
           </DialogActions>
         </Dialog>
         <Dialog
-          PaperProps={{ elevation: 1 }}
+          slotProps={{ paper: { elevation: 1 } }}
           open={this.state.displayExternalLink}
           keepMounted={true}
-          TransitionComponent={Transition}
+          slots={{ transition: Transition }}
           onClose={this.handleCloseExternalLink.bind(this)}
         >
           <DialogContent>

@@ -14,7 +14,6 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
 import { DialogTitle } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
@@ -619,9 +618,9 @@ const StixDomainObjectHeader = (props) => {
       </div>
       {!noAliases && (
         <Dialog
-          PaperProps={{ elevation: 1 }}
+          slotProps={{ paper: { elevation: 1 } }}
           open={openAliases}
-          TransitionComponent={Transition}
+          slots={{ transition: Transition }}
           onClose={handleToggleOpenAliases}
           fullWidth={true}
         >

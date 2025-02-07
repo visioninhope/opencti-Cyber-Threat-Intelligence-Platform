@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import { FactCheckOutlined } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import { ListItemButton } from '@mui/material';
