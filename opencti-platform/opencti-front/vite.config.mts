@@ -247,7 +247,7 @@ export default defineConfig({
   server: {
     port: 3000,
     warmup: {
-      clientFiles: ['./lang/front/*', './src/static/*', './src/app.tsx', './src/util/hooks/*']
+      clientFiles: ['./lang/front/*', './src/static/*', './src/app.tsx', './src/front.tsx', './src/util/hooks/*']
     },
     proxy: {
       '/logout': backProxy(),
