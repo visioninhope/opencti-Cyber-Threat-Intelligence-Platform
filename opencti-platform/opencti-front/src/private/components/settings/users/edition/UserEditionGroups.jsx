@@ -80,7 +80,20 @@ const UserEditionGroupsComponent = ({ user }) => {
         {groups.map((group) => {
           const userGroup = userGroups.find((g) => g.id === group.id);
           return (
-            <ListItem key={group.id} divider={true}>
+            <ListItem
+              key={group.id}
+              divider={true}
+              secondaryAction={
+                <Checkbox
+                  onChange={(event) => handleToggle(
+                    group.id,
+                    userGroup,
+                    event,
+                  )}
+                  checked={userGroup !== undefined}
+                />
+              }
+            >
               <ListItemIcon color="primary">
                 <GroupOutlined />
               </ListItemIcon>
@@ -101,16 +114,6 @@ const UserEditionGroupsComponent = ({ user }) => {
                 }
                 secondary={group.description ?? ''}
               />
-              <ListItemSecondaryAction>
-                <Checkbox
-                  onChange={(event) => handleToggle(
-                    group.id,
-                    userGroup,
-                    event,
-                  )}
-                  checked={userGroup !== undefined}
-                />
-              </ListItemSecondaryAction>
             </ListItem>
           );
         })}

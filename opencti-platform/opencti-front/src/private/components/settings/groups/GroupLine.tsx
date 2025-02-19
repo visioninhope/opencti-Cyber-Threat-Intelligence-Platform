@@ -159,7 +159,15 @@ export const GroupLineDummy: React.FC<Pick<GroupLineProps, 'dataColumns'>> = ({ 
   const classes = useStyles();
 
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <Box classes={{ root: classes.itemIconDisabled }}>
+          <KeyboardArrowRightOutlined/>
+        </Box>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIconDisabled }}>
         <Skeleton
           animation="wave"
@@ -240,9 +248,6 @@ export const GroupLineDummy: React.FC<Pick<GroupLineProps, 'dataColumns'>> = ({ 
           </div>
         }
       />
-      <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-        <KeyboardArrowRightOutlined/>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

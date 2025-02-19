@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import { LinkOff, SourceOutlined } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { useFormatter } from '../../../../components/i18n';
 import { AttackPatternDataComponents_attackPattern$data } from './__generated__/AttackPatternDataComponents_attackPattern.graphql';
 import AddDataComponents from './AddDataComponents';
@@ -74,20 +75,11 @@ const AttackPatternDataComponentsComponent: FunctionComponent<{
                 );
               }
               return (
-                <ListItemButton
+                <ListItem
                   key={dataComponent.id}
                   dense={true}
                   divider={true}
-                  component={Link}
-                  to={`/dashboard/techniques/data_components/${dataComponent.id}`}
-                >
-                  <ListItemIcon>
-                    <ListItemIcon>
-                      <SourceOutlined color="primary" />
-                    </ListItemIcon>
-                  </ListItemIcon>
-                  <ListItemText primary={dataComponent.name} />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <IconButton
                       aria-label="Remove"
                       onClick={() => removeDataComponent(dataComponent.id)}
@@ -95,8 +87,20 @@ const AttackPatternDataComponentsComponent: FunctionComponent<{
                     >
                       <LinkOff />
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                  }
+                >
+                  <ListItemButton
+                    component={Link}
+                    to={`/dashboard/techniques/data_components/${dataComponent.id}`}
+                  >
+                    <ListItemIcon>
+                      <ListItemIcon>
+                        <SourceOutlined color="primary" />
+                      </ListItemIcon>
+                    </ListItemIcon>
+                    <ListItemText primary={dataComponent.name} />
+                  </ListItemButton>
+                </ListItem>
               );
             })}
         </FieldOrEmpty>

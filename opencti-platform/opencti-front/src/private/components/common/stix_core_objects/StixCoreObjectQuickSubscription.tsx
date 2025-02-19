@@ -26,6 +26,7 @@ import {
 } from '@components/common/stix_core_objects/__generated__/stixCoreObjectTriggersUtilsPaginationQuery.graphql';
 import { stixCoreObjectTriggersUtils_triggers$key as FragmentKey } from '@components/common/stix_core_objects/__generated__/stixCoreObjectTriggersUtils_triggers.graphql';
 import { ListItemButton, SvgIconPropsColorOverrides } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import AutocompleteField from '../../../../components/AutocompleteField';
 import FilterIconButton from '../../../../components/FilterIconButton';
 import { useFormatter } from '../../../../components/i18n';
@@ -440,17 +441,9 @@ StixCoreObjectQuickSubscriptionContentProps
           </div>
           {otherInstanceTriggersToDisplay.length > 0 && (
             <List>
-              <ListItemButton
+              <ListItem
                 divider={true}
-                classes={{ root: classes.nested }}
-                onClick={handleToggleLine}
-              >
-                <ListItemText
-                  primary={`${otherInstanceTriggersToDisplay.length} ${t_i18n(
-                    'other trigger(s) related to this entity',
-                  )}`}
-                />
-                <ListItemSecondaryAction>
+                secondaryAction={
                   <IconButton
                     onClick={handleToggleLine}
                     aria-haspopup="true"
@@ -458,8 +451,19 @@ StixCoreObjectQuickSubscriptionContentProps
                   >
                     {expandedLines ? <ExpandLess /> : <ExpandMore />}
                   </IconButton>
-                </ListItemSecondaryAction>
-              </ListItemButton>
+              }
+              >
+                <ListItemButton
+                  classes={{ root: classes.nested }}
+                  onClick={handleToggleLine}
+                >
+                  <ListItemText
+                    primary={`${otherInstanceTriggersToDisplay.length} ${t_i18n(
+                      'other trigger(s) related to this entity',
+                    )}`}
+                  />
+                </ListItemButton>
+              </ListItem>
               <Collapse in={expandedLines}>
                 {otherInstanceTriggersToDisplay.map((instanceTrigger) => updateInstanceTriggerContent(
                   instanceTrigger.values,

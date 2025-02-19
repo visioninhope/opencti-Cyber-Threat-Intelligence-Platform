@@ -381,42 +381,47 @@ StixCoreObjectExternalReferencesLinesContainerProps
                 }
                 return (
                   <React.Fragment key={externalReference.id}>
-                    <ListItemButton
-                      component={Link}
-                      to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                    <ListItem
                       dense={true}
                       divider={true}
-                    >
-                      <ListItemIcon>
-                        <ItemIcon type="External-Reference" />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={`${externalReference.source_name} ${externalReferenceId}`}
-                        secondary={truncate(externalReference.description, 120)}
-                      />
-                      <ListItemSecondaryAction>
-                        {!isFileAttached && (
-                          <Security needs={[KNOWLEDGE_KNUPLOAD]}>
-                            <FileUploader
-                              entityId={externalReference.id}
-                              onUploadSuccess={() => relay.refetchConnection(200)
+                      secondaryAction={
+                        <>
+                          {!isFileAttached && (
+                            <Security needs={[KNOWLEDGE_KNUPLOAD]}>
+                              <FileUploader
+                                entityId={externalReference.id}
+                                onUploadSuccess={() => relay.refetchConnection(200)
+                                }
+                                size={undefined}
+                              />
+                            </Security>
+                          )}
+                          <Security needs={[KNOWLEDGE_KNUPDATE]}>
+                            <ExternalReferencePopover
+                              id={externalReference.id}
+                              isExternalReferenceAttachment={isFileAttached}
+                              handleRemove={() => handleOpenDialog(externalReferenceEdge)
                               }
-                              size={undefined}
+                              objectId={stixCoreObjectId}
+                              variant="inLine"
                             />
                           </Security>
-                        )}
-                        <Security needs={[KNOWLEDGE_KNUPDATE]}>
-                          <ExternalReferencePopover
-                            id={externalReference.id}
-                            isExternalReferenceAttachment={isFileAttached}
-                            handleRemove={() => handleOpenDialog(externalReferenceEdge)
-                            }
-                            objectId={stixCoreObjectId}
-                            variant="inLine"
-                          />
-                        </Security>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
+                        </>
+                      }
+                    >
+                      <ListItemButton
+                        component={Link}
+                        to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                      >
+                        <ListItemIcon>
+                          <ItemIcon type="External-Reference" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={`${externalReference.source_name} ${externalReferenceId}`}
+                          secondary={truncate(externalReference.description, 120)}
+                        />
+                      </ListItemButton>
+                    </ListItem>
                     {externalReference.importFiles?.edges
                       && externalReference.importFiles?.edges.length > 0 && (
                         <List>

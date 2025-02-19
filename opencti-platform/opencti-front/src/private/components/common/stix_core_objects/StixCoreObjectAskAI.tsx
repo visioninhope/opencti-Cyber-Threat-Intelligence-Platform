@@ -312,12 +312,10 @@ const StixCoreObjectAskAI: FunctionComponent<StixCoreObjectAskAiProps> = ({
         <DialogContent>
           <List>
             {isContainerWithContent(instanceType) && format !== 'json' && (
-              <ListItem dense={true} divider={true}>
-                <ListItemText
-                  primary={t_i18n('Main content')}
-                  secondary={t_i18n('Put in the embedded content of the entity')}
-                />
-                <ListItemSecondaryAction>
+              <ListItem
+                dense={true}
+                divider={true}
+                secondaryAction={
                   <Radio
                     checked={destination === 'content'}
                     onChange={() => setDestination('content')}
@@ -325,16 +323,19 @@ const StixCoreObjectAskAI: FunctionComponent<StixCoreObjectAskAiProps> = ({
                     name="destination"
                     inputProps={{ 'aria-label': 'destination' }}
                   />
-                </ListItemSecondaryAction>
+                }
+              >
+                <ListItemText
+                  primary={t_i18n('Main content')}
+                  secondary={t_i18n('Put in the embedded content of the entity')}
+                />
               </ListItem>
             )}
             {isKnowledgeUploader && (
-              <ListItem dense={true} divider={true}>
-                <ListItemText
-                  primary={t_i18n('New file')}
-                  secondary={t_i18n('Create a new file with the content')}
-                />
-                <ListItemSecondaryAction>
+              <ListItem
+                dense={true}
+                divider={true}
+                secondaryAction={
                   <Radio
                     checked={destination === 'file'}
                     onChange={() => setDestination('file')}
@@ -342,7 +343,12 @@ const StixCoreObjectAskAI: FunctionComponent<StixCoreObjectAskAiProps> = ({
                     name="destination"
                     inputProps={{ 'aria-label': 'destination' }}
                   />
-                </ListItemSecondaryAction>
+                }
+              >
+                <ListItemText
+                  primary={t_i18n('New file')}
+                  secondary={t_i18n('Create a new file with the content')}
+                />
               </ListItem>
             )}
           </List>

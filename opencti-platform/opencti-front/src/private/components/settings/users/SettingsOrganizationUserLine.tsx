@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
 import makeStyles from '@mui/styles/makeStyles';
 import { SettingsOrganizationUserLine_node$key } from '@components/settings/users/__generated__/SettingsOrganizationUserLine_node.graphql';
-import { ListItemButton, ListItemSecondaryAction } from '@mui/material';
+import { ListItemButton } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 import { DataColumns } from '../../../../components/list_lines';
 import type { Theme } from '../../../../components/Theme';
@@ -75,35 +75,36 @@ export const SettingsOrganizationUserLine: FunctionComponent<SettingsOrganizatio
   const external = user.external === true;
 
   return (
-    <ListItemButton
-      classes={{ root: classes.item }}
+    <ListItem
       divider={true}
-      component={Link}
-      to={`/dashboard/settings/accesses/users/${user.id}`}
+      secondaryAction={<KeyboardArrowRightOutlined />}
     >
-      <ListItemIcon classes={{ root: classes.itemIcon }}>
-        {external && <AccountCircleOutlined />}
-        {!external && (memberIsOrganizationAdmin ? <Tooltip title={t_i18n('Organization administrator')}><AdminPanelSettingsOutlined color="success" /></Tooltip> : <Tooltip title={t_i18n('Member')}><PersonOutlined /></Tooltip>)}
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <div>
-            {Object.values(dataColumns).map((value) => (
-              <div
-                key={value.label}
-                className={classes.bodyItem}
-                style={{ width: value.width }}
-              >
-                {value.render?.(user, { fd })}
-              </div>
-            ))}
-          </div>
+      <ListItemButton
+        classes={{ root: classes.item }}
+        component={Link}
+        to={`/dashboard/settings/accesses/users/${user.id}`}
+      >
+        <ListItemIcon classes={{ root: classes.itemIcon }}>
+          {external && <AccountCircleOutlined />}
+          {!external && (memberIsOrganizationAdmin ? <Tooltip title={t_i18n('Organization administrator')}><AdminPanelSettingsOutlined color="success" /></Tooltip> : <Tooltip title={t_i18n('Member')}><PersonOutlined /></Tooltip>)}
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <div>
+              {Object.values(dataColumns).map((value) => (
+                <div
+                  key={value.label}
+                  className={classes.bodyItem}
+                  style={{ width: value.width }}
+                >
+                  {value.render?.(user, { fd })}
+                </div>
+              ))}
+            </div>
         }
-      />
-      <ListItemSecondaryAction>
-        <KeyboardArrowRightOutlined />
-      </ListItemSecondaryAction>
-    </ListItemButton>
+        />
+      </ListItemButton>
+    </ListItem>
   );
 };
 

@@ -105,6 +105,12 @@ const SubTypeWorkflow: FunctionComponent<SubTypeEditionContainerProps> = ({
                   <ListItem
                     key={status.id}
                     divider={true}
+                    secondaryAction={
+                      <SubTypeWorkflowStatusPopover
+                        subTypeId={subType.id}
+                        statusId={status.id}
+                      />
+                    }
                   >
                     <ListItemAvatar>
                       <Avatar
@@ -137,12 +143,6 @@ const SubTypeWorkflow: FunctionComponent<SubTypeEditionContainerProps> = ({
                         </>
                       }
                     />
-                    <ListItemSecondaryAction>
-                      <SubTypeWorkflowStatusPopover
-                        subTypeId={subType.id}
-                        statusId={status.id}
-                      />
-                    </ListItemSecondaryAction>
                   </ListItem>
                 );
               })}

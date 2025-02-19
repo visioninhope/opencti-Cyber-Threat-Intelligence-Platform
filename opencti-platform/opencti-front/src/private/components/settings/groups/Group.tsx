@@ -240,9 +240,20 @@ const Group = ({ groupData }: { groupData: Group_group$key }) => {
                 </Typography>
                 <FieldOrEmpty source={group.default_dashboard}>
                   <List>
-                    <ListItemButton
+                    <ListItem
                       dense={true}
                       divider={true}
+                      secondaryAction={!canAccessDashboard && (
+                          <Tooltip
+                            title={t_i18n(
+                              'You need to authorize this group to access this dashboard in the permissions of the workspace.',
+                            )}
+                          >
+                            <WarningOutlined color="warning" />
+                          </Tooltip>
+                      )}
+                      ></ListItem>
+                    <ListItemButton
                       component={Link}
                       to={`/dashboard/workspaces/dashboards/${group.default_dashboard?.id}`}
                     >
@@ -252,18 +263,8 @@ const Group = ({ groupData }: { groupData: Group_group$key }) => {
                       <ListItemText
                         primary={truncate(group.default_dashboard?.name, 40)}
                       />
-                      {!canAccessDashboard && (
-                        <ListItemSecondaryAction>
-                          <Tooltip
-                            title={t_i18n(
-                              'You need to authorize this group to access this dashboard in the permissions of the workspace.',
-                            )}
-                          >
-                            <WarningOutlined color="warning" />
-                          </Tooltip>
-                        </ListItemSecondaryAction>
-                      )}
                     </ListItemButton>
+                    </ListItem>
                   </List>
                 </FieldOrEmpty>
               </Grid>

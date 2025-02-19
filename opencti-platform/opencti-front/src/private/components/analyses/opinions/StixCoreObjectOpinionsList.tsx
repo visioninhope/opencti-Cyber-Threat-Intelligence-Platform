@@ -11,6 +11,7 @@ import * as R from 'ramda';
 import { Link } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import OpinionPopover from './OpinionPopover';
 import { truncate } from '../../../../utils/String';
 import ItemMarkings from '../../../../components/ItemMarkings';
@@ -76,62 +77,63 @@ const StixCoreObjectOpinionsList: FunctionComponent<StixCoreObjectOpinionsListPr
           {opinions && (opinions.edges ?? []).map((opinionEdge) => {
             const opinion = opinionEdge?.node;
             return (
-              <ListItemButton
+              <ListItem
                 key={opinion?.id}
                 divider={true}
-                component={Link}
-                to={`/dashboard/analyses/opinions/${opinion?.id}`}
+                secondaryAction={opinion
+                  && <OpinionPopover
+                    opinion={opinion}
+                    variant='inList'
+                    onDelete={() => {
+                      onDelete();
+                      handleClose();
+                    }}
+                     />
+                }
               >
-                <ListItemIcon>
-                  <ItemIcon type="Opinion" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={opinion?.opinion}
-                  secondary={
-                    <Tooltip title={opinion?.explanation}>
-                      <span>{truncate(opinion?.explanation, 80)}</span>
-                    </Tooltip>
+                <ListItemButton
+                  component={Link}
+                  to={`/dashboard/analyses/opinions/${opinion?.id}`}
+                >
+                  <ListItemIcon>
+                    <ItemIcon type="Opinion" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={opinion?.opinion}
+                    secondary={
+                      <Tooltip title={opinion?.explanation}>
+                        <span>{truncate(opinion?.explanation, 80)}</span>
+                      </Tooltip>
                   }
-                  sx={{
-                    flex: 'none',
-                    width: '400px',
-                    marginRight: '50px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                />
-                <Tooltip title={R.pathOr('', ['createdBy', 'name'], opinion)}>
-                  <div style={{
-                    marginRight: 50,
-                    width: '200px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                  >
-                    {R.pathOr('', ['createdBy', 'name'], opinion)}
-                  </div>
-                </Tooltip>
-                <div style={{ marginRight: 50 }}>
-                  <ItemMarkings
-                    variant="inList"
-                    markingDefinitions={opinion?.objectMarking ?? []}
-                    limit={1}
+                    sx={{
+                      flex: 'none',
+                      width: '400px',
+                      marginRight: '50px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
                   />
-                </div>
-                <ListItemSecondaryAction>
-                  {opinion
-                    && <OpinionPopover
-                      opinion={opinion}
-                      variant='inList'
-                      onDelete={() => {
-                        onDelete();
-                        handleClose();
-                      }}
-                       />
-                  }
-                </ListItemSecondaryAction>
-              </ListItemButton>
+                  <Tooltip title={R.pathOr('', ['createdBy', 'name'], opinion)}>
+                    <div style={{
+                      marginRight: 50,
+                      width: '200px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                    >
+                      {R.pathOr('', ['createdBy', 'name'], opinion)}
+                    </div>
+                  </Tooltip>
+                  <div style={{ marginRight: 50 }}>
+                    <ItemMarkings
+                      variant="inList"
+                      markingDefinitions={opinion?.objectMarking ?? []}
+                      limit={1}
+                    />
+                  </div>
+                </ListItemButton>
+              </ListItem>
             );
           })}
         </List>

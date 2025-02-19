@@ -476,6 +476,9 @@ class ListLines extends Component {
               classes={{ root: classes.item }}
               divider={false}
               style={{ paddingTop: 0 }}
+              secondaryAction={secondaryAction && (
+                <> &nbsp; </>
+              )}
             >
               <ListItemIcon
                 style={{
@@ -530,9 +533,6 @@ class ListLines extends Component {
                   </Box>
                 }
               />
-              {secondaryAction && (
-                <ListItemSecondaryAction> &nbsp; </ListItemSecondaryAction>
-              )}
             </ListItem>
             )}
             {children}

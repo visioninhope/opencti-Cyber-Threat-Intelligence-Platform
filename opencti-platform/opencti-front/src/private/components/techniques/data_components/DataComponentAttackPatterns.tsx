@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import { LinkOff } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { deleteNodeFromEdge } from '../../../../utils/store';
 import { useFormatter } from '../../../../components/i18n';
 import AddAttackPatterns from './AddAttackPatterns';
@@ -72,20 +73,11 @@ const DataComponentAttackPatternsComponent: FunctionComponent<{
                 );
               }
               return (
-                <ListItemButton
+                <ListItem
                   key={attackPattern.id}
                   dense={true}
                   divider={true}
-                  component={Link}
-                  to={`/dashboard/techniques/attack_patterns/${attackPattern.id}`}
-                >
-                  <ListItemIcon>
-                    <ListItemIcon>
-                      <LockPattern color="primary" />
-                    </ListItemIcon>
-                  </ListItemIcon>
-                  <ListItemText primary={attackPattern.name} />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <IconButton
                       aria-label="Remove"
                       onClick={() => removeAttackPattern(attackPattern.id)}
@@ -93,8 +85,20 @@ const DataComponentAttackPatternsComponent: FunctionComponent<{
                     >
                       <LinkOff />
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                  }
+                >
+                  <ListItemButton
+                    component={Link}
+                    to={`/dashboard/techniques/attack_patterns/${attackPattern.id}`}
+                  >
+                    <ListItemIcon>
+                      <ListItemIcon>
+                        <LockPattern color="primary" />
+                      </ListItemIcon>
+                    </ListItemIcon>
+                    <ListItemText primary={attackPattern.name} />
+                  </ListItemButton>
+                </ListItem>
               );
             })}
         </List>

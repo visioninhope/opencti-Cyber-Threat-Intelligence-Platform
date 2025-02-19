@@ -111,30 +111,33 @@ class StixCyberObservablesContainer extends Component {
             <AccordionDetails classes={{ root: classes.expansionPanelContent }}>
               <List classes={{ root: classes.list }}>
                 {stixCyberObservables[type].map((stixCyberObservable) => (
-                  <ListItemButton
+                  <ListItem
                     key={stixCyberObservable.id}
-                    classes={{ root: classes.menuItem }}
                     divider={true}
-                    component={Link}
-                    to={`/dashboard/observations/observables/${stixCyberObservable.id}`}
-                  >
-                    <ListItemIcon classes={{ root: classes.itemIcon }}>
-                      <ItemIcon type={type} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={truncate(
-                        stixCyberObservable.observable_value,
-                        100,
-                      )}
-                      secondary={truncate(stixCyberObservable.description, 150)}
-                    />
-                    <ListItemSecondaryAction>
+                    secondaryAction={
                       <StixCoreObjectLabels
                         labels={stixCyberObservable.objectLabel}
                         variant="inSearch"
                       />
-                    </ListItemSecondaryAction>
-                  </ListItemButton>
+                    }
+                  >
+                    <ListItemButton
+                      classes={{ root: classes.menuItem }}
+                      component={Link}
+                      to={`/dashboard/observations/observables/${stixCyberObservable.id}`}
+                    >
+                      <ListItemIcon classes={{ root: classes.itemIcon }}>
+                        <ItemIcon type={type} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={truncate(
+                          stixCyberObservable.observable_value,
+                          100,
+                        )}
+                        secondary={truncate(stixCyberObservable.description, 150)}
+                      />
+                    </ListItemButton>
+                  </ListItem>
                 ))}
               </List>
             </AccordionDetails>

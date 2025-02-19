@@ -23,6 +23,7 @@ import IconButton from '@mui/material/IconButton';
 import { Link } from 'react-router-dom';
 import withTheme from '@mui/styles/withTheme';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { truncate } from '../../../../utils/String';
 import inject18n from '../../../../components/i18n';
 import MarkdownDisplay from '../../../../components/MarkdownDisplay';
@@ -353,24 +354,11 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
                       }
                       if (externalReference.url) {
                         return (
-                          <ListItemButton
-                            component={Link}
+                          <ListItem
                             key={externalReference.id}
-                            to={`/dashboard/analyses/external_references/${externalReference.id}`}
                             dense={true}
                             divider={true}
-                          >
-                            <ListItemIcon>
-                              <ItemIcon type="External-Reference" />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={`${externalReference.source_name} ${externalReferenceId}`}
-                              secondary={truncate(
-                                externalReferenceSecondary,
-                                90,
-                              )}
-                            />
-                            <ListItemSecondaryAction>
+                            secondaryAction={
                               <Tooltip title={t('Browse the link')}>
                                 <IconButton
                                   onClick={this.handleOpenExternalLink.bind(
@@ -383,8 +371,24 @@ class StixCoreRelationshipHistoryLineComponent extends Component {
                                   <OpenInBrowserOutlined />
                                 </IconButton>
                               </Tooltip>
-                            </ListItemSecondaryAction>
-                          </ListItemButton>
+                            }
+                          >
+                            <ListItemButton
+                              component={Link}
+                              to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                            >
+                              <ListItemIcon>
+                                <ItemIcon type="External-Reference" />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={`${externalReference.source_name} ${externalReferenceId}`}
+                                secondary={truncate(
+                                  externalReferenceSecondary,
+                                  90,
+                                )}
+                              />
+                            </ListItemButton>
+                          </ListItem>
                         );
                       }
                       return (

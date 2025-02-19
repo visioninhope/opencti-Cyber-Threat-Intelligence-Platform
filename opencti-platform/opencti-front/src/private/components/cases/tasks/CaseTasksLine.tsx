@@ -94,38 +94,41 @@ export const CaseTasksLine: FunctionComponent<CaseTasksLineProps> = ({
   const [open, setOpen] = useState(false);
   return (
     <>
-      <ListItemButton
-        classes={{ root: classes.item }}
+      <ListItem
         divider={true}
-        onClick={() => setOpen(true)}
-      >
-        <ListItemIcon classes={{ root: classes.itemIcon }}>
-          <ItemIcon type="Task" />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <>
-              {Object.values(tasksDataColumns).map((value) => (
-                <div
-                  key={value.label}
-                  className={classes.bodyItem}
-                  style={{ width: value.width }}
-                >
-                  {value.render?.(task, { fld, classes })}
-                </div>
-              ))}
-            </>
-          }
-        />
-        <ListItemSecondaryAction>
+        secondaryAction={
           <TaskPopover
             id={task.id}
             objectId={entityId}
             paginationOptions={paginationOptions}
             variant="inLine"
           />
-        </ListItemSecondaryAction>
-      </ListItemButton>
+      }
+      >
+        <ListItemButton
+          classes={{ root: classes.item }}
+          onClick={() => setOpen(true)}
+        >
+          <ListItemIcon classes={{ root: classes.itemIcon }}>
+            <ItemIcon type="Task" />
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <>
+                {Object.values(tasksDataColumns).map((value) => (
+                  <div
+                    key={value.label}
+                    className={classes.bodyItem}
+                    style={{ width: value.width }}
+                  >
+                    {value.render?.(task, { fld, classes })}
+                  </div>
+                ))}
+              </>
+          }
+          />
+        </ListItemButton>
+      </ListItem>
       <Drawer
         open={open}
         title={task.name}

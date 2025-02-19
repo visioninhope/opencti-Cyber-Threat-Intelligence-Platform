@@ -14,6 +14,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import * as R from 'ramda';
 import { ListItemButton } from '@mui/material';
+import Box from '@mui/material/Box';
 import { DraftChip, getDraftModeColor } from '../draft/DraftChip';
 import inject18n from '../../../../components/i18n';
 import ItemConfidence from '../../../../components/ItemConfidence';
@@ -76,93 +77,94 @@ class SimpleStixObjectOrStixRelationshipStixCoreRelationshipLineComponent extend
     };
     const draftColor = getDraftModeColor(theme);
     return (
-      <ListItemButton
-        classes={{ root: classes.item }}
+      <ListItem
         divider={true}
-        component={Link}
-        to={link}
+        secondaryAction={node.is_inferred ? (
+          <Tooltip
+            title={
+              t('Inferred knowledge based on the rule ')
+              + R.head(node.x_opencti_inferences).rule.name
+            }
+          >
+            <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
+          </Tooltip>
+        ) : (
+          <Security needs={[KNOWLEDGE_KNUPDATE]}>
+            <StixCoreRelationshipPopover
+              stixCoreRelationshipId={node.id}
+              paginationOptions={paginationOptions}
+              connectionKey={connectionKey}
+            />
+          </Security>
+        )}
       >
-        <ListItemIcon classes={{ root: classes.itemIcon }}>
-          <ItemIcon type={node.entity_type} isReversed={isReversed} color={node.draftVersion ? draftColor : null} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <>
-              <div
-                className={classes.bodyItem}
-                style={{ width: dataColumns.relationship_type.width }}
-              >
-                <ItemEntityType
-                  entityType={node.relationship_type}
-                />
-              </div>
-              <div
-                className={classes.bodyItem}
-                style={{ width: dataColumns.entity_type.width }}
-              >
-                <ItemEntityType
-                  entityType={element.entity_type}
-                  size='large'
-                  showIcon
-                />
-              </div>
-              <div
-                className={classes.bodyItem}
-                style={{ width: dataColumns.name.width }}
-              >
-                {element.restricted ? element.name : getMainRepresentative(element)}
-                {element.draftVersion && (<DraftChip/>)}
-              </div>
-              <div
-                className={classes.bodyItem}
-                style={{ width: dataColumns.created_at.width }}
-              >
-                {fsd(node.created_at)}
-              </div>
-              <div
-                className={classes.bodyItem}
-                style={{ width: dataColumns.confidence.width }}
-              >
-                <ItemConfidence
-                  confidence={node.confidence}
-                  entityType={node.entity_type}
-                  variant="inList"
-                />
-              </div>
-              <div
-                className={classes.bodyItem}
-                style={{ width: dataColumns.markings.width }}
-              >
-                <ItemMarkings
-                  variant="inList"
-                  markingDefinitions={node.objectMarking ?? []}
-                  limit={1}
-                />
-              </div>
-            </>
+        <ListItemButton
+          classes={{ root: classes.item }}
+          component={Link}
+          to={link}
+        >
+          <ListItemIcon classes={{ root: classes.itemIcon }}>
+            <ItemIcon type={node.entity_type} isReversed={isReversed} color={node.draftVersion ? draftColor : null} />
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <>
+                <div
+                  className={classes.bodyItem}
+                  style={{ width: dataColumns.relationship_type.width }}
+                >
+                  <ItemEntityType
+                    entityType={node.relationship_type}
+                  />
+                </div>
+                <div
+                  className={classes.bodyItem}
+                  style={{ width: dataColumns.entity_type.width }}
+                >
+                  <ItemEntityType
+                    entityType={element.entity_type}
+                    size='large'
+                    showIcon
+                  />
+                </div>
+                <div
+                  className={classes.bodyItem}
+                  style={{ width: dataColumns.name.width }}
+                >
+                  {element.restricted ? element.name : getMainRepresentative(element)}
+                  {element.draftVersion && (<DraftChip/>)}
+                </div>
+                <div
+                  className={classes.bodyItem}
+                  style={{ width: dataColumns.created_at.width }}
+                >
+                  {fsd(node.created_at)}
+                </div>
+                <div
+                  className={classes.bodyItem}
+                  style={{ width: dataColumns.confidence.width }}
+                >
+                  <ItemConfidence
+                    confidence={node.confidence}
+                    entityType={node.entity_type}
+                    variant="inList"
+                  />
+                </div>
+                <div
+                  className={classes.bodyItem}
+                  style={{ width: dataColumns.markings.width }}
+                >
+                  <ItemMarkings
+                    variant="inList"
+                    markingDefinitions={node.objectMarking ?? []}
+                    limit={1}
+                  />
+                </div>
+              </>
           }
-        />
-        <ListItemSecondaryAction>
-          {node.is_inferred ? (
-            <Tooltip
-              title={
-                t('Inferred knowledge based on the rule ')
-                + R.head(node.x_opencti_inferences).rule.name
-              }
-            >
-              <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
-            </Tooltip>
-          ) : (
-            <Security needs={[KNOWLEDGE_KNUPDATE]}>
-              <StixCoreRelationshipPopover
-                stixCoreRelationshipId={node.id}
-                paginationOptions={paginationOptions}
-                connectionKey={connectionKey}
-              />
-            </Security>
-          )}
-        </ListItemSecondaryAction>
-      </ListItemButton>
+          />
+        </ListItemButton>
+      </ListItem>
     );
   }
 }
@@ -697,7 +699,15 @@ class SimpleStixObjectOrStixRelationshipStixCoreRelationshipLineDummyComponent e
   render() {
     const { classes, dataColumns } = this.props;
     return (
-      <ListItem classes={{ root: classes.item }} divider={true}>
+      <ListItem
+        classes={{ root: classes.item }}
+        divider={true}
+        secondaryAction={
+          <Box classes={{ root: classes.itemIconDisabled }}>
+            <MoreVertOutlined/>
+          </Box>
+        }
+      >
         <ListItemIcon classes={{ root: classes.itemIconDisabled }}>
           <Skeleton
             animation="wave"
@@ -767,9 +777,6 @@ class SimpleStixObjectOrStixRelationshipStixCoreRelationshipLineDummyComponent e
             </div>
           }
         />
-        <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-          <MoreVertOutlined />
-        </ListItemSecondaryAction>
       </ListItem>
     );
   }

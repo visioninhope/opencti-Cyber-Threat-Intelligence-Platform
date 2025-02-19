@@ -13,6 +13,7 @@ import { ExpandLessOutlined, ExpandMoreOutlined, LinkOff } from '@mui/icons-mate
 import { graphql, createFragmentContainer } from 'react-relay';
 import * as R from 'ramda';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { truncate } from '../../../../utils/String';
 import AddAttackPatterns from './AddAttackPatterns';
 import { addAttackPatternsLinesMutationRelationDelete } from './AddAttackPatternsLines';
@@ -104,23 +105,11 @@ class CourseOfActionAttackPatternComponent extends Component {
             (attackPatternEdge) => {
               const attackPattern = attackPatternEdge.node;
               return (
-                <ListItemButton
+                <ListItem
                   key={attackPattern.id}
                   dense={true}
                   divider={true}
-                  component={Link}
-                  to={`/dashboard/techniques/attack_patterns/${attackPattern.id}`}
-                >
-                  <ListItemIcon>
-                    <Avatar classes={{ root: classes.avatar }}>
-                      {attackPattern.name.substring(0, 1)}
-                    </Avatar>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={attackPattern.name}
-                    secondary={truncate(attackPattern.description, 60)}
-                  />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <IconButton
                       aria-label="Remove"
                       onClick={this.removeAttackPattern.bind(
@@ -131,8 +120,23 @@ class CourseOfActionAttackPatternComponent extends Component {
                     >
                       <LinkOff />
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                  }
+                >
+                  <ListItemButton
+                    component={Link}
+                    to={`/dashboard/techniques/attack_patterns/${attackPattern.id}`}
+                  >
+                    <ListItemIcon>
+                      <Avatar classes={{ root: classes.avatar }}>
+                        {attackPattern.name.substring(0, 1)}
+                      </Avatar>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={attackPattern.name}
+                      secondary={truncate(attackPattern.description, 60)}
+                    />
+                  </ListItemButton>
+                </ListItem>
               );
             },
           )}

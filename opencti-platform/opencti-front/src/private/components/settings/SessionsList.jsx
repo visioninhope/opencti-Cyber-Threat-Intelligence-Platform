@@ -162,6 +162,16 @@ const SessionsListComponent = ({ relay, data, keyword }) => {
                     key={userSession.id}
                     classes={{ root: classes.itemNested }}
                     divider={true}
+                    secondaryAction={
+                      <IconButton
+                        aria-label="Kill"
+                        onClick={() => handleOpenKillSession(userSession.id)}
+                        size="large"
+                        color="primary"
+                      >
+                        <DeleteOutlined />
+                      </IconButton>
+                    }
                   >
                     <ListItemIcon>
                       <ItemIcon type="Session" />
@@ -180,16 +190,6 @@ const SessionsListComponent = ({ relay, data, keyword }) => {
                         </div>
                       }
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        aria-label="Kill"
-                        onClick={() => handleOpenKillSession(userSession.id)}
-                        size="large"
-                        color="primary"
-                      >
-                        <DeleteOutlined />
-                      </IconButton>
-                    </ListItemSecondaryAction>
                   </ListItem>
                 ))}
               </List>

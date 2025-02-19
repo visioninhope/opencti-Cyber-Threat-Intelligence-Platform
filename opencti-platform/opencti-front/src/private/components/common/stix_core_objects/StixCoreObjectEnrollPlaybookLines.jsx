@@ -75,25 +75,26 @@ const StixCoreObjectEnrollPlaybook = ({
                 <ListItem
                   divider={true}
                   classes={{ root: classes.item }}
-
+                  secondaryAction={
+                    <Security needs={[KNOWLEDGE_KNENRICHMENT]}>
+                      <div style={{ right: 0 }}>
+                        <Tooltip title={t_i18n('Trigger this playbook now')}>
+                          <IconButton
+                            disabled={isSubmitting}
+                            onClick={() => askEnroll(playbook.id)}
+                            size="large"
+                          >
+                            <PlayCircleOutlined />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    </Security>
+                  }
                 >
                   <ListItemIcon classes={{ root: classes.itemIcon }}>
                     <ItemIcon type="Playbook" />
                   </ListItemIcon>
                   <ListItemText primary={playbook.name} />
-                  <Security needs={[KNOWLEDGE_KNENRICHMENT]}>
-                    <ListItemSecondaryAction style={{ right: 0 }}>
-                      <Tooltip title={t_i18n('Trigger this playbook now')}>
-                        <IconButton
-                          disabled={isSubmitting}
-                          onClick={() => askEnroll(playbook.id)}
-                          size="large"
-                        >
-                          <PlayCircleOutlined />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  </Security>
                 </ListItem>
               </div>
             );

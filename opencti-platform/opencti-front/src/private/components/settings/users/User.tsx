@@ -618,7 +618,15 @@ const User: FunctionComponent<UserProps> = ({ data, refetch }) => {
                           key={session.id}
                           dense={true}
                           divider={true}
-
+                          secondaryAction={
+                            <IconButton
+                              aria-label="Kill"
+                              onClick={() => handleOpenKillSession(session.id)}
+                              size="small"
+                            >
+                              <DeleteOutlined fontSize="small" />
+                            </IconButton>
+                          }
                         >
                           <ListItemIcon>
                             <ItemIcon type="Session" />
@@ -638,15 +646,6 @@ const User: FunctionComponent<UserProps> = ({ data, refetch }) => {
                               </>
                             }
                           />
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              aria-label="Kill"
-                              onClick={() => handleOpenKillSession(session.id)}
-                              size="small"
-                            >
-                              <DeleteOutlined fontSize="small" />
-                            </IconButton>
-                          </ListItemSecondaryAction>
                         </ListItem>
                       ))}
                   </List>

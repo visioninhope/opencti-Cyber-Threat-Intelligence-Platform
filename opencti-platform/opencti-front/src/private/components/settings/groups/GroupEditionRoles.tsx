@@ -100,14 +100,10 @@ const GroupEditionRolesComponent: FunctionComponent<GroupEditionRolesComponentPr
       {rolesData.sort((roleA, roleB) => roleA.name.localeCompare(roleB.name)).map((role) => {
         const groupRole = groupRoles.find((g) => g.id === role.id);
         return (
-          <ListItem key={group.id} divider={true}>
-            <ListItemIcon color="primary">
-              <Security />
-            </ListItemIcon>
-            <ListItemText
-              primary={role.name}
-            />
-            <ListItemSecondaryAction>
+          <ListItem
+            key={group.id}
+            divider={true}
+            secondaryAction={
               <Checkbox
                 onChange={(event) => handleToggle(
                   role.id,
@@ -116,7 +112,14 @@ const GroupEditionRolesComponent: FunctionComponent<GroupEditionRolesComponentPr
                 )}
                 checked={groupRole !== undefined}
               />
-            </ListItemSecondaryAction>
+            }
+          >
+            <ListItemIcon color="primary">
+              <Security />
+            </ListItemIcon>
+            <ListItemText
+              primary={role.name}
+            />
           </ListItem>
         );
       })}

@@ -75,46 +75,48 @@ const SearchIndexedFileLineComponent: FunctionComponent<SearchIndexedFileLineCom
     entityLink = entityLink.concat('/files');
   }
   return (
-    <ListItemButton
-      classes={{ root: classes.item }}
+    <ListItem
       divider={true}
-      component="a"
-      href={getFileUri(node.file_id)}
-      target="_blank"
+      secondaryAction={node.entity && entityLink && (
+        <Tooltip title={t_i18n('Open the entity overview in a separated tab')}>
+          <IconButton
+            component={Link}
+            target="_blank"
+            to={entityLink}
+            size="medium"
+          >
+            <OpenInNewOutlined fontSize="medium" />
+          </IconButton>
+        </Tooltip>
+      )}
     >
-      <ListItemIcon classes={{ root: classes.itemIcon }}>
-        <ItemIcon type="File" />
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <div>
-            {Object.values(dataColumns).map((value) => (
-              <div
-                key={value.label}
-                className={classes.bodyItem}
-                style={{ width: value.width }}
-              >
-                {value.render?.(node)}
-              </div>
-            ))}
-          </div>
+
+      <ListItemButton
+        classes={{ root: classes.item }}
+        component="a"
+        href={getFileUri(node.file_id)}
+        target="_blank"
+      >
+        <ListItemIcon classes={{ root: classes.itemIcon }}>
+          <ItemIcon type="File" />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <div>
+              {Object.values(dataColumns).map((value) => (
+                <div
+                  key={value.label}
+                  className={classes.bodyItem}
+                  style={{ width: value.width }}
+                >
+                  {value.render?.(node)}
+                </div>
+              ))}
+            </div>
         }
-      />
-      <ListItemSecondaryAction>
-        {node.entity && entityLink && (
-          <Tooltip title={t_i18n('Open the entity overview in a separated tab')}>
-            <IconButton
-              component={Link}
-              target="_blank"
-              to={entityLink}
-              size="medium"
-            >
-              <OpenInNewOutlined fontSize="medium" />
-            </IconButton>
-          </Tooltip>
-        )}
-      </ListItemSecondaryAction>
-    </ListItemButton>
+        />
+      </ListItemButton>
+    </ListItem>
   );
 };
 
@@ -155,7 +157,15 @@ export const SearchIndexedFileLineDummy = ({
 }) => {
   const classes = useStyles();
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <div classes={{ root: classes.itemIconDisabled }}>
+          <MoreVertOutlined/>
+        </div>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIconDisabled }}>
         <Skeleton animation="wave" variant="circular" width={30} height={30} />
       </ListItemIcon>
@@ -179,9 +189,6 @@ export const SearchIndexedFileLineDummy = ({
           </div>
         }
       />
-      <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-        <MoreVertOutlined />
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

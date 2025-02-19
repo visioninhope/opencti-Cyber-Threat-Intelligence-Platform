@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { DraftChip } from '../draft/DraftChip';
 import inject18n from '../../../../components/i18n';
 import ItemIcon from '../../../../components/ItemIcon';
@@ -64,57 +65,60 @@ class StixDomainObjectNestedEntitiesLinesComponent extends Component {
               stixCoreObject.id
             }`;
             return (
-              <ListItemButton
+              <ListItem
                 key={stixCoreObject.id}
-                classes={{ root: classes.item }}
                 divider={true}
-                component={Link}
-                to={link}
-              >
-                <ListItemIcon classes={{ root: classes.itemIcon }}>
-                  <ItemIcon type={stixCoreObject.entity_type} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '20%' }}
-                      >
-                        <ItemEntityType
-                          entityType={node.relationship_type}
-                        />
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '20%' }}
-                      >
-                        <ItemEntityType
-                          entityType={stixCoreObject.entity_type}
-                          size='large'
-                          showIcon
-                        />
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '40%' }}
-                      >
-                        {getMainRepresentative(stixCoreObject)}
-                        {stixCoreObject.draftVersion && (<DraftChip/>)}
-                      </div>
-                      <div className={classes.bodyItem}>
-                        {fsd(node.start_time)}
-                      </div>
-                    </div>
-                  }
-                />
-                <ListItemSecondaryAction>
+                secondaryAction={
                   <StixNestedRefRelationshipPopover
                     stixNestedRefRelationshipId={node.id}
                     paginationOptions={paginationOptions}
                   />
-                </ListItemSecondaryAction>
-              </ListItemButton>
+              }
+              >
+                <ListItemButton
+                  classes={{ root: classes.item }}
+                  component={Link}
+                  to={link}
+                >
+                  <ListItemIcon classes={{ root: classes.itemIcon }}>
+                    <ItemIcon type={stixCoreObject.entity_type} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '20%' }}
+                        >
+                          <ItemEntityType
+                            entityType={node.relationship_type}
+                          />
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '20%' }}
+                        >
+                          <ItemEntityType
+                            entityType={stixCoreObject.entity_type}
+                            size='large'
+                            showIcon
+                          />
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '40%' }}
+                        >
+                          {getMainRepresentative(stixCoreObject)}
+                          {stixCoreObject.draftVersion && (<DraftChip/>)}
+                        </div>
+                        <div className={classes.bodyItem}>
+                          {fsd(node.start_time)}
+                        </div>
+                      </div>
+                  }
+                  />
+                </ListItemButton>
+              </ListItem>
             );
           })}
       </div>

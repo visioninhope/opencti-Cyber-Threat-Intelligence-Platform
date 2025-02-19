@@ -93,133 +93,134 @@ const ContainerStixCyberObservableLineComponent = (props) => {
   }/${node.id}`;
   const linkAnalyses = `${link}/analyses`;
   return (
-    <ListItemButton
-      classes={{ root: classes.item }}
+    <ListItem
       divider={true}
-      component={Link}
-      to={link}
+      secondaryAction={isOnlyThroughInference ? (
+        <Tooltip title={t_i18n('Inferred knowledge')}>
+          <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
+        </Tooltip>
+      ) : (
+        <Security needs={[KNOWLEDGE_KNUPDATE]}>
+          <ContainerStixCoreObjectPopover
+            containerId={containerId}
+            toId={node.id}
+            toStandardId={node.standard_id}
+            menuDisable={isOnlyThroughInference}
+            relationshipType="object"
+            paginationKey="Pagination_objects"
+            paginationOptions={paginationOptions}
+            selectedElements={selectedElements}
+            setSelectedElements={setSelectedElements}
+            enableReferences={enableReferences}
+          />
+        </Security>
+      )}
     >
-      <ListItemIcon
-        classes={{ root: classes.itemIcon }}
-        style={{ minWidth: 40 }}
-        onClick={(event) => !isOnlyThroughInference
+      <ListItemButton
+        classes={{ root: classes.item }}
+        component={Link}
+        to={link}
+      >
+        <ListItemIcon
+          classes={{ root: classes.itemIcon }}
+          style={{ minWidth: 40 }}
+          onClick={(event) => !isOnlyThroughInference
           && (event.shiftKey
             ? onToggleShiftEntity(index, node, event)
             : onToggleEntity(node, event))
         }
-      >
-        <Checkbox
-          edge="start"
-          disabled={isOnlyThroughInference}
-          checked={
+        >
+          <Checkbox
+            edge="start"
+            disabled={isOnlyThroughInference}
+            checked={
             (selectAll
               && !isOnlyThroughInference
               && !(node.id in deSelectedElements))
             || node.id in selectedElements
           }
-          disableRipple={true}
-        />
-      </ListItemIcon>
-      <ListItemIcon classes={{ root: classes.itemIcon }}>
-        <ItemIcon type={node.entity_type} />
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.entity_type.width }}
-            >
-              <ItemEntityType entityType={node.entity_type} />
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.observable_value.width }}
-            >
-              {renderObservableValue(node)}
-              {node.draftVersion && (<DraftChip/>)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.objectLabel.width }}
-            >
-              <StixCoreObjectLabels
-                variant="inList"
-                labels={node.objectLabel}
-              />
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.createdBy.width }}
-            >
-              {R.pathOr('', ['createdBy', 'name'], node)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.created_at.width }}
-            >
-              {fd(node.created_at)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.analyses.width }}
-            >
-              {[
-                'Note',
-                'Opinion',
-                'Course-Of-Action',
-                'Data-Component',
-                'Data-Source',
-              ].includes(node.entity_type) ? (
-                <Chip
-                  classes={{ root: classes.chipNoLink }}
-                  label={n(node.containersNumber.total)}
+            disableRipple={true}
+          />
+        </ListItemIcon>
+        <ListItemIcon classes={{ root: classes.itemIcon }}>
+          <ItemIcon type={node.entity_type} />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.entity_type.width }}
+              >
+                <ItemEntityType entityType={node.entity_type} />
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.observable_value.width }}
+              >
+                {renderObservableValue(node)}
+                {node.draftVersion && (<DraftChip/>)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.objectLabel.width }}
+              >
+                <StixCoreObjectLabels
+                  variant="inList"
+                  labels={node.objectLabel}
                 />
-                ) : (
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.createdBy.width }}
+              >
+                {R.pathOr('', ['createdBy', 'name'], node)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.created_at.width }}
+              >
+                {fd(node.created_at)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.analyses.width }}
+              >
+                {[
+                  'Note',
+                  'Opinion',
+                  'Course-Of-Action',
+                  'Data-Component',
+                  'Data-Source',
+                ].includes(node.entity_type) ? (
                   <Chip
-                    classes={{ root: classes.chip }}
+                    classes={{ root: classes.chipNoLink }}
                     label={n(node.containersNumber.total)}
-                    component={Link}
-                    to={linkAnalyses}
                   />
-                )}
+                  ) : (
+                    <Chip
+                      classes={{ root: classes.chip }}
+                      label={n(node.containersNumber.total)}
+                      component={Link}
+                      to={linkAnalyses}
+                    />
+                  )}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.objectMarking.width }}
+              >
+                <ItemMarkings
+                  variant="inList"
+                  markingDefinitions={node.objectMarking ?? []}
+                  limit={1}
+                />
+              </div>
             </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.objectMarking.width }}
-            >
-              <ItemMarkings
-                variant="inList"
-                markingDefinitions={node.objectMarking ?? []}
-                limit={1}
-              />
-            </div>
-          </div>
         }
-      />
-      <ListItemSecondaryAction>
-        {isOnlyThroughInference ? (
-          <Tooltip title={t_i18n('Inferred knowledge')}>
-            <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
-          </Tooltip>
-        ) : (
-          <Security needs={[KNOWLEDGE_KNUPDATE]}>
-            <ContainerStixCoreObjectPopover
-              containerId={containerId}
-              toId={node.id}
-              toStandardId={node.standard_id}
-              menuDisable={isOnlyThroughInference}
-              relationshipType="object"
-              paginationKey="Pagination_objects"
-              paginationOptions={paginationOptions}
-              selectedElements={selectedElements}
-              setSelectedElements={setSelectedElements}
-              enableReferences={enableReferences}
-            />
-          </Security>
-        )}
-      </ListItemSecondaryAction>
-    </ListItemButton>
+        />
+      </ListItemButton>
+    </ListItem>
   );
 };
 

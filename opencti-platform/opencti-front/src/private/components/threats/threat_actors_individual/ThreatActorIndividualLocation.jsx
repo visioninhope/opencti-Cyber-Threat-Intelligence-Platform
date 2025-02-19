@@ -11,6 +11,7 @@ import { LinkOff } from '@mui/icons-material';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { AutoFix } from 'mdi-material-ui';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { APP_BASE_PATH, commitMutation } from '../../../../relay/environment';
 import inject18n from '../../../../components/i18n';
 import { resolveLink } from '../../../../utils/Entity';
@@ -76,39 +77,45 @@ class ThreatActorIndividualLocationsComponent extends Component {
                   ),
                 );
               return (
-                <ListItemButton
+                <ListItem
                   key={location.id}
                   dense={true}
                   divider={true}
-                  component={Link}
-                  to={`${link}/${location.id}`}
+                  secondaryAction={
+                    types.includes('manual') && (
+                      <div style={{ right: 0 }} >
+                        <Security needs={[KNOWLEDGE_KNUPDATE]}>
+                          <IconButton
+                            aria-label="Remove"
+                            onClick={() => this.removeLocation(locationEdge)}
+                            size="large"
+                          >
+                            <LinkOff />
+                          </IconButton>
+                        </Security>
+                      </div>
+                    )
+                  }
                 >
-                  <ListItemIcon>
-                    {flag ? (
-                      <img
-                        style={{ width: 20 }}
-                        src={`${APP_BASE_PATH}/static/flags/4x3/${flag.toLowerCase()}.svg`}
-                        alt={location.name}
-                      />
-                    ) : (
-                      <ItemIcon type={location.entity_type} />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={location.name} />
-                  {types.includes('manual') ? (
-                    <ListItemSecondaryAction style={{ right: 0 }} >
-                      <Security needs={[KNOWLEDGE_KNUPDATE]}>
-                        <IconButton
-                          aria-label="Remove"
-                          onClick={() => this.removeLocation(locationEdge)}
-                          size="large"
-                        >
-                          <LinkOff />
-                        </IconButton>
-                      </Security>
-                    </ListItemSecondaryAction>
-                  ) : <AutoFix fontSize="small" style={{ marginRight: 13 }}/>}
-                </ListItemButton>
+                  <ListItemButton
+                    component={Link}
+                    to={`${link}/${location.id}`}
+                  >
+                    <ListItemIcon>
+                      {flag ? (
+                        <img
+                          style={{ width: 20 }}
+                          src={`${APP_BASE_PATH}/static/flags/4x3/${flag.toLowerCase()}.svg`}
+                          alt={location.name}
+                        />
+                      ) : (
+                        <ItemIcon type={location.entity_type} />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText primary={location.name} />
+                    {!types.includes('manual') && <AutoFix fontSize="small" style={{ marginRight: 13 }}/>}
+                  </ListItemButton>
+                </ListItem>
               );
             })}
           </List>

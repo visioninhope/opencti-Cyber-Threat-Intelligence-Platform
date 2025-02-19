@@ -232,7 +232,34 @@ NotificationLineProps
     <div>
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
-      <ListItem classes={{ root: classes.item }} divider={true}>
+      <ListItem
+        classes={{ root: classes.item }}
+        divider={true}
+        secondaryAction={
+          <>
+            <IconButton
+              disabled={updating}
+              onClick={() => handleRead(!data.is_read)}
+              size="large"
+              color={data.is_read ? 'success' : 'warning'}
+            >
+              {data.is_read ? <CheckCircleOutlined /> : <UnpublishedOutlined />}
+            </IconButton>
+            <Tooltip title={t_i18n('Delete this notification')}>
+              <span>
+                <IconButton
+                  disabled={updating}
+                  onClick={() => handleOpenDelete()}
+                  size="large"
+                  color="primary"
+                >
+                  <DeleteOutlined/>
+                </IconButton>
+              </span>
+            </Tooltip>
+          </>
+        }
+      >
         <ListItemButton
           component={isLinkAvailable ? Link : 'div'}
           to={isLinkAvailable ? `/dashboard/id/${firstEvent?.instance_id}` : undefined}
@@ -298,28 +325,6 @@ NotificationLineProps
             }
           />
         </ListItemButton>
-        <ListItemSecondaryAction>
-          <IconButton
-            disabled={updating}
-            onClick={() => handleRead(!data.is_read)}
-            size="large"
-            color={data.is_read ? 'success' : 'warning'}
-          >
-            {data.is_read ? <CheckCircleOutlined /> : <UnpublishedOutlined />}
-          </IconButton>
-          <Tooltip title={t_i18n('Delete this notification')}>
-            <span>
-              <IconButton
-                disabled={updating}
-                onClick={() => handleOpenDelete()}
-                size="large"
-                color="primary"
-              >
-                <DeleteOutlined/>
-              </IconButton>
-            </span>
-          </Tooltip>
-        </ListItemSecondaryAction>
       </ListItem>
 
       <Dialog

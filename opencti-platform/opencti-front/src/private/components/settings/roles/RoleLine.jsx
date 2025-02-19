@@ -10,6 +10,7 @@ import { compose } from 'ramda';
 import Skeleton from '@mui/material/Skeleton';
 import { Link } from 'react-router-dom';
 import { ListItemButton } from '@mui/material';
+import Box from '@mui/material/Box';
 import inject18n from '../../../../components/i18n';
 import { groupsSearchQuery } from '../Groups';
 import { QueryRenderer } from '../../../../relay/environment';
@@ -151,7 +152,15 @@ class RoleLineDummyComponent extends Component {
   render() {
     const { classes, dataColumns } = this.props;
     return (
-      <ListItem classes={{ root: classes.item }} divider={true}>
+      <ListItem
+        classes={{ root: classes.item }}
+        divider={true}
+        secondaryAction={
+          <Box classes={{ root: classes.itemIconDisabled }}>
+            <KeyboardArrowRightOutlined />
+          </Box>
+        }
+      >
         <ListItemIcon classes={{ root: classes.itemIconDisabled }}>
           <Skeleton
             animation="wave"
@@ -210,9 +219,6 @@ class RoleLineDummyComponent extends Component {
             </div>
           }
         />
-        <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-          <KeyboardArrowRightOutlined />
-        </ListItemSecondaryAction>
       </ListItem>
     );
   }

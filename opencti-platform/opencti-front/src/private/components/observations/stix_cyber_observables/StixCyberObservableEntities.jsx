@@ -243,6 +243,7 @@ class StixCyberObservableEntities extends Component {
               classes={{ root: classes.itemHead }}
               divider={false}
               style={{ paddingTop: 0 }}
+              secondaryAction={<> &nbsp; </>}
             >
               <ListItemIcon>
                 <span
@@ -269,7 +270,6 @@ class StixCyberObservableEntities extends Component {
                   </div>
                 }
               />
-              <ListItemSecondaryAction> &nbsp; </ListItemSecondaryAction>
             </ListItem>
             <QueryRenderer
               query={stixCyberObservableEntitiesLinesQuery}

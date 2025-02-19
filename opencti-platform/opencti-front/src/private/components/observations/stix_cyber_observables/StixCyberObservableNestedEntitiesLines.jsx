@@ -82,70 +82,73 @@ class StixCyberObservableNestedEntitiesLinesComponent extends Component {
                 stixCoreObject.id
               }`;
               return (
-                <ListItemButton
+                <ListItem
                   key={stixCoreObject.id}
-                  classes={{ root: classes.item }}
                   divider={true}
-                  component={Link}
-                  to={link}
-                >
-                  <ListItemIcon classes={{ root: classes.itemIcon }}>
-                    <ItemIcon type={stixCoreObject.entity_type} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      <div>
-                        <div
-                          className={classes.bodyItem}
-                          style={{ width: '10%' }}
-                        >
-                          <ItemEntityType
-                            entityType={stixNestedRefRelationship.relationship_type}
-                          />
-                        </div>
-                        <div
-                          className={classes.bodyItem}
-                          style={{ width: '10%' }}
-                        >
-                          <ItemEntityType entityType={stixCoreObject.entity_type} />
-                        </div>
-                        <div
-                          className={classes.bodyItem}
-                          style={{ width: '22%' }}
-                        >
-                          {getMainRepresentative(stixCoreObject)}
-                          {stixCoreObject.draftVersion && (<DraftChip/>)}
-                        </div>
-                        <div
-                          className={classes.bodyItem}
-                          style={{ width: '12%' }}
-                        >
-                          {(stixCoreObject.creators ?? [])
-                            .map((c) => c?.name)
-                            .join(', ')}
-                        </div>
-                        <div
-                          className={classes.bodyItem}
-                          style={{ width: '15%' }}
-                        >
-                          {fsd(stixNestedRefRelationship.start_time)}
-                        </div>
-                        <div
-                          className={classes.bodyItem}
-                          style={{ width: '15%' }}
-                        >
-                          {fsd(stixNestedRefRelationship.stop_time)}
-                        </div>
-                      </div>
-                    }
-                  />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <StixNestedRefRelationshipPopover
                       stixNestedRefRelationshipId={stixNestedRefRelationship.id}
                       paginationOptions={paginationOptions}
                     />
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                  }
+                >
+                  <ListItemButton
+                    classes={{ root: classes.item }}
+                    component={Link}
+                    to={link}
+                  >
+                    <ListItemIcon classes={{ root: classes.itemIcon }}>
+                      <ItemIcon type={stixCoreObject.entity_type} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <div>
+                          <div
+                            className={classes.bodyItem}
+                            style={{ width: '10%' }}
+                          >
+                            <ItemEntityType
+                              entityType={stixNestedRefRelationship.relationship_type}
+                            />
+                          </div>
+                          <div
+                            className={classes.bodyItem}
+                            style={{ width: '10%' }}
+                          >
+                            <ItemEntityType entityType={stixCoreObject.entity_type} />
+                          </div>
+                          <div
+                            className={classes.bodyItem}
+                            style={{ width: '22%' }}
+                          >
+                            {getMainRepresentative(stixCoreObject)}
+                            {stixCoreObject.draftVersion && (<DraftChip/>)}
+                          </div>
+                          <div
+                            className={classes.bodyItem}
+                            style={{ width: '12%' }}
+                          >
+                            {(stixCoreObject.creators ?? [])
+                              .map((c) => c?.name)
+                              .join(', ')}
+                          </div>
+                          <div
+                            className={classes.bodyItem}
+                            style={{ width: '15%' }}
+                          >
+                            {fsd(stixNestedRefRelationship.start_time)}
+                          </div>
+                          <div
+                            className={classes.bodyItem}
+                            style={{ width: '15%' }}
+                          >
+                            {fsd(stixNestedRefRelationship.stop_time)}
+                          </div>
+                        </div>
+                    }
+                    />
+                  </ListItemButton>
+                </ListItem>
               );
             },
           )}

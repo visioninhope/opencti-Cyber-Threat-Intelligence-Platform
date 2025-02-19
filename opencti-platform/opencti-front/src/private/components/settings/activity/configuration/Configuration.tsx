@@ -29,6 +29,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/styles';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import ActivityMenu from '../../ActivityMenu';
 import type { Theme } from '../../../../../components/Theme';
 import { useFormatter } from '../../../../../components/i18n';
@@ -221,21 +222,9 @@ ConfigurationComponentProps
                 {(settings.activity_listeners ?? []).map((listener) => {
                   return (
                     <React.Fragment key={listener.id}>
-                      <ListItemButton
-                        classes={{ root: classes.item }}
+                      <ListItem
                         divider={true}
-                      >
-                        <ListItemIcon classes={{ root: classes.itemIcon }}>
-                          <ItemIcon type={listener.entity_type} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <div>
-                              <div className={classes.name}>{listener.name}</div>
-                            </div>
-                        }
-                        />
-                        <ListItemSecondaryAction>
+                        secondaryAction={
                           <IconButton
                             aria-label="Kill"
                             onClick={() => {
@@ -253,8 +242,23 @@ ConfigurationComponentProps
                           >
                             <Delete />
                           </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItemButton>
+                        }
+                      >
+                        <ListItemButton
+                          classes={{ root: classes.item }}
+                        >
+                          <ListItemIcon classes={{ root: classes.itemIcon }}>
+                            <ItemIcon type={listener.entity_type} />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <div>
+                                <div className={classes.name}>{listener.name}</div>
+                              </div>
+                        }
+                          />
+                        </ListItemButton>
+                      </ListItem>
                     </React.Fragment>
                   );
                 })}

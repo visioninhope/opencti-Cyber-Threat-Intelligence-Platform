@@ -675,9 +675,11 @@ const StixDomainObjectHeader = (props) => {
                 stixDomainObject,
               ).map(
                 (label) => label.length > 0 && (
-                  <ListItem key={label} disableGutters={true} dense={true}>
-                    <ListItemText primary={label} />
-                    <ListItemSecondaryAction>
+                  <ListItem
+                    key={label}
+                    disableGutters={true}
+                    dense={true}
+                    secondaryAction={
                       <IconButton
                         edge="end"
                         aria-label="delete"
@@ -690,7 +692,9 @@ const StixDomainObjectHeader = (props) => {
                       >
                         <Delete />
                       </IconButton>
-                    </ListItemSecondaryAction>
+                    }
+                  >
+                    <ListItemText primary={label} />
                   </ListItem>
                 ),
               )}

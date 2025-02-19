@@ -13,6 +13,7 @@ import { RetentionLinesPaginationQuery$variables } from '@components/settings/re
 import { RetentionLine_node$key } from '@components/settings/retention/__generated__/RetentionLine_node.graphql';
 import { InformationOutline } from 'mdi-material-ui';
 import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
 import { useFormatter } from '../../../../components/i18n';
 import RetentionPopover from './RetentionPopover';
 import { deserializeFilterGroupForFrontend, isFilterGroupNotEmpty } from '../../../../utils/filters/filtersUtils';
@@ -88,7 +89,16 @@ export const RetentionLine: FunctionComponent<RetentionLineProps> = ({ dataColum
     appliedOnContent = t_i18n('Global workbenches');
   }
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <RetentionPopover
+          retentionRuleId={data.id}
+          paginationOptions={paginationOptions}
+        />
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIcon }}>
         <LayersClearOutlined/>
       </ListItemIcon>
@@ -153,12 +163,6 @@ export const RetentionLine: FunctionComponent<RetentionLineProps> = ({ dataColum
           </div>
           }
       />
-      <ListItemSecondaryAction>
-        <RetentionPopover
-          retentionRuleId={data.id}
-          paginationOptions={paginationOptions}
-        />
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };
@@ -166,7 +170,15 @@ export const RetentionLine: FunctionComponent<RetentionLineProps> = ({ dataColum
 export const RetentionLineDummy = ({ dataColumns }: { dataColumns: DataColumns }) => {
   const classes = useStyles();
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <Box classes={{ root: classes.itemIconDisabled }}>
+          <MoreVert/>
+        </Box>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIcon }}>
         <Skeleton
           animation="wave"
@@ -248,9 +260,6 @@ export const RetentionLineDummy = ({ dataColumns }: { dataColumns: DataColumns }
           </div>
           }
       />
-      <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-        <MoreVert/>
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

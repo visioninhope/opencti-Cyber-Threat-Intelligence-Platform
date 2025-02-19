@@ -8,6 +8,7 @@ import Skeleton from '@mui/material/Skeleton';
 import makeStyles from '@mui/styles/makeStyles';
 import Checkbox from '@mui/material/Checkbox';
 import { ListItemButton } from '@mui/material';
+import Box from '@mui/material/Box';
 import VocabularyPopover from './VocabularyPopover';
 import { DataColumns } from '../../../../components/list_lines';
 import type { Theme } from '../../../../components/Theme';
@@ -73,53 +74,56 @@ export const VocabularyLine: FunctionComponent<VocabularyLineProps> = ({
   const classes = useStyles();
   const vocab = useFragment(vocabFragment, node);
   return (
-    <ListItemButton
-      classes={{ root: classes.item }}
+    <ListItem
       divider={true}
-      onClick={(event) => (event.shiftKey
-        ? onToggleShiftEntity(index, vocab)
-        : onToggleEntity(vocab))
-      }
-    >
-      <ListItemIcon
-        classes={{ root: classes.itemIcon }}
-        style={{ minWidth: 40 }}
-      >
-        <Checkbox
-          edge="start"
-          checked={
-            (selectAll && !(vocab.id in (deSelectedElements || {})))
-            || vocab.id in (selectedElements || {})
-          }
-          disableRipple={true}
-        />
-      </ListItemIcon>
-      <ListItemIcon classes={{ root: classes.itemIcon }}>
-        <ShortTextOutlined />
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <div>
-            {Object.values(dataColumns).map((value) => (
-              <div
-                key={value.label}
-                className={classes.bodyItem}
-                style={{ width: value.width }}
-              >
-                {value.render?.(vocab)}
-              </div>
-            ))}
-          </div>
-        }
-      />
-      <ListItemSecondaryAction>
+      secondaryAction={
         <VocabularyPopover
           vocab={vocab}
           refetch={refetch}
           paginationOptions={paginationOptions}
         />
-      </ListItemSecondaryAction>
-    </ListItemButton>
+      }
+    >
+      <ListItemButton
+        classes={{ root: classes.item }}
+        onClick={(event) => (event.shiftKey
+          ? onToggleShiftEntity(index, vocab)
+          : onToggleEntity(vocab))
+      }
+      >
+        <ListItemIcon
+          classes={{ root: classes.itemIcon }}
+          style={{ minWidth: 40 }}
+        >
+          <Checkbox
+            edge="start"
+            checked={
+            (selectAll && !(vocab.id in (deSelectedElements || {})))
+            || vocab.id in (selectedElements || {})
+          }
+            disableRipple={true}
+          />
+        </ListItemIcon>
+        <ListItemIcon classes={{ root: classes.itemIcon }}>
+          <ShortTextOutlined />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <div>
+              {Object.values(dataColumns).map((value) => (
+                <div
+                  key={value.label}
+                  className={classes.bodyItem}
+                  style={{ width: value.width }}
+                >
+                  {value.render?.(vocab)}
+                </div>
+              ))}
+            </div>
+        }
+        />
+      </ListItemButton>
+    </ListItem>
   );
 };
 
@@ -130,7 +134,15 @@ export const VocabularyLineDummy = ({
 }) => {
   const classes = useStyles();
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <Box classes={{ root: classes.itemIconDisabled }}>
+          <MoreVertOutlined />
+        </Box>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIconDisabled }}>
         <Skeleton animation="wave" variant="circular" width={30} height={30} />
       </ListItemIcon>
@@ -154,9 +166,6 @@ export const VocabularyLineDummy = ({
           </div>
         }
       />
-      <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-        <MoreVertOutlined />
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

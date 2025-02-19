@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import { SpeakerNotesOutlined, LinkOff } from '@mui/icons-material';
 import { graphql, createFragmentContainer } from 'react-relay';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import AddSubNarrative from './AddSubNarrative';
 import { addSubNarrativesMutationRelationDelete } from './AddSubNarrativesLines';
 import { commitMutation } from '../../../../relay/environment';
@@ -58,18 +59,11 @@ class NarrativeSubNarrativesComponent extends Component {
           {narrative.subNarratives.edges.map((subNarrativeEdge) => {
             const subNarrative = subNarrativeEdge.node;
             return (
-              <ListItemButton
+              <ListItem
                 key={subNarrative.id}
                 dense={true}
                 divider={true}
-                component={Link}
-                to={`/dashboard/techniques/narratives/${subNarrative.id}`}
-              >
-                <ListItemIcon>
-                  <SpeakerNotesOutlined color="primary" />
-                </ListItemIcon>
-                <ListItemText primary={subNarrative.name} />
-                <ListItemSecondaryAction>
+                secondaryAction={
                   <IconButton
                     aria-label="Remove"
                     onClick={this.removeSubNarrative.bind(
@@ -80,8 +74,18 @@ class NarrativeSubNarrativesComponent extends Component {
                   >
                     <LinkOff />
                   </IconButton>
-                </ListItemSecondaryAction>
-              </ListItemButton>
+                }
+              >
+                <ListItemButton
+                  component={Link}
+                  to={`/dashboard/techniques/narratives/${subNarrative.id}`}
+                >
+                  <ListItemIcon>
+                    <SpeakerNotesOutlined color="primary" />
+                  </ListItemIcon>
+                  <ListItemText primary={subNarrative.name} />
+                </ListItemButton>
+              </ListItem>
             );
           })}
         </List>

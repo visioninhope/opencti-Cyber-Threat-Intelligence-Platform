@@ -230,33 +230,34 @@ const SettingsOrganization = ({
                   </Typography>
                   <FieldOrEmpty source={organization.default_dashboard}>
                     <List>
-                      <ListItemButton
+                      <ListItem
                         dense={true}
                         divider={true}
-                        component={Link}
-                        to={`/dashboard/workspaces/dashboards/${organization.default_dashboard?.id}`}
-                      >
-                        <ListItemIcon>
-                          <ItemIcon type="Dashboard" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={truncate(
-                            organization.default_dashboard?.name,
-                            40,
-                          )}
-                        />
-                        {!canAccessDashboard && (
-                          <ListItemSecondaryAction>
-                            <Tooltip
-                              title={t_i18n(
-                                'You need to authorize this organization to access this dashboard in the permissions of the workspace.',
-                              )}
-                            >
-                              <WarningOutlined color="warning" />
-                            </Tooltip>
-                          </ListItemSecondaryAction>
+                        secondaryAction={!canAccessDashboard && (
+                          <Tooltip
+                            title={t_i18n(
+                              'You need to authorize this organization to access this dashboard in the permissions of the workspace.',
+                            )}
+                          >
+                            <WarningOutlined color="warning" />
+                          </Tooltip>
                         )}
-                      </ListItemButton>
+                      >
+                        <ListItemButton
+                          component={Link}
+                          to={`/dashboard/workspaces/dashboards/${organization.default_dashboard?.id}`}
+                        >
+                          <ListItemIcon>
+                            <ItemIcon type="Dashboard" />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={truncate(
+                              organization.default_dashboard?.name,
+                              40,
+                            )}
+                          />
+                        </ListItemButton>
+                      </ListItem>
                     </List>
                   </FieldOrEmpty>
                 </Grid>

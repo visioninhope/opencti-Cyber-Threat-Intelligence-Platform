@@ -5,10 +5,11 @@ import List from '@mui/material/List';
 import { Link } from 'react-router-dom';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { ListItemButton, ListItemSecondaryAction } from '@mui/material';
+import { ListItemButton } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { LinkOff, SourceOutlined } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
+import ListItem from '@mui/material/ListItem';
 import { useFormatter } from '../../../../components/i18n';
 import AddDataComponents from './AddDataComponents';
 import { addDataComponentsMutationRelationDelete } from './AddDataComponentsLines';
@@ -57,20 +58,11 @@ const DataSourceDataComponentsComponent: FunctionComponent<{
                 );
               }
               return (
-                <ListItemButton
+                <ListItem
                   key={dataComponent.id}
                   dense={true}
                   divider={true}
-                  component={Link}
-                  to={`/dashboard/techniques/data_components/${dataComponent.id}`}
-                >
-                  <ListItemIcon>
-                    <ListItemIcon>
-                      <SourceOutlined color="primary" />
-                    </ListItemIcon>
-                  </ListItemIcon>
-                  <ListItemText primary={dataComponent.name} />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <IconButton
                       aria-label="Remove"
                       onClick={() => removeDataComponent(dataComponent.id)}
@@ -78,8 +70,20 @@ const DataSourceDataComponentsComponent: FunctionComponent<{
                     >
                       <LinkOff />
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                  }
+                >
+                  <ListItemButton
+                    component={Link}
+                    to={`/dashboard/techniques/data_components/${dataComponent.id}`}
+                  >
+                    <ListItemIcon>
+                      <ListItemIcon>
+                        <SourceOutlined color="primary" />
+                      </ListItemIcon>
+                    </ListItemIcon>
+                    <ListItemText primary={dataComponent.name} />
+                  </ListItemButton>
+                </ListItem>
               );
             })}
         </List>

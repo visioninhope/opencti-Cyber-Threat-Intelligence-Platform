@@ -5,7 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import Chip from '@mui/material/Chip';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItem from '@mui/material/ListItem';
-import { IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { ContentCopy, OpenInNew } from 'mdi-material-ui';
 import Typography from '@mui/material/Typography';
 import { environment } from '../../../../relay/environment';

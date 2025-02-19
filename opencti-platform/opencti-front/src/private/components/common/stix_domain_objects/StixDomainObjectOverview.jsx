@@ -417,9 +417,10 @@ const StixDomainObjectOverview = ({
           <List>
             {stixIds.map(
               (stixId) => stixId.length > 0 && (
-              <ListItem key={stixId} disableGutters={true} dense={true}>
-                <ListItemText primary={stixId} />
-                <ListItemSecondaryAction>
+              <ListItem
+                key={stixId}disableGutters={true}
+                dense={true}
+                secondaryAction={
                   <IconButton
                     edge="end"
                     aria-label="delete"
@@ -428,7 +429,9 @@ const StixDomainObjectOverview = ({
                   >
                     <Delete />
                   </IconButton>
-                </ListItemSecondaryAction>
+                }
+              >
+                <ListItemText primary={stixId} />
               </ListItem>
               ),
             )}

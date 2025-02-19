@@ -115,21 +115,41 @@ class StixCyberObservableEntitiesLinesComponent extends Component {
                 }/knowledge/relations/${node.id}`
               : null;
             return (
-              <ListItemButton
-                classes={{ root: classes.item }}
-                divider={true}
-                component={Link}
-                to={link}
-                disabled={restricted}
+              <ListItem
                 key={node.id}
+                divider={true}
+                secondaryAction={node.is_inferred ? (
+                  <Tooltip
+                    title={
+                      t('Inferred knowledge based on the rule ')
+                      + R.head(node.x_opencti_inferences).rule.name
+                    }
+                  >
+                    <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
+                  </Tooltip>
+                ) : (
+                  <Security needs={[KNOWLEDGE_KNUPDATE]}>
+                    <StixCoreRelationshipPopover
+                      stixCoreRelationshipId={node.id}
+                      paginationOptions={paginationOptions}
+                      disabled={restricted}
+                    />
+                  </Security>
+                )}
               >
-                <ListItemIcon classes={{ root: classes.itemIcon }}>
-                  <ItemIcon type={node.entity_type} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <div>
-                      {displayRelation && (
+                <ListItemButton
+                  classes={{ root: classes.item }}
+                  component={Link}
+                  to={link}
+                  disabled={restricted}
+                >
+                  <ListItemIcon classes={{ root: classes.itemIcon }}>
+                    <ItemIcon type={node.entity_type} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <div>
+                        {displayRelation && (
                         <div
                           className={classes.bodyItem}
                           style={{ width: '10%' }}
@@ -138,90 +158,71 @@ class StixCyberObservableEntitiesLinesComponent extends Component {
                             entityType={node.relationship_type}
                           />
                         </div>
-                      )}
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '10%' }}
-                      >
-                        <ItemEntityType
-                          entityType={targetEntityType}
-                          isRestricted={restricted}
-                          size='large'
-                          showIcon
-                        />
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '22%' }}
-                      >
-                        {/* eslint-disable-next-line no-nested-ternary */}
-                        {!restricted
-                          ? targetEntity.entity_type === 'stix_relation'
+                        )}
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '10%' }}
+                        >
+                          <ItemEntityType
+                            entityType={targetEntityType}
+                            isRestricted={restricted}
+                            size='large'
+                            showIcon
+                          />
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '22%' }}
+                        >
+                          {/* eslint-disable-next-line no-nested-ternary */}
+                          {!restricted
+                            ? targetEntity.entity_type === 'stix_relation'
                             || targetEntity.entity_type === 'stix-relation'
-                            ? `${targetEntity.from.name} ${String.fromCharCode(
-                              8594,
-                            )} ${getMainRepresentative(targetEntity.to)}`
-                            : getMainRepresentative(targetEntity)
-                          : t('Restricted')}
+                              ? `${targetEntity.from.name} ${String.fromCharCode(
+                                8594,
+                              )} ${getMainRepresentative(targetEntity.to)}`
+                              : getMainRepresentative(targetEntity)
+                            : t('Restricted')}
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '12%' }}
+                        >
+                          {R.pathOr('', ['createdBy', 'name'], node)}
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '12%' }}
+                        >
+                          {(node.creators ?? []).map((c) => c?.name).join(', ')}
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '10%' }}
+                        >
+                          {fsd(node.start_time)}
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '10%' }}
+                        >
+                          {fsd(node.stop_time)}
+                        </div>
+                        <div
+                          className={classes.bodyItem}
+                          style={{ width: '12%' }}
+                        >
+                          <ItemConfidence
+                            confidence={node.confidence}
+                            entityType={node.entity_type}
+                            variant="inList"
+                          />
+                        </div>
                       </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '12%' }}
-                      >
-                        {R.pathOr('', ['createdBy', 'name'], node)}
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '12%' }}
-                      >
-                        {(node.creators ?? []).map((c) => c?.name).join(', ')}
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '10%' }}
-                      >
-                        {fsd(node.start_time)}
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '10%' }}
-                      >
-                        {fsd(node.stop_time)}
-                      </div>
-                      <div
-                        className={classes.bodyItem}
-                        style={{ width: '12%' }}
-                      >
-                        <ItemConfidence
-                          confidence={node.confidence}
-                          entityType={node.entity_type}
-                          variant="inList"
-                        />
-                      </div>
-                    </div>
                   }
-                />
-                <ListItemSecondaryAction>
-                  {node.is_inferred ? (
-                    <Tooltip
-                      title={
-                        t('Inferred knowledge based on the rule ')
-                        + R.head(node.x_opencti_inferences).rule.name
-                      }
-                    >
-                      <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
-                    </Tooltip>
-                  ) : (
-                    <Security needs={[KNOWLEDGE_KNUPDATE]}>
-                      <StixCoreRelationshipPopover
-                        stixCoreRelationshipId={node.id}
-                        paginationOptions={paginationOptions}
-                        disabled={restricted}
-                      />
-                    </Security>
-                  )}
-                </ListItemSecondaryAction>
-              </ListItemButton>
+                  />
+                </ListItemButton>
+              </ListItem>
             );
           })}
       </>

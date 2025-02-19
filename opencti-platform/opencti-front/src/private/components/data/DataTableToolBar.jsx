@@ -2321,24 +2321,24 @@ class DataTableToolBar extends Component {
                   <List>
                     {selectedElementsList.map((element) => (
                       <ListItem
-                          key={element.id}
-                          dense={true}
-                          divider={true}
-                          secondaryAction={
-                              <Radio
-                                  checked={
+                        key={element.id}
+                        dense={true}
+                        divider={true}
+                        secondaryAction={
+                          <Radio
+                            checked={
                                       keptEntityId
-                                          ? keptEntityId === element.id
-                                          : R.head(selectedElementsList).id === element.id
+                                        ? keptEntityId === element.id
+                                        : R.head(selectedElementsList).id === element.id
                                   }
-                                  onChange={this.handleChangeKeptEntityId.bind(
-                                      this,
-                                      element.id,
-                                  )}
-                                  value={element.id}
-                                  name="keptEntityID"
-                                  inputProps={{ 'aria-label': 'keptEntityID' }}
-                              />
+                            onChange={this.handleChangeKeptEntityId.bind(
+                              this,
+                              element.id,
+                            )}
+                            value={element.id}
+                            name="keptEntityID"
+                            inputProps={{ 'aria-label': 'keptEntityID' }}
+                          />
                           }
                       >
                         <ListItemIcon>
@@ -2490,12 +2490,11 @@ class DataTableToolBar extends Component {
                       </Alert>
                     )}
                     {this.state.enrichConnectors.map((connector) => (
-                      <ListItem key={connector.id} dense={true} divider={true}>
-                        <ListItemIcon>
-                          <CloudRefreshOutline />
-                        </ListItemIcon>
-                        <ListItemText primary={connector.name} />
-                        <ListItemSecondaryAction>
+                      <ListItem
+                        key={connector.id}
+                        dense={true}
+                        divider={true}
+                        secondaryAction={
                           <MuiSwitch
                             checked={this.state.enrichSelected.includes(
                               connector.id,
@@ -2506,7 +2505,12 @@ class DataTableToolBar extends Component {
                             )}
                             inputProps={{ 'aria-label': 'controlled' }}
                           />
-                        </ListItemSecondaryAction>
+                      }
+                      >
+                        <ListItemIcon>
+                          <CloudRefreshOutline />
+                        </ListItemIcon>
+                        <ListItemText primary={connector.name} />
                       </ListItem>
                     ))}
                   </List>

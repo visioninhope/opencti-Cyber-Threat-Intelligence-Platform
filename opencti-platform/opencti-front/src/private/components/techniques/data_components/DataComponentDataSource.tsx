@@ -5,9 +5,10 @@ import List from '@mui/material/List';
 import { Link } from 'react-router-dom';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { ListItemButton, ListItemSecondaryAction } from '@mui/material';
+import { ListItemButton } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { LinkOff, StreamOutlined } from '@mui/icons-material';
+import ListItem from '@mui/material/ListItem';
 import { useFormatter } from '../../../../components/i18n';
 import AddDataSources from './AddDataSources';
 import { DataComponentDataSources_dataComponent$data, DataComponentDataSources_dataComponent$key } from './__generated__/DataComponentDataSources_dataComponent.graphql';
@@ -74,20 +75,11 @@ DataComponentDataSourcesProps
       <div className="clearfix" />
       <List style={{ marginTop: -10 }}>
         {dataSourceId && (
-          <ListItemButton
+          <ListItem
             key={data.dataSource?.id}
             dense={true}
             divider={true}
-            component={Link}
-            to={`/dashboard/techniques/data_sources/${dataSourceId}`}
-          >
-            <ListItemIcon>
-              <ListItemIcon>
-                <StreamOutlined color="primary" />
-              </ListItemIcon>
-            </ListItemIcon>
-            <ListItemText primary={data.dataSource?.name} />
-            <ListItemSecondaryAction>
+            secondaryAction={
               <Security needs={[KNOWLEDGE_KNUPDATE]}>
                 <IconButton
                   aria-label="Remove"
@@ -97,8 +89,20 @@ DataComponentDataSourcesProps
                   <LinkOff />
                 </IconButton>
               </Security>
-            </ListItemSecondaryAction>
-          </ListItemButton>
+            }
+          >
+            <ListItemButton
+              component={Link}
+              to={`/dashboard/techniques/data_sources/${dataSourceId}`}
+            >
+              <ListItemIcon>
+                <ListItemIcon>
+                  <StreamOutlined color="primary" />
+                </ListItemIcon>
+              </ListItemIcon>
+              <ListItemText primary={data.dataSource?.name} />
+            </ListItemButton>
+          </ListItem>
         )}
       </List>
     </div>

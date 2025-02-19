@@ -58,7 +58,16 @@ CaseTemplateTasksLineProps
   const task = useFragment(CaseTemplateTasksLineFragment, node);
 
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <CaseTemplateTasksPopover
+          paginationOptions={paginationOptions}
+          task={task}
+        />
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIcon }}>
         <ItemIcon type="Task" />
       </ListItemIcon>
@@ -77,12 +86,6 @@ CaseTemplateTasksLineProps
           </div>
         }
       />
-      <ListItemSecondaryAction>
-        <CaseTemplateTasksPopover
-          paginationOptions={paginationOptions}
-          task={task}
-        />
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };

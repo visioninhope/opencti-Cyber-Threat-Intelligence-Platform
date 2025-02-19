@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import inject18n from '../../../../components/i18n';
 import { truncate } from '../../../../utils/String';
 import { commitMutation } from '../../../../relay/environment';
@@ -222,62 +223,67 @@ class StixCoreRelationshipExternalReferencesLinesContainer extends Component {
                   if (externalReference.url) {
                     return (
                       <div key={externalReference.id}>
-                        <ListItemButton
-                          component={Link}
-                          to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                        <ListItem
                           dense={true}
                           divider={true}
+                          secondaryAction={
+                            <>
+                              <Tooltip title={t('Browse the link')}>
+                                <IconButton
+                                  onClick={this.handleOpenExternalLink.bind(
+                                    this,
+                                    externalReference.url,
+                                  )}
+                                  color="primary"
+                                  size="large"
+                                >
+                                  <OpenInBrowserOutlined />
+                                </IconButton>
+                              </Tooltip>
+                              {!isFileAttached && (
+                                <Security needs={[KNOWLEDGE_KNUPLOAD]}>
+                                  <FileUploader
+                                    entityId={externalReference.id}
+                                    onUploadSuccess={() => this.props.relay.refetchConnection(200)
+                                    }
+                                  />
+                                </Security>
+                              )}
+                              {!isFileAttached && (
+                                <Security needs={[KNOWLEDGE_KNENRICHMENT]}>
+                                  <ExternalReferenceEnrichment
+                                    externalReferenceId={externalReference.id}
+                                  />
+                                </Security>
+                              )}
+                              <Security needs={[KNOWLEDGE_KNUPDATE]}>
+                                <ExternalReferencePopover
+                                  id={externalReference.id}
+                                  isExternalReferenceAttachment={isFileAttached}
+                                  objectId={stixCoreRelationshipId}
+                                  handleRemove={this.handleOpenDialog.bind(
+                                    this,
+                                    externalReferenceEdge,
+                                  )}
+                                  variant="inLine"
+                                />
+                              </Security>
+                            </>
+                          }
                         >
-                          <ListItemIcon>
-                            <ItemIcon type="External-Reference" />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={`${externalReference.source_name} ${externalReferenceId}`}
-                            secondary={truncate(externalReferenceSecondary, 90)}
-                          />
-                          <ListItemSecondaryAction>
-                            <Tooltip title={t('Browse the link')}>
-                              <IconButton
-                                onClick={this.handleOpenExternalLink.bind(
-                                  this,
-                                  externalReference.url,
-                                )}
-                                color="primary"
-                                size="large"
-                              >
-                                <OpenInBrowserOutlined />
-                              </IconButton>
-                            </Tooltip>
-                            {!isFileAttached && (
-                              <Security needs={[KNOWLEDGE_KNUPLOAD]}>
-                                <FileUploader
-                                  entityId={externalReference.id}
-                                  onUploadSuccess={() => this.props.relay.refetchConnection(200)
-                                  }
-                                />
-                              </Security>
-                            )}
-                            {!isFileAttached && (
-                              <Security needs={[KNOWLEDGE_KNENRICHMENT]}>
-                                <ExternalReferenceEnrichment
-                                  externalReferenceId={externalReference.id}
-                                />
-                              </Security>
-                            )}
-                            <Security needs={[KNOWLEDGE_KNUPDATE]}>
-                              <ExternalReferencePopover
-                                id={externalReference.id}
-                                isExternalReferenceAttachment={isFileAttached}
-                                objectId={stixCoreRelationshipId}
-                                handleRemove={this.handleOpenDialog.bind(
-                                  this,
-                                  externalReferenceEdge,
-                                )}
-                                variant="inLine"
-                              />
-                            </Security>
-                          </ListItemSecondaryAction>
-                        </ListItemButton>
+                          <ListItemButton
+                            component={Link}
+                            to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                          >
+                            <ListItemIcon>
+                              <ItemIcon type="External-Reference" />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={`${externalReference.source_name} ${externalReferenceId}`}
+                              secondary={truncate(externalReferenceSecondary, 90)}
+                            />
+                          </ListItemButton>
+                        </ListItem>
                         {externalReference.importFiles.edges.length > 0 && (
                           <List>
                             {externalReference.importFiles.edges.map((file) => file?.node && (
@@ -296,43 +302,48 @@ class StixCoreRelationshipExternalReferencesLinesContainer extends Component {
                   }
                   return (
                     <div key={externalReference.id}>
-                      <ListItemButton
-                        component={Link}
-                        to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                      <ListItem
                         dense={true}
                         divider={true}
+                        secondaryAction={
+                          <>
+                            <Security needs={[KNOWLEDGE_KNUPLOAD]}>
+                              <FileUploader
+                                entityId={externalReference.id}
+                                onUploadSuccess={() => this.props.relay.refetchConnection(200)
+                                }
+                                color="inherit"
+                              />
+                            </Security>
+                            <Security needs={[KNOWLEDGE_KNUPDATE]}>
+                              <ExternalReferencePopover
+                                id={externalReference.id}
+                                handleRemove={this.handleOpenDialog.bind(
+                                  this,
+                                  externalReferenceEdge,
+                                )}
+                                variant="inLine"
+                              />
+                            </Security>
+                          </>
+                        }
                       >
-                        <ListItemIcon>
-                          <ItemIcon type="External-Reference" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={`${externalReference.source_name} ${externalReferenceId}`}
-                          secondary={truncate(
-                            externalReference.description,
-                            120,
-                          )}
-                        />
-                        <ListItemSecondaryAction>
-                          <Security needs={[KNOWLEDGE_KNUPLOAD]}>
-                            <FileUploader
-                              entityId={externalReference.id}
-                              onUploadSuccess={() => this.props.relay.refetchConnection(200)
-                              }
-                              color="inherit"
-                            />
-                          </Security>
-                          <Security needs={[KNOWLEDGE_KNUPDATE]}>
-                            <ExternalReferencePopover
-                              id={externalReference.id}
-                              handleRemove={this.handleOpenDialog.bind(
-                                this,
-                                externalReferenceEdge,
-                              )}
-                              variant="inLine"
-                            />
-                          </Security>
-                        </ListItemSecondaryAction>
-                      </ListItemButton>
+                        <ListItemButton
+                          component={Link}
+                          to={`/dashboard/analyses/external_references/${externalReference.id}`}
+                        >
+                          <ListItemIcon>
+                            <ItemIcon type="External-Reference" />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={`${externalReference.source_name} ${externalReferenceId}`}
+                            secondary={truncate(
+                              externalReference.description,
+                              120,
+                            )}
+                          />
+                        </ListItemButton>
+                      </ListItem>
                       {externalReference.importFiles.edges.length > 0 && (
                         <List>
                           {externalReference.importFiles.edges.map((file) => file?.node && (

@@ -15,6 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { yearFormat } from '../../../../utils/Time';
 import inject18n from '../../../../components/i18n';
 import StixCoreRelationshipPopover from '../stix_core_relationships/StixCoreRelationshipPopover';
@@ -381,15 +382,9 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
             )(sector.subSectors);
             return (
               <div key={sector.id}>
-                <ListItemButton
+                <ListItem
                   divider={true}
-                  onClick={this.handleToggleLine.bind(this, sector.id)}
-                >
-                  <ListItemIcon>
-                    <Domain role="img" />
-                  </ListItemIcon>
-                  <ListItemText primary={sector.name} />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <IconButton
                       onClick={this.handleToggleLine.bind(this, sector.id)}
                       aria-haspopup="true"
@@ -401,35 +396,65 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                         <ExpandMore />
                       )}
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                  }
+                >
+                  <ListItemButton onClick={this.handleToggleLine.bind(this, sector.id)}>
+                    <ListItemIcon>
+                      <Domain role="img" />
+                    </ListItemIcon>
+                    <ListItemText primary={sector.name} />
+                  </ListItemButton>
+                </ListItem>
                 <Collapse in={this.state.expandedLines[sector.id] === true}>
                   <List>
                     {orderedRelations.map((stixCoreRelationship) => {
                       const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                       return (
-                        <ListItemButton
+                        <ListItem
                           key={stixCoreRelationship.id}
-                          classes={{ root: classes.nested }}
                           divider={true}
                           dense={true}
-                          component={Link}
-                          to={link}
-                        >
-                          <ListItemIcon className={classes.itemIcon}>
-                            <ItemIcon
-                              type={stixCoreRelationship.to.entity_type}
+                          secondaryAction={stixCoreRelationship.is_inferred ? (
+                            <Tooltip
+                              title={
+                                t('Inferred knowledge based on the rule ')
+                                + R.head(
+                                  stixCoreRelationship.x_opencti_inferences,
+                                ).rule.name
+                              }
+                            >
+                              <AutoFix
+                                fontSize="small"
+                                style={{ marginLeft: -30 }}
+                              />
+                            </Tooltip>
+                          ) : (
+                            <StixCoreRelationshipPopover
+                              stixCoreRelationshipId={stixCoreRelationship.id}
+                              paginationOptions={paginationOptions}
+                              onDelete={this.props.relay.refetch.bind(this)}
                             />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
+                          )}
+                        >
+                          <ListItemButton
+                            classes={{ root: classes.nested }}
+                            component={Link}
+                            to={link}
+                          >
+                            <ListItemIcon className={classes.itemIcon}>
+                              <ItemIcon
+                                type={stixCoreRelationship.to.entity_type}
+                              />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={
                               stixCoreRelationship.to.id === sector.id ? (
                                 <em>{t('Direct targeting of this sector')}</em>
                               ) : (
                                 stixCoreRelationship.to.name
                               )
                             }
-                            secondary={
+                              secondary={
                               // eslint-disable-next-line no-nested-ternary
                               stixCoreRelationship.description
                               && stixCoreRelationship.description.length > 0 ? (
@@ -442,42 +467,20 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                   t('No description of this targeting')
                                 )
                             }
-                          />
-                          <ItemMarkings
-                            variant="inList"
-                            markingDefinitions={
+                            />
+                            <ItemMarkings
+                              variant="inList"
+                              markingDefinitions={
                               stixCoreRelationship.objectMarking ?? []
                             }
-                            limit={1}
-                          />
-                          <ItemYears
-                            variant="inList"
-                            years={stixCoreRelationship.years}
-                          />
-                          <ListItemSecondaryAction>
-                            {stixCoreRelationship.is_inferred ? (
-                              <Tooltip
-                                title={
-                                  t('Inferred knowledge based on the rule ')
-                                  + R.head(
-                                    stixCoreRelationship.x_opencti_inferences,
-                                  ).rule.name
-                                }
-                              >
-                                <AutoFix
-                                  fontSize="small"
-                                  style={{ marginLeft: -30 }}
-                                />
-                              </Tooltip>
-                            ) : (
-                              <StixCoreRelationshipPopover
-                                stixCoreRelationshipId={stixCoreRelationship.id}
-                                paginationOptions={paginationOptions}
-                                onDelete={this.props.relay.refetch.bind(this)}
-                              />
-                            )}
-                          </ListItemSecondaryAction>
-                        </ListItemButton>
+                              limit={1}
+                            />
+                            <ItemYears
+                              variant="inList"
+                              years={stixCoreRelationship.years}
+                            />
+                          </ListItemButton>
+                        </ListItem>
                       );
                     })}
                     {orderedSubSectors.map((subsector) => {
@@ -487,19 +490,9 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                       )(subsector.relations);
                       return (
                         <div key={subsector.id}>
-                          <ListItemButton
+                          <ListItem
                             divider={true}
-                            classes={{ root: classes.nested }}
-                            onClick={this.handleToggleLine.bind(
-                              this,
-                              subsector.id,
-                            )}
-                          >
-                            <ListItemIcon>
-                              <Domain role="img" />
-                            </ListItemIcon>
-                            <ListItemText primary={subsector.name} />
-                            <ListItemSecondaryAction>
+                            secondaryAction={
                               <IconButton
                                 onClick={this.handleToggleLine.bind(
                                   this,
@@ -515,8 +508,21 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                     <ExpandMore />
                                   )}
                               </IconButton>
-                            </ListItemSecondaryAction>
-                          </ListItemButton>
+                            }
+                          >
+                            <ListItemButton
+                              classes={{ root: classes.nested }}
+                              onClick={this.handleToggleLine.bind(
+                                this,
+                                subsector.id,
+                              )}
+                            >
+                              <ListItemIcon>
+                                <Domain role="img" />
+                              </ListItemIcon>
+                              <ListItemText primary={subsector.name} />
+                            </ListItemButton>
+                          </ListItem>
                           <Collapse
                             in={this.state.expandedLines[subsector.id] === true}
                           >
@@ -525,25 +531,56 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                 (stixCoreRelationship) => {
                                   const link = `${entityLink}/relations/${stixCoreRelationship.id}`;
                                   return (
-                                    <ListItemButton
+                                    <ListItem
                                       key={stixCoreRelationship.id}
-                                      classes={{ root: classes.subnested }}
                                       divider={true}
                                       dense={true}
-                                      component={Link}
-                                      to={link}
+                                      secondaryAction={stixCoreRelationship.is_inferred ? (
+                                        <Tooltip
+                                          title={
+                                            t(
+                                              'Inferred knowledge based on the rule ',
+                                            )
+                                            + R.head(
+                                              stixCoreRelationship.x_opencti_inferences,
+                                            ).rule.name
+                                          }
+                                        >
+                                          <AutoFix
+                                            fontSize="small"
+                                            style={{ marginLeft: -30 }}
+                                          />
+                                        </Tooltip>
+                                      ) : (
+                                        <StixCoreRelationshipPopover
+                                          stixCoreRelationshipId={
+                                            stixCoreRelationship.id
+                                          }
+                                          paginationOptions={
+                                            paginationOptions
+                                          }
+                                          onDelete={this.props.relay.refetch.bind(
+                                            this,
+                                          )}
+                                        />
+                                      )}
                                     >
-                                      <ListItemIcon
-                                        className={classes.itemIcon}
+                                      <ListItemButton
+                                        classes={{ root: classes.subnested }}
+                                        component={Link}
+                                        to={link}
                                       >
-                                        <ItemIcon
-                                          type={
+                                        <ListItemIcon
+                                          className={classes.itemIcon}
+                                        >
+                                          <ItemIcon
+                                            type={
                                             stixCoreRelationship.to.entity_type
                                           }
-                                        />
-                                      </ListItemIcon>
-                                      <ListItemText
-                                        primary={
+                                          />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                          primary={
                                           stixCoreRelationship.to.id
                                           === subsector.id ? (
                                             <em>
@@ -555,7 +592,7 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                               stixCoreRelationship.to.name
                                             )
                                         }
-                                        secondary={
+                                          secondary={
                                           // eslint-disable-next-line no-nested-ternary
                                           stixCoreRelationship.description
                                           && stixCoreRelationship.description
@@ -577,50 +614,20 @@ class StixDomainObjectVictimologySectorsComponent extends Component {
                                               )
                                             )
                                         }
-                                      />
-                                      <ItemMarkings
-                                        variant="inList"
-                                        markingDefinitions={
+                                        />
+                                        <ItemMarkings
+                                          variant="inList"
+                                          markingDefinitions={
                                           stixCoreRelationship.objectMarking ?? []
                                         }
-                                        limit={1}
-                                      />
-                                      <ItemYears
-                                        variant="inList"
-                                        years={stixCoreRelationship.years}
-                                      />
-                                      <ListItemSecondaryAction>
-                                        {stixCoreRelationship.is_inferred ? (
-                                          <Tooltip
-                                            title={
-                                              t(
-                                                'Inferred knowledge based on the rule ',
-                                              )
-                                              + R.head(
-                                                stixCoreRelationship.x_opencti_inferences,
-                                              ).rule.name
-                                            }
-                                          >
-                                            <AutoFix
-                                              fontSize="small"
-                                              style={{ marginLeft: -30 }}
-                                            />
-                                          </Tooltip>
-                                        ) : (
-                                          <StixCoreRelationshipPopover
-                                            stixCoreRelationshipId={
-                                              stixCoreRelationship.id
-                                            }
-                                            paginationOptions={
-                                              paginationOptions
-                                            }
-                                            onDelete={this.props.relay.refetch.bind(
-                                              this,
-                                            )}
-                                          />
-                                        )}
-                                      </ListItemSecondaryAction>
-                                    </ListItemButton>
+                                          limit={1}
+                                        />
+                                        <ItemYears
+                                          variant="inList"
+                                          years={stixCoreRelationship.years}
+                                        />
+                                      </ListItemButton>
+                                    </ListItem>
                                   );
                                 },
                               )}

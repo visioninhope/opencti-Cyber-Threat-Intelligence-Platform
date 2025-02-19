@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import * as R from 'ramda';
 import { AutoFix } from 'mdi-material-ui';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import inject18n from '../../../../components/i18n';
 import ItemIcon from '../../../../components/ItemIcon';
 import StixCoreRelationshipPopover from './StixCoreRelationshipPopover';
@@ -80,51 +81,52 @@ class StixCoreRelationshipStixCoreRelationshipsLinesContainer extends Component 
                   remoteNode.id
                 }`;
                 return (
-                  <ListItemButton
+                  <ListItem
                     key={stixCoreRelationship.id}
                     dense={true}
                     divider={true}
-                    component={Link}
-                    to={link}
+                    secondaryAction={stixCoreRelationship.is_inferred ? (
+                      <Tooltip
+                        title={
+                          t('Inferred knowledge based on the rule ')
+                          + R.head(stixCoreRelationship.x_opencti_inferences)
+                            .rule.name
+                        }
+                      >
+                        <AutoFix
+                          fontSize="small"
+                          style={{ marginLeft: -30 }}
+                          color="secondary"
+                        />
+                      </Tooltip>
+                    ) : (
+                      <StixCoreRelationshipPopover
+                        stixCoreRelationshipId={stixCoreRelationship.id}
+                        paginationOptions={paginationOptions}
+                      />
+                    )}
                   >
-                    <ListItemIcon>
-                      <ItemIcon
-                        type={
+                    <ListItemButton
+                      component={Link}
+                      to={link}
+                    >
+                      <ListItemIcon>
+                        <ItemIcon
+                          type={
                           !restricted ? remoteNode.entity_type : 'restricted'
                         }
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={
+                        />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
                         remoteNode.observable_value
                           ? remoteNode.observable_value
                           : remoteNode.name
                       }
-                      secondary={t(`entity_${remoteNode.entity_type}`)}
-                    />
-                    <ListItemSecondaryAction>
-                      {stixCoreRelationship.is_inferred ? (
-                        <Tooltip
-                          title={
-                            t('Inferred knowledge based on the rule ')
-                            + R.head(stixCoreRelationship.x_opencti_inferences)
-                              .rule.name
-                          }
-                        >
-                          <AutoFix
-                            fontSize="small"
-                            style={{ marginLeft: -30 }}
-                            color="secondary"
-                          />
-                        </Tooltip>
-                      ) : (
-                        <StixCoreRelationshipPopover
-                          stixCoreRelationshipId={stixCoreRelationship.id}
-                          paginationOptions={paginationOptions}
-                        />
-                      )}
-                    </ListItemSecondaryAction>
-                  </ListItemButton>
+                        secondary={t(`entity_${remoteNode.entity_type}`)}
+                      />
+                    </ListItemButton>
+                  </ListItem>
                 );
               },
             )}

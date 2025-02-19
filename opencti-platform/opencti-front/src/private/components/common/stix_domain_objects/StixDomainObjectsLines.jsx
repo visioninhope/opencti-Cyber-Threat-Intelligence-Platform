@@ -124,47 +124,55 @@ class StixDomainObjectsContainer extends Component {
                     const link = resolveLink(stixDomainObject.entity_type);
                     if (link) {
                       return (
-                        <ListItemButton
+                        <ListItem
                           key={stixDomainObject.id}
                           divider={true}
-                          component={Link}
-                          to={`${link}/${stixDomainObject.id}`}
+                          secondaryAction={
+                            <StixCoreObjectLabels
+                              labels={stixDomainObject.objectLabel}
+                              variant="inSearch"
+                            />
+                          }
                         >
-                          <ListItemIcon classes={{ root: classes.itemIcon }}>
-                            <ItemIcon type={type} />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={truncate(
-                              stixDomainObject.x_mitre_id
-                                ? `[${stixDomainObject.x_mitre_id}] ${stixDomainObject.name}`
-                                : stixDomainObject.name
+                          <ListItemButton
+                            component={Link}
+                            to={`${link}/${stixDomainObject.id}`}
+                          >
+                            <ListItemIcon classes={{ root: classes.itemIcon }}>
+                              <ItemIcon type={type} />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={truncate(
+                                stixDomainObject.x_mitre_id
+                                  ? `[${stixDomainObject.x_mitre_id}] ${stixDomainObject.name}`
+                                  : stixDomainObject.name
                                     || stixDomainObject.attribute_abstract
                                     || stixDomainObject.content
                                     || stixDomainObject.opinion
                                     || `${fd(
                                       stixDomainObject.first_observed,
                                     )} - ${fd(stixDomainObject.last_observed)}`,
-                              100,
-                            )}
-                            secondary={truncate(
-                              stixDomainObject.description,
-                              150,
-                            )}
-                          />
-                          <ListItemSecondaryAction>
-                            <StixCoreObjectLabels
-                              labels={stixDomainObject.objectLabel}
-                              variant="inSearch"
+                                100,
+                              )}
+                              secondary={truncate(
+                                stixDomainObject.description,
+                                150,
+                              )}
                             />
-                          </ListItemSecondaryAction>
-                        </ListItemButton>
+                          </ListItemButton>
+                        </ListItem>
                       );
                     }
                     return (
                       <ListItem
                         key={stixDomainObject.id}
                         divider={true}
-
+                        secondaryAction={
+                          <StixCoreObjectLabels
+                            labels={stixDomainObject.objectLabel}
+                            variant="inSearch"
+                          />
+                        }
                       >
                         <ListItemIcon classes={{ root: classes.itemIcon }}>
                           <ItemIcon type={type} />
@@ -176,12 +184,6 @@ class StixDomainObjectsContainer extends Component {
                             150,
                           )}
                         />
-                        <ListItemSecondaryAction>
-                          <StixCoreObjectLabels
-                            labels={stixDomainObject.objectLabel}
-                            variant="inSearch"
-                          />
-                        </ListItemSecondaryAction>
                       </ListItem>
                     );
                   })}

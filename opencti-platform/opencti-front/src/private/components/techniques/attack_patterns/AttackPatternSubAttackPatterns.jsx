@@ -11,6 +11,7 @@ import { LockPattern } from 'mdi-material-ui';
 import { LinkOff } from '@mui/icons-material';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import FieldOrEmpty from '../../../../components/FieldOrEmpty';
 import AddSubAttackPattern from './AddSubAttackPattern';
 import { addSubAttackPatternsMutationRelationDelete } from './AddSubAttackPatternsLines';
@@ -69,20 +70,11 @@ class AttackPatternSubAttackPatternsComponent extends Component {
         <List style={{ marginTop: -10, paddingTop: 0 }}>
           <FieldOrEmpty source={subAttackPatterns}>
             {subAttackPatterns.map((subAttackPattern) => (
-              <ListItemButton
+              <ListItem
                 key={subAttackPattern.id}
                 dense={true}
                 divider={true}
-                component={Link}
-                to={`/dashboard/techniques/attack_patterns/${subAttackPattern.id}`}
-              >
-                <ListItemIcon>
-                  <LockPattern color="primary"/>
-                </ListItemIcon>
-                <ListItemText
-                  primary={`[${subAttackPattern.x_mitre_id}] ${subAttackPattern.name}`}
-                />
-                <ListItemSecondaryAction>
+                secondaryAction={
                   <IconButton
                     aria-label="Remove"
                     onClick={this.removeSubAttackPattern.bind(
@@ -93,8 +85,20 @@ class AttackPatternSubAttackPatternsComponent extends Component {
                   >
                     <LinkOff/>
                   </IconButton>
-                </ListItemSecondaryAction>
-              </ListItemButton>
+                }
+              >
+                <ListItemButton
+                  component={Link}
+                  to={`/dashboard/techniques/attack_patterns/${subAttackPattern.id}`}
+                >
+                  <ListItemIcon>
+                    <LockPattern color="primary"/>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`[${subAttackPattern.x_mitre_id}] ${subAttackPattern.name}`}
+                  />
+                </ListItemButton>
+              </ListItem>
             ))}
           </FieldOrEmpty>
         </List>

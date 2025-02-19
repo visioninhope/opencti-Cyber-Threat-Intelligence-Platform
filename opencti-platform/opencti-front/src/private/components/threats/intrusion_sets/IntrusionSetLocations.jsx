@@ -93,28 +93,11 @@ class IntrusionSetLocationsComponent extends Component {
                 ),
               );
             return (
-              <ListItemButton
+              <ListItem
                 key={location.id}
                 dense={true}
                 divider={true}
-                component={Link}
-                to={`${link}/${location.id}`}
-              >
-                <ListItemIcon>
-                  <ListItemIcon>
-                    {flag ? (
-                      <img
-                        style={{ width: 20 }}
-                        src={`${APP_BASE_PATH}/static/flags/4x3/${flag.toLowerCase()}.svg`}
-                        alt={location.name}
-                      />
-                    ) : (
-                      <ItemIcon type={location.entity_type} />
-                    )}
-                  </ListItemIcon>
-                </ListItemIcon>
-                <ListItemText primary={location.name} />
-                <ListItemSecondaryAction>
+                secondaryAction={
                   <Security needs={[KNOWLEDGE_KNUPDATE]}>
                     <IconButton
                       aria-label="Remove"
@@ -124,8 +107,28 @@ class IntrusionSetLocationsComponent extends Component {
                       <LinkOff />
                     </IconButton>
                   </Security>
-                </ListItemSecondaryAction>
-              </ListItemButton>
+                }
+              >
+                <ListItemButton
+                  component={Link}
+                  to={`${link}/${location.id}`}
+                >
+                  <ListItemIcon>
+                    <ListItemIcon>
+                      {flag ? (
+                        <img
+                          style={{ width: 20 }}
+                          src={`${APP_BASE_PATH}/static/flags/4x3/${flag.toLowerCase()}.svg`}
+                          alt={location.name}
+                        />
+                      ) : (
+                        <ItemIcon type={location.entity_type} />
+                      )}
+                    </ListItemIcon>
+                  </ListItemIcon>
+                  <ListItemText primary={location.name} />
+                </ListItemButton>
+              </ListItem>
             );
           })}
         </List>

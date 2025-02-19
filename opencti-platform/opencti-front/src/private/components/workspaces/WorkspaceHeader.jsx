@@ -476,9 +476,7 @@ const WorkspaceHeader = ({
                       key={label}
                       disableGutters={true}
                       dense={true}
-                    >
-                      <ListItemText primary={label} />
-                      <ListItemSecondaryAction>
+                      secondaryAction={
                         <IconButton
                           edge="end"
                           aria-label="delete"
@@ -487,7 +485,9 @@ const WorkspaceHeader = ({
                         >
                           <Delete />
                         </IconButton>
-                      </ListItemSecondaryAction>
+                      }
+                    >
+                      <ListItemText primary={label} />
                     </ListItem>
                     ),
                   )}

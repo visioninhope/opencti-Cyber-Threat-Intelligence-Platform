@@ -3286,6 +3286,14 @@ const WorkbenchFileContentComponent = ({
                     ? null
                     : () => handleOpenEntity(object.type, object.id)
                 }
+                secondaryAction={
+                  <IconButton
+                    onClick={() => handleDeleteObject(object)}
+                    aria-haspopup="true"
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                }
               >
                 <ListItemIcon
                   classes={{ root: classes.itemIcon }}
@@ -3357,14 +3365,6 @@ const WorkbenchFileContentComponent = ({
                     </div>
                   }
                 />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    onClick={() => handleDeleteObject(object)}
-                    aria-haspopup="true"
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                </ListItemSecondaryAction>
               </ListItem>
             );
           })}
@@ -3418,6 +3418,7 @@ const WorkbenchFileContentComponent = ({
             classes={{ root: classes.itemHead }}
             divider={false}
             style={{ paddingTop: 0 }}
+            secondaryAction={<>&nbsp;</>}
           >
             <ListItemIcon
               style={{
@@ -3449,7 +3450,6 @@ const WorkbenchFileContentComponent = ({
                 </div>
               }
             />
-            <ListItemSecondaryAction>&nbsp;</ListItemSecondaryAction>
           </ListItem>
           {sortedStixCyberObservables.map((object) => {
             const type = convertFromStixType(object.type);
@@ -3463,6 +3463,14 @@ const WorkbenchFileContentComponent = ({
                   object.type === 'marking-definition'
                     ? null
                     : () => handleOpenObservable(object.type, object.id)
+                }
+                secondaryAction={
+                  <IconButton
+                    onClick={() => handleDeleteObject(object)}
+                    aria-haspopup="true"
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
                 }
               >
                 <ListItemIcon
@@ -3596,14 +3604,6 @@ const WorkbenchFileContentComponent = ({
                     </div>
                   }
                 />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    onClick={() => handleDeleteObject(object)}
-                    aria-haspopup="true"
-                  >
-                    <DeleteOutlined />
-                  </IconButton>
-                </ListItemSecondaryAction>
               </ListItem>
             );
           })}
@@ -3658,6 +3658,7 @@ const WorkbenchFileContentComponent = ({
             classes={{ root: classes.itemHead }}
             divider={false}
             style={{ paddingTop: 0 }}
+            secondaryAction={<>&nbsp;</>}
           >
             <ListItemIcon
               style={{
@@ -3688,78 +3689,80 @@ const WorkbenchFileContentComponent = ({
                 </div>
               }
             />
-            <ListItemSecondaryAction>&nbsp;</ListItemSecondaryAction>
           </ListItem>
           {sortedStixCoreRelationships.map((object) => (
-            <ListItemButton
+            <ListItem
               key={object.id}
-              classes={{ root: classes.item }}
               divider
-              onClick={() => handleOpenRelationship(object.id)}
-            >
-              <ListItemIcon
-                classes={{ root: classes.itemIcon }}
-                style={{ minWidth: 40 }}
-                onClick={(event) => handleToggleSelectObject(object, event)}
-              >
-                <Checkbox
-                  edge="start"
-                  checked={
-                    (selectAll && !(object.id in (deSelectedElements || {})))
-                    || object.id in (selectedElements || {})
-                  }
-                  disableRipple
-                />
-              </ListItemIcon>
-              <ListItemIcon classes={{ root: classes.itemIcon }}>
-                <ItemIcon type={object.relationship_type} />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.ttype}
-                    >
-                      {object.ttype}
-                    </div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.default_value}
-                    >
-                      {object.default_value || t_i18n('Unknown')}
-                    </div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.labels}
-                    >
-                      <StixItemLabels
-                        variant="inList"
-                        labels={object.labels || []}
-                      />
-                    </div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.markings}
-                    >
-                      <StixItemMarkings
-                        variant="inList"
-                        markingDefinitions={object.markings || []}
-                        limit={2}
-                      />
-                    </div>
-                  </div>
-                }
-              />
-              <ListItemSecondaryAction>
+              secondaryAction={
                 <IconButton
                   onClick={() => handleDeleteObject(object)}
                   aria-haspopup="true"
                 >
                   <DeleteOutlined />
                 </IconButton>
-              </ListItemSecondaryAction>
-            </ListItemButton>
+              }
+            >
+              <ListItemButton
+                classes={{ root: classes.item }}
+                onClick={() => handleOpenRelationship(object.id)}
+              >
+                <ListItemIcon
+                  classes={{ root: classes.itemIcon }}
+                  style={{ minWidth: 40 }}
+                  onClick={(event) => handleToggleSelectObject(object, event)}
+                >
+                  <Checkbox
+                    edge="start"
+                    checked={
+                    (selectAll && !(object.id in (deSelectedElements || {})))
+                    || object.id in (selectedElements || {})
+                  }
+                    disableRipple
+                  />
+                </ListItemIcon>
+                <ListItemIcon classes={{ root: classes.itemIcon }}>
+                  <ItemIcon type={object.relationship_type} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.ttype}
+                      >
+                        {object.ttype}
+                      </div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.default_value}
+                      >
+                        {object.default_value || t_i18n('Unknown')}
+                      </div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.labels}
+                      >
+                        <StixItemLabels
+                          variant="inList"
+                          labels={object.labels || []}
+                        />
+                      </div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.markings}
+                      >
+                        <StixItemMarkings
+                          variant="inList"
+                          markingDefinitions={object.markings || []}
+                          limit={2}
+                        />
+                      </div>
+                    </div>
+                }
+                />
+              </ListItemButton>
+            </ListItem>
           ))}
         </List>
         <Drawer
@@ -3809,6 +3812,7 @@ const WorkbenchFileContentComponent = ({
             classes={{ root: classes.itemHead }}
             divider={false}
             style={{ paddingTop: 0 }}
+            secondaryAction={<>&nbsp;</>}
           >
             <ListItemIcon
               style={{
@@ -3839,78 +3843,79 @@ const WorkbenchFileContentComponent = ({
                 </div>
               }
             />
-            <ListItemSecondaryAction>&nbsp;</ListItemSecondaryAction>
           </ListItem>
           {sortedStixSightings.map((object) => (
-            <ListItemButton
+            <ListItem
               key={object.id}
-              classes={{ root: classes.item }}
               divider
-
-            >
-              <ListItemIcon
-                classes={{ root: classes.itemIcon }}
-                style={{ minWidth: 40 }}
-                onClick={(event) => handleToggleSelectObject(object, event)}
-              >
-                <Checkbox
-                  edge="start"
-                  checked={
-                    (selectAll && !(object.id in (deSelectedElements || {})))
-                    || object.id in (selectedElements || {})
-                  }
-                  disableRipple
-                />
-              </ListItemIcon>
-              <ListItemIcon classes={{ root: classes.itemIcon }}>
-                <ItemIcon type="sighting" />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.ttype}
-                    >
-                      {object.ttype}
-                    </div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.default_value}
-                    >
-                      {object.default_value || t_i18n('Unknown')}
-                    </div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.labels}
-                    >
-                      <StixItemLabels
-                        variant="inList"
-                        labels={object.labels || []}
-                      />
-                    </div>
-                    <div
-                      className={classes.bodyItem}
-                      style={inlineStyles.markings}
-                    >
-                      <StixItemMarkings
-                        variant="inList"
-                        markingDefinitions={object.markings || []}
-                        limit={2}
-                      />
-                    </div>
-                  </div>
-                }
-              />
-              <ListItemSecondaryAction>
+              secondaryAction={
                 <IconButton
                   onClick={() => handleDeleteObject(object)}
                   aria-haspopup="true"
                 >
                   <DeleteOutlined />
                 </IconButton>
-              </ListItemSecondaryAction>
-            </ListItemButton>
+              }
+            >
+              <ListItemButton
+                classes={{ root: classes.item }}
+              >
+                <ListItemIcon
+                  classes={{ root: classes.itemIcon }}
+                  style={{ minWidth: 40 }}
+                  onClick={(event) => handleToggleSelectObject(object, event)}
+                >
+                  <Checkbox
+                    edge="start"
+                    checked={
+                    (selectAll && !(object.id in (deSelectedElements || {})))
+                    || object.id in (selectedElements || {})
+                  }
+                    disableRipple
+                  />
+                </ListItemIcon>
+                <ListItemIcon classes={{ root: classes.itemIcon }}>
+                  <ItemIcon type="sighting" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.ttype}
+                      >
+                        {object.ttype}
+                      </div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.default_value}
+                      >
+                        {object.default_value || t_i18n('Unknown')}
+                      </div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.labels}
+                      >
+                        <StixItemLabels
+                          variant="inList"
+                          labels={object.labels || []}
+                        />
+                      </div>
+                      <div
+                        className={classes.bodyItem}
+                        style={inlineStyles.markings}
+                      >
+                        <StixItemMarkings
+                          variant="inList"
+                          markingDefinitions={object.markings || []}
+                          limit={2}
+                        />
+                      </div>
+                    </div>
+                }
+                />
+              </ListItemButton>
+            </ListItem>
           ))}
         </List>
       </>

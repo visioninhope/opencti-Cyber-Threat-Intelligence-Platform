@@ -130,7 +130,20 @@ class StixDomainObjectDetectDuplicate extends Component {
                 {potentialDuplicates.map((element) => {
                   const link = resolveLink(element.node.entity_type);
                   return (
-                    <ListItem key={element.node.id} dense={true} divider={true}>
+                    <ListItem
+                      key={element.node.id}
+                      dense={true}
+                      divider={true}
+                      secondaryAction={
+                        <IconButton
+                          component={Link}
+                          to={`${link}/${element.node.id}`}
+                          size="large"
+                        >
+                          <VisibilityOutlined />
+                        </IconButton>
+                      }
+                    >
                       <ListItemIcon>
                         <ItemIcon type={element.node.entity_type} />
                       </ListItemIcon>
@@ -153,15 +166,6 @@ class StixDomainObjectDetectDuplicate extends Component {
                           }
                         />
                       </div>
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          component={Link}
-                          to={`${link}/${element.node.id}`}
-                          size="large"
-                        >
-                          <VisibilityOutlined />
-                        </IconButton>
-                      </ListItemSecondaryAction>
                     </ListItem>
                   );
                 })}

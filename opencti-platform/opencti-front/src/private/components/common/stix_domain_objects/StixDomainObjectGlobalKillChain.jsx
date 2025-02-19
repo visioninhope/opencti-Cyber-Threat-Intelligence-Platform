@@ -12,6 +12,7 @@ import { Launch } from 'mdi-material-ui';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { createRefetchContainer, graphql } from 'react-relay';
 import { ListItemButton } from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import { yearFormat } from '../../../../utils/Time';
 import inject18n from '../../../../components/i18n';
 import StixCoreRelationshipPopover from '../stix_core_relationships/StixCoreRelationshipPopover';
@@ -114,18 +115,9 @@ class StixDomainObjectGlobalKillChainComponent extends Component {
           <List id="test">
             {stixRelationships.map((stixRelationship) => (
               <div key={stixRelationship.id}>
-                <ListItemButton
+                <ListItem
                   divider={true}
-                  onClick={this.handleToggleLine.bind(
-                    this,
-                    stixRelationship.id,
-                  )}
-                >
-                  <ListItemIcon>
-                    <Launch color="primary" role="img" />
-                  </ListItemIcon>
-                  <ListItemText primary={stixRelationship.phase_name} />
-                  <ListItemSecondaryAction>
+                  secondaryAction={
                     <IconButton
                       onClick={this.handleToggleLine.bind(
                         this,
@@ -135,14 +127,26 @@ class StixDomainObjectGlobalKillChainComponent extends Component {
                       size="large"
                     >
                       {this.state.expandedLines[stixRelationship.id]
-                      === false ? (
-                        <ExpandMore />
+                    === false ? (
+                      <ExpandMore />
                         ) : (
                           <ExpandLess />
                         )}
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItemButton>
+                }
+                >
+                  <ListItemButton
+                    onClick={this.handleToggleLine.bind(
+                      this,
+                      stixRelationship.id,
+                    )}
+                  >
+                    <ListItemIcon>
+                      <Launch color="primary" role="img" />
+                    </ListItemIcon>
+                    <ListItemText primary={stixRelationship.phase_name} />
+                  </ListItemButton>
+                </ListItem>
                 <Collapse
                   in={this.state.expandedLines[stixRelationship.id] !== false}
                 >
@@ -153,25 +157,34 @@ class StixDomainObjectGlobalKillChainComponent extends Component {
                         const restricted = entityToDisplay === null;
                         const link = `${entityLink}/relations/${stixDomainObject.id}`;
                         return (
-                          <ListItemButton
+                          <ListItem
                             key={stixDomainObject.id}
-                            classes={{ root: classes.nested }}
                             divider={true}
                             dense={true}
-                            component={Link}
-                            to={link}
+                            secondaryAction={
+                              <StixCoreRelationshipPopover
+                                stixCoreRelationshipId={stixDomainObject.id}
+                                paginationOptions={paginationOptions}
+                                onDelete={this.props.relay.refetch.bind(this)}
+                              />
+                          }
                           >
-                            <ListItemIcon className={classes.itemIcon}>
-                              <ItemIcon
-                                type={
+                            <ListItemButton
+                              classes={{ root: classes.nested }}
+                              component={Link}
+                              to={link}
+                            >
+                              <ListItemIcon className={classes.itemIcon}>
+                                <ItemIcon
+                                  type={
                                   !restricted
                                     ? entityToDisplay.entity_type
                                     : 'restricted'
                                 }
-                              />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={
+                                />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
                                 // eslint-disable-next-line no-nested-ternary
                                 !restricted ? (
                                   entityToDisplay.entity_type
@@ -189,7 +202,7 @@ class StixDomainObjectGlobalKillChainComponent extends Component {
                                   t('Restricted')
                                 )
                               }
-                              secondary={
+                                secondary={
                                 stixDomainObject.description
                                 && stixDomainObject.description.length > 0 ? (
                                   <MarkdownDisplay
@@ -201,26 +214,20 @@ class StixDomainObjectGlobalKillChainComponent extends Component {
                                     t('No description of this usage')
                                   )
                               }
-                            />
-                            <ItemMarkings
-                              variant="inList"
-                              markingDefinitions={
+                              />
+                              <ItemMarkings
+                                variant="inList"
+                                markingDefinitions={
                                 stixDomainObject.objectMarking ?? []
                               }
-                              limit={1}
-                            />
-                            <ItemYears
-                              variant="inList"
-                              years={stixDomainObject.years}
-                            />
-                            <ListItemSecondaryAction>
-                              <StixCoreRelationshipPopover
-                                stixCoreRelationshipId={stixDomainObject.id}
-                                paginationOptions={paginationOptions}
-                                onDelete={this.props.relay.refetch.bind(this)}
+                                limit={1}
                               />
-                            </ListItemSecondaryAction>
-                          </ListItemButton>
+                              <ItemYears
+                                variant="inList"
+                                years={stixDomainObject.years}
+                              />
+                            </ListItemButton>
+                          </ListItem>
                         );
                       },
                     )}

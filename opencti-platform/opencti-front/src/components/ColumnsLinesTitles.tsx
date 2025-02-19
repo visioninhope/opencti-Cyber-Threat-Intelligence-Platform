@@ -89,7 +89,13 @@ const ColumnsLinesTitles: FunctionComponent<TriggerLineTitlesProps> = ({
     );
   };
   return (
-    <ListItem classes={{ root: classes.item }} divider={false}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={false}
+      secondaryAction={secondaryAction && (
+        <> &nbsp; </>
+      )}
+    >
       <ListItemIcon> &nbsp; </ListItemIcon>
       <ListItemText
         primary={
@@ -103,9 +109,6 @@ const ColumnsLinesTitles: FunctionComponent<TriggerLineTitlesProps> = ({
           </>
         }
       />
-      {secondaryAction && (
-        <ListItemSecondaryAction> &nbsp; </ListItemSecondaryAction>
-      )}
     </ListItem>
   );
 };

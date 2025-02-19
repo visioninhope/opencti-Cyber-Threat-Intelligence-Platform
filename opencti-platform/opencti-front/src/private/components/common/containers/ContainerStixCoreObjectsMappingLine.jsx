@@ -73,91 +73,93 @@ const ContainerStixCoreObjectLineComponent = (props) => {
   const isOnlyThroughInference = isThroughInference && !refTypes.includes('manual');
   const mappedString = Object.keys(contentMappingData).find((key) => contentMappingData[key] === node.standard_id);
   return (
-    <ListItemButton
-      classes={{ root: classes.item }}
+    <ListItem
       divider={true}
-      component={Link}
-      to={`${resolveLink(node.entity_type)}/${node.id}`}
+      secondaryAction={isOnlyThroughInference ? (
+        <Tooltip title={t_i18n('Inferred knowledge')}>
+          <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
+        </Tooltip>
+      ) : (
+        <Security needs={[KNOWLEDGE_KNUPDATE]}>
+          <ContainerStixCoreObjectPopover
+            containerId={containerId}
+            toId={node.id}
+            toStandardId={node.standard_id}
+            relationshipType="object"
+            paginationKey="Pagination_objects"
+            paginationOptions={paginationOptions}
+            contentMappingData={contentMappingData}
+            mapping={contentMappingCount[mappedString]}
+            enableReferences={enableReferences}
+          />
+        </Security>
+      )
+    }
     >
-      <ListItemIcon classes={{ root: classes.itemIcon }}>
-        <ItemIcon type={node.entity_type} />
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.entity_type.width }}
-            >
-              <ItemEntityType entityType={node.entity_type} />
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.value.width }}
-            >
-              {node.representative?.main}
-              {node.draftVersion && (<DraftChip/>)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.createdBy.width }}
-            >
-              {R.pathOr('', ['createdBy', 'name'], node)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.created_at.width }}
-            >
-              {fd(node.created_at)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.objectMarking.width }}
-            >
-              <ItemMarkings
-                variant="inList"
-                markingDefinitions={node.objectMarking ?? []}
-                limit={1}
-              />
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.mapping.width }}
-            >
-              <Chip
-                classes={{ root: classes.chipInList }}
-                label={
+      <ListItemButton
+        classes={{ root: classes.item }}
+        component={Link}
+        to={`${resolveLink(node.entity_type)}/${node.id}`}
+      >
+        <ListItemIcon classes={{ root: classes.itemIcon }}>
+          <ItemIcon type={node.entity_type} />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.entity_type.width }}
+              >
+                <ItemEntityType entityType={node.entity_type} />
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.value.width }}
+              >
+                {node.representative?.main}
+                {node.draftVersion && (<DraftChip/>)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.createdBy.width }}
+              >
+                {R.pathOr('', ['createdBy', 'name'], node)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.created_at.width }}
+              >
+                {fd(node.created_at)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.objectMarking.width }}
+              >
+                <ItemMarkings
+                  variant="inList"
+                  markingDefinitions={node.objectMarking ?? []}
+                  limit={1}
+                />
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.mapping.width }}
+              >
+                <Chip
+                  classes={{ root: classes.chipInList }}
+                  label={
                   (mappedString && contentMappingCount[mappedString])
                     ? contentMappingCount[mappedString]
                     : '0'
                 }
-              />
-            </div>
-          </>
+                />
+              </div>
+            </>
         }
-      />
-      <ListItemSecondaryAction>
-        {isOnlyThroughInference ? (
-          <Tooltip title={t_i18n('Inferred knowledge')}>
-            <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
-          </Tooltip>
-        ) : (
-          <Security needs={[KNOWLEDGE_KNUPDATE]}>
-            <ContainerStixCoreObjectPopover
-              containerId={containerId}
-              toId={node.id}
-              toStandardId={node.standard_id}
-              relationshipType="object"
-              paginationKey="Pagination_objects"
-              paginationOptions={paginationOptions}
-              contentMappingData={contentMappingData}
-              mapping={contentMappingCount[mappedString]}
-              enableReferences={enableReferences}
-            />
-          </Security>
-        )}
-      </ListItemSecondaryAction>
-    </ListItemButton>
+        />
+      </ListItemButton>
+    </ListItem>
   );
 };
 

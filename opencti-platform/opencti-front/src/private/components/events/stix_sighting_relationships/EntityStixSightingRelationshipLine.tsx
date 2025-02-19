@@ -259,98 +259,99 @@ export const EntityStixSightingRelationshipLine: FunctionComponent<EntityStixSig
   const restricted = entity === null;
   const link = `${resolveLink(data.entity_type)}/${data.id}`;
   return (
-    <ListItemButton
-      classes={{ root: classes.item }}
+    <ListItem
       divider={true}
-      component={Link}
-      to={link}
-      disabled={restricted}
+      secondaryAction={data.is_inferred ? (
+        <Tooltip
+          title={
+            `${t_i18n('Inferred knowledge based on the rule ')}
+                ${R.head(data.x_opencti_inferences ?? [])?.rule.name ?? ''}`
+          }
+        >
+          <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
+        </Tooltip>
+      ) : (
+        <StixSightingRelationshipPopover
+          stixSightingRelationshipId={data.id}
+          paginationOptions={paginationOptions}
+          disabled={restricted}
+        />
+      )}
     >
-      <ListItemIcon classes={{ root: classes.itemIcon }}>
-        <ItemIcon type={!restricted ? entity?.entity_type : 'restricted'} />
-      </ListItemIcon>
-      <ListItemText
-        primary={
-          <div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.x_opencti_negative.width }}
-            >
-              <Chip
-                classes={{
-                  root: data.x_opencti_negative
-                    ? classes.negative
-                    : classes.positive,
-                }}
-                label={
+      <ListItemButton
+        classes={{ root: classes.item }}
+        component={Link}
+        to={link}
+        disabled={restricted}
+      >
+        <ListItemIcon classes={{ root: classes.itemIcon }}>
+          <ItemIcon type={!restricted ? entity?.entity_type : 'restricted'} />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.x_opencti_negative.width }}
+              >
+                <Chip
+                  classes={{
+                    root: data.x_opencti_negative
+                      ? classes.negative
+                      : classes.positive,
+                  }}
+                  label={
                     data.x_opencti_negative
                       ? t_i18n('False positive')
                       : t_i18n('True positive')
                   }
-              />
+                />
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.attribute_count.width }}
+              >
+                {data.attribute_count}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.name.width }}
+              >
+                {!restricted
+                  ? entity?.name || entity?.observable_value
+                  : t_i18n('Restricted')}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.entity_type.width }}
+              >
+                {!restricted
+                  ? t_i18n(`entity_${entity?.entity_type}`)
+                  : t_i18n('Restricted')}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.first_seen.width }}
+              >
+                {nsdt(data.first_seen)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.last_seen.width }}
+              >
+                {nsdt(data.last_seen)}
+              </div>
+              <div
+                className={classes.bodyItem}
+                style={{ width: dataColumns.confidence.width }}
+              >
+                <ItemConfidence confidence={data.confidence} entityType={data.entity_type} variant="inList" />
+              </div>
             </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.attribute_count.width }}
-            >
-              {data.attribute_count}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.name.width }}
-            >
-              {!restricted
-                ? entity?.name || entity?.observable_value
-                : t_i18n('Restricted')}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.entity_type.width }}
-            >
-              {!restricted
-                ? t_i18n(`entity_${entity?.entity_type}`)
-                : t_i18n('Restricted')}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.first_seen.width }}
-            >
-              {nsdt(data.first_seen)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.last_seen.width }}
-            >
-              {nsdt(data.last_seen)}
-            </div>
-            <div
-              className={classes.bodyItem}
-              style={{ width: dataColumns.confidence.width }}
-            >
-              <ItemConfidence confidence={data.confidence} entityType={data.entity_type} variant="inList" />
-            </div>
-          </div>
           }
-      />
-      <ListItemSecondaryAction>
-        {data.is_inferred ? (
-          <Tooltip
-            title={
-                `${t_i18n('Inferred knowledge based on the rule ')}
-                ${R.head(data.x_opencti_inferences ?? [])?.rule.name ?? ''}`
-              }
-          >
-            <AutoFix fontSize="small" style={{ marginLeft: -30 }} />
-          </Tooltip>
-        ) : (
-          <StixSightingRelationshipPopover
-            stixSightingRelationshipId={data.id}
-            paginationOptions={paginationOptions}
-            disabled={restricted}
-          />
-        )}
-      </ListItemSecondaryAction>
-    </ListItemButton>
+        />
+      </ListItemButton>
+    </ListItem>
   );
 };
 
@@ -361,7 +362,15 @@ export const EntityStixSightingRelationshipLineDummy = ({
 }) => {
   const classes = useStyles();
   return (
-    <ListItem classes={{ root: classes.item }} divider={true}>
+    <ListItem
+      classes={{ root: classes.item }}
+      divider={true}
+      secondaryAction={
+        <div classes={{ root: classes.itemIconDisabled }}>
+          <MoreVertOutlined/>
+        </div>
+      }
+    >
       <ListItemIcon classes={{ root: classes.itemIconDisabled }}>
         <HelpOutlined />
       </ListItemIcon>
@@ -448,9 +457,6 @@ export const EntityStixSightingRelationshipLineDummy = ({
           </div>
           }
       />
-      <ListItemSecondaryAction classes={{ root: classes.itemIconDisabled }}>
-        <MoreVertOutlined />
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };
