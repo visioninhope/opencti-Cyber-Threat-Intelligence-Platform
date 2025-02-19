@@ -623,7 +623,7 @@ export const getDefaultOperatorFilter = (
   }
   const { type } = filterDefinition;
   if (type === 'date') {
-    return 'gte';
+    return 'within';
   }
   if (isNumericFilter(type)) {
     return 'gt';
@@ -674,7 +674,7 @@ export const getAvailableOperatorForFilterKey = (
   }
   const { type: filterType } = filterDefinition;
   if (filterType === 'date') {
-    return ['gt', 'gte', 'lt', 'lte', 'nil', 'not_nil'];
+    return ['gt', 'gte', 'lt', 'lte', 'nil', 'not_nil', 'within'];
   }
   if (isNumericFilter(filterType)) {
     return ['gt', 'gte', 'lt', 'lte'];
