@@ -4,13 +4,13 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
 import FilterDate from '@components/common/lists/FilterDate';
-import { Alert, Autocomplete, MenuItem, Select } from '@mui/material';
+import { Alert, Autocomplete, MenuItem, Select, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import SearchScopeElement from '@components/common/lists/SearchScopeElement';
 import Chip from '@mui/material/Chip';
 import { OptionValue } from '@components/common/lists/FilterAutocomplete';
 import { addDays, subDays } from 'date-fns';
-import { useTheme } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 import {
   FilterSearchContext,
   getAvailableOperatorForFilter,
@@ -161,7 +161,6 @@ export const FilterChipPopover: FunctionComponent<FilterChipMenuProps> = ({
   fintelTemplatesContext,
 }) => {
   const { t_i18n } = useFormatter();
-  const theme = useTheme();
 
   const filter = filters.find((f) => f.id === params.filterId);
   const filterKey = filter?.key ?? '';
@@ -467,31 +466,17 @@ export const FilterChipPopover: FunctionComponent<FilterChipMenuProps> = ({
               padding: 8,
             }}
           >
-          <Alert severity="info" style={{ marginBottom: 5 }}>
-            <span>
-              {t_i18n('This filter is not working for ')}
-            </span>
-            <Tooltip title={
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '10px',
-              }}
-              >
-                <div>{t_i18n('The "in regards of" filter does not detect the following relationships:')}</div>
-                <div>{t_i18n('- the relationships of type related_to with an Observable as source type,')}</div>
-                <div>{t_i18n('- the relationships of type located_at with an Ipv4/Ipv6 Address or a City as source type, and a Region or Country as target type,')}</div>
-                <div>{t_i18n('- the relationships of type targets with a Region, Country or Sector as target type.')}</div>
-              </div>
-            }
-            >
-              <span style={{
-                color: theme.palette.primary.main,
-              }}
-              >
-                {t_i18n('some configurations')}
-              </span>
-            </Tooltip>
+          <Alert severity="info" sx={{ marginBottom: 1 }}>
+            <Typography variant="body2">
+              {t_i18n('', {
+                id: 'This filter may exclude some results for technical reasons.',
+                values: {
+                  link: <Link target="_blank" to="https://docs.opencti.io/latest/reference/filters/?h=#the-regardingof-filter-key">
+                    {t_i18n('technical reasons')}
+                  </Link>,
+                },
+              })}
+            </Typography>
           </Alert>
           {displayOperatorAndFilter(filterKey, filterDefinition?.subFilters[0].filterKey)}
           <Chip
