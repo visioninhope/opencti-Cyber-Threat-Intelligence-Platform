@@ -466,18 +466,16 @@ export const FilterChipPopover: FunctionComponent<FilterChipMenuProps> = ({
               padding: 8,
             }}
           >
-          <Alert severity="info" sx={{ marginBottom: 1 }}>
-            <Typography variant="body2">
-              {t_i18n('', {
-                id: 'This filter may exclude some results for technical reasons.',
-                values: {
-                  link: <Link target="_blank" to="https://docs.opencti.io/latest/reference/filters/?h=#the-regardingof-filter-key">
-                    {t_i18n('technical reasons')}
-                  </Link>,
-                },
-              })}
-            </Typography>
-          </Alert>
+          <Typography variant="body2" style={{ marginBottom: 10 }}>
+            {t_i18n('', {
+              id: 'This filter may exclude some results for technical reasons.',
+              values: {
+                link: <Link target="_blank" to="https://docs.opencti.io/latest/reference/filters/?h=#the-regardingof-filter-key">
+                  {t_i18n('technical reasons')}
+                </Link>,
+              },
+            })}
+          </Typography>
           {displayOperatorAndFilter(filterKey, filterDefinition?.subFilters[0].filterKey)}
           <Chip
             style={{
