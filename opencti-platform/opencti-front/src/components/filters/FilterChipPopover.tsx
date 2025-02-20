@@ -2,7 +2,7 @@ import React, { Dispatch, FunctionComponent, ReactNode, SyntheticEvent, useState
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip'; import * as PropTypes from 'prop-types';
+import Tooltip from '@mui/material/Tooltip';
 import Alert from '@mui/material/Alert';
 import FilterDate from '@components/common/lists/FilterDate';
 import { Autocomplete, MenuItem, Select, Typography } from '@mui/material';
