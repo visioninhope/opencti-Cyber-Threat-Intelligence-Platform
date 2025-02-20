@@ -2,7 +2,8 @@ import React, { Dispatch, FunctionComponent, ReactNode, SyntheticEvent, useState
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip'; import * as PropTypes from 'prop-types';
+import Alert from '@mui/material/Alert';
 import FilterDate from '@components/common/lists/FilterDate';
 import { Autocomplete, MenuItem, Select, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -11,6 +12,7 @@ import Chip from '@mui/material/Chip';
 import { OptionValue } from '@components/common/lists/FilterAutocomplete';
 import { addDays, subDays } from 'date-fns';
 import { Link } from 'react-router-dom';
+
 import {
   FilterSearchContext,
   getAvailableOperatorForFilter,
@@ -466,16 +468,18 @@ export const FilterChipPopover: FunctionComponent<FilterChipMenuProps> = ({
               padding: 8,
             }}
           >
-          <Typography variant="body2" style={{ marginBottom: 10 }}>
-            {t_i18n('', {
-              id: 'This filter may exclude some results for technical reasons.',
-              values: {
-                link: <Link target="_blank" to="https://docs.opencti.io/latest/reference/filters/?h=#the-regardingof-filter-key">
-                  {t_i18n('technical reasons')}
-                </Link>,
-              },
-            })}
-          </Typography>
+          <Alert severity={'info'} sx={{ marginBottom: 1 }}>
+            <Typography variant="caption" >
+              {t_i18n('', {
+                id: 'This filter may exclude some results (link)',
+                values: {
+                  link: <Link target="_blank" to="https://docs.opencti.io/latest/reference/filters/?h=#the-regardingof-filter-key">
+                    {t_i18n('more info')}
+                  </Link>,
+                },
+              })}
+            </Typography>
+          </Alert>
           {displayOperatorAndFilter(filterKey, filterDefinition?.subFilters[0].filterKey)}
           <Chip
             style={{
