@@ -1873,6 +1873,11 @@ enum ConnectorType {
   STREAM
 }
 
+enum ConnectorListenProtocol {
+  AMQP
+  API
+}
+
 input ExportAskInput {
   format: String!
   exportType: String!
@@ -1936,6 +1941,7 @@ input RegisterConnectorInput {
   auto: Boolean
   only_contextual: Boolean
   playbook_compatible: Boolean
+  listen_callback_uri: String
 }
 
 type RabbitMQConnection {
@@ -1970,6 +1976,7 @@ type ConnectorConfig {
   listen: String!
   listen_routing: String!
   listen_exchange: String!
+  listen_callback_uri: String
   push: String!
   push_routing: String!
   push_exchange: String!
@@ -8755,7 +8762,7 @@ type Mutation {
   stixCoreObjectEdit(id: ID!): StixCoreObjectEditMutations
   stixCoreObjectsExportAsk(input: StixCoreObjectsExportAskInput!): [File!]
   stixCoreObjectsExportPush(entity_id: String, entity_type: String!, file: Upload!, file_markings: [String]!, listFilters: String): Boolean
-  stixBundlePush(connectorId: String!, bundle: String!): Boolean
+  stixBundlePush(connectorId: String!, bundle: String!, work_id: String): Boolean
   stixDomainObjectAdd(input: StixDomainObjectAddInput!): StixDomainObject
   stixDomainObjectEdit(id: ID!): StixDomainObjectEditMutations
   stixDomainObjectsExportAsk(format: String!, exportType: String!, contentMaxMarkings: [String], fileMarkings: [String], search: String, exportContext: ExportContext, relationship_type: [String], orderBy: StixDomainObjectsOrdering, orderMode: OrderingMode, filters: FilterGroup, selectedIds: [String]): [File!]
