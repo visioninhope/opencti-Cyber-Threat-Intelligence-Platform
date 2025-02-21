@@ -1873,11 +1873,6 @@ enum ConnectorType {
   STREAM
 }
 
-enum ConnectorListenProtocol {
-  AMQP
-  API
-}
-
 input ExportAskInput {
   format: String!
   exportType: String!
