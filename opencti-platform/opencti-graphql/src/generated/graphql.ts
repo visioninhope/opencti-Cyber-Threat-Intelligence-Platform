@@ -3822,6 +3822,11 @@ export enum ConnectorType {
   Stream = 'STREAM'
 }
 
+export type ConnectorWithConfig = {
+  configuration?: InputMaybe<Scalars['String']['input']>;
+  connectorId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Container = {
   authorized_members?: Maybe<Array<MemberAccess>>;
   authorized_members_activation_date?: Maybe<Scalars['DateTime']['output']>;
@@ -13958,6 +13963,7 @@ export type Mutation = {
   triggerKnowledgeFieldPatch?: Maybe<Trigger>;
   triggerKnowledgeLiveAdd?: Maybe<Trigger>;
   updateConnectorTrigger?: Maybe<Connector>;
+  uploadAndAskJobImport?: Maybe<File>;
   uploadImport?: Maybe<File>;
   uploadPending?: Maybe<File>;
   userAdd?: Maybe<User>;
@@ -15925,6 +15931,16 @@ export type MutationTriggerKnowledgeLiveAddArgs = {
 export type MutationUpdateConnectorTriggerArgs = {
   id: Scalars['ID']['input'];
   input: Array<InputMaybe<EditInput>>;
+};
+
+
+export type MutationUploadAndAskJobImportArgs = {
+  bypassEntityId?: InputMaybe<Scalars['String']['input']>;
+  bypassValidation?: InputMaybe<Scalars['Boolean']['input']>;
+  connectors?: InputMaybe<Array<InputMaybe<ConnectorWithConfig>>>;
+  file: Scalars['Upload']['input'];
+  fileMarkings?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  validationMode?: InputMaybe<ValidationMode>;
 };
 
 
@@ -31312,6 +31328,7 @@ export type ResolversTypes = ResolversObject<{
   ConnectorMetadata: ResolverTypeWrapper<ConnectorMetadata>;
   ConnectorQueueDetails: ResolverTypeWrapper<ConnectorQueueDetails>;
   ConnectorType: ConnectorType;
+  ConnectorWithConfig: ConnectorWithConfig;
   ConstraintNumber: ResolverTypeWrapper<Scalars['ConstraintNumber']['output']>;
   ConstraintString: ResolverTypeWrapper<Scalars['ConstraintString']['output']>;
   Container: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Container']>;
@@ -32174,6 +32191,7 @@ export type ResolversParentTypes = ResolversObject<{
   ConnectorInfoInput: ConnectorInfoInput;
   ConnectorMetadata: ConnectorMetadata;
   ConnectorQueueDetails: ConnectorQueueDetails;
+  ConnectorWithConfig: ConnectorWithConfig;
   ConstraintNumber: Scalars['ConstraintNumber']['output'];
   ConstraintString: Scalars['ConstraintString']['output'];
   Container: ResolversInterfaceTypes<ResolversParentTypes>['Container'];
@@ -37835,6 +37853,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   triggerKnowledgeFieldPatch?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType, RequireFields<MutationTriggerKnowledgeFieldPatchArgs, 'id' | 'input'>>;
   triggerKnowledgeLiveAdd?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType, RequireFields<MutationTriggerKnowledgeLiveAddArgs, 'input'>>;
   updateConnectorTrigger?: Resolver<Maybe<ResolversTypes['Connector']>, ParentType, ContextType, RequireFields<MutationUpdateConnectorTriggerArgs, 'id' | 'input'>>;
+  uploadAndAskJobImport?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<MutationUploadAndAskJobImportArgs, 'file'>>;
   uploadImport?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<MutationUploadImportArgs, 'file'>>;
   uploadPending?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<MutationUploadPendingArgs, 'file'>>;
   userAdd?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUserAddArgs, 'input'>>;

@@ -109,6 +109,60 @@ export const askJobImport = async (context, user, args) => {
   return file;
 };
 
+export const uploadAndAskJobImport = async (context, user, args) => {
+  const {
+    file,
+    fileMarkings: file_markings,
+    connectors = [],
+    bypassEntityId = null,
+    bypassValidation = false,
+    validationMode = defaultValidationMode
+  } = args;
+
+  const path = 'import/global';
+  const { upload: uploadedFile } = await uploadToStorage(context, user, path, file, { file_markings });
+  const contextData = buildContextDataForFile(null, path, uploadedFile.name, file_markings);
+  await publishUserAction({
+    user,
+    event_type: 'file',
+    event_access: 'extended',
+    event_scope: 'create',
+    context_data: contextData
+  });
+
+  await Promise.all(connectors.map(async ({ connectorId, configuration }) => {
+    const entityId = bypassEntityId || uploadedFile.metaData.entity_id;
+    const opts = { manual: true, connectorId, configuration, bypassValidation, validationMode };
+    const entity = await internalLoadById(context, user, entityId);
+    // This is a manual request for import, we have to check confidence and throw on error
+    if (entity) {
+      controlUserConfidenceAgainstElement(user, entity);
+    }
+    const connectorsJobs = await uploadJobImport(context, user, uploadedFile, entityId, opts);
+    const entityName = entityId ? extractEntityRepresentativeName(entity) : 'global';
+    const entityType = entityId ? entity.entity_type : 'global';
+    const baseData = {
+      id: entityId,
+      file_id: uploadedFile.id,
+      file_name: uploadedFile.name,
+      file_mime: uploadedFile.metaData.mimetype,
+      connectors: connectorsJobs.map((c) => c.name),
+      entity_name: entityName,
+      entity_type: entityType
+    };
+
+    const contextDataJobs = completeContextDataForEntity(baseData, entity);
+    await publishUserAction({
+      user,
+      event_access: 'extended',
+      event_type: 'command',
+      event_scope: 'import',
+      context_data: contextDataJobs
+    });
+  }));
+  return uploadedFile;
+};
+
 export const uploadImport = async (context, user, args) => {
   const { file, fileMarkings: file_markings } = args;
   const path = 'import/global';
