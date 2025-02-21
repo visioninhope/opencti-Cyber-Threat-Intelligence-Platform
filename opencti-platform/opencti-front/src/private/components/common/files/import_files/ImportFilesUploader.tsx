@@ -6,7 +6,7 @@ import ImportFilesDropzone from '@components/common/files/import_files/ImportFil
 import ImportFilesFreeText from '@components/common/files/import_files/ImportFilesFreeText';
 import { graphql, useFragment } from 'react-relay';
 import { useFormatter } from '../../../../../components/i18n';
-import { ImportFilesUploader_connectors$key } from './__generated__/ImportFilesUploader_connectors.graphql';
+import { ImportFilesUploader_connectors$data, ImportFilesUploader_connectors$key } from './__generated__/ImportFilesUploader_connectors.graphql';
 
 const importFilesUploaderFragment = graphql`
   fragment ImportFilesUploader_connectors on Query {
@@ -28,7 +28,7 @@ const importFilesUploaderFragment = graphql`
 
 export type FileWithConnectors = {
   file: File;
-  connectors: { id: string; name: string }[];
+  connectors: ImportFilesUploader_connectors$data['connectorsForImport'][];
 };
 
 interface ImportFilesUploaderProps {
@@ -41,14 +41,15 @@ const ImportFilesUploader = ({ files = [], onChange, connectorsData }: ImportFil
   const { t_i18n } = useFormatter();
   const [isTextView, setIsTextView] = useState(false);
 
-  const { connectorsForImport } = useFragment(importFilesUploaderFragment, connectorsData);
+  const { connectorsForImport } = useFragment<ImportFilesUploader_connectors$key>(importFilesUploaderFragment, connectorsData);
   console.log({ connectorsForImport });
   const addFiles = (newFiles: File[]) => {
-    const extendedFiles: FileWithConnectors[] = newFiles.map((file) => {
-      const matchingConnectors = connectorsForImport.filter((connector) => connector.connector_scope.includes(file.type));
-
-      return { file, connectors: matchingConnectors.map(({ id, name }) => ({ id, name })) };
-    });
+    const extendedFiles: FileWithConnectors[] = newFiles.map((file) => (
+      {
+        file,
+        connectors: connectorsForImport?.filter((connector) => connector?.connector_scope?.includes(file.type)) as ImportFilesUploader_connectors$data['connectorsForImport'][],
+      }
+    ));
     console.log({ extendedFiles });
     onChange([...files, ...extendedFiles]);
   };
@@ -128,10 +129,10 @@ const ImportFilesUploader = ({ files = [], onChange, connectorsData }: ImportFil
 
                     {/* Column 3: Select - Show all connectors but disable those not in `connectors` */}
                     <Grid item xs={3}>
-                      <Select variant="standard" fullWidth value={connectors.map((c) => c.id)} multiple>
-                        {connectorsForImport.map((connector) => (
-                          <MenuItem key={connector.id} value={connector.id} disabled={!connectors.some((c) => c.id === connector.id)}>
-                            {connector.name}
+                      <Select variant="standard" fullWidth value={connectors.map((c) => c?.id)} multiple>
+                        {connectorsForImport?.map((connector) => (
+                          <MenuItem key={connector?.id} value={connector?.id} disabled={!connectors.some((c) => c?.id === connector?.id)}>
+                            {connector?.name}
                           </MenuItem>
                         ))}
                       </Select>
@@ -141,9 +142,9 @@ const ImportFilesUploader = ({ files = [], onChange, connectorsData }: ImportFil
                     <Grid item xs={3}>
                       <Select variant="standard" fullWidth value="">
                         <MenuItem value="">None</MenuItem>
-                        {connectorsForImport.map((connector) => (
-                          <MenuItem key={connector.id} value={connector.id}>
-                            {connector.name}
+                        {connectorsForImport?.find((connector) => connector.name === '[FILE] CSV Mapper import')?.configurations.map((mapper) => (
+                          <MenuItem key={mapper?.id} value={mapper?.id}>
+                            {mapper?.name}
                           </MenuItem>
                         ))}
                       </Select>
